@@ -15,7 +15,6 @@ import org.voidsentinel.hexmap.utils.VectorUtils;
 
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
-import com.jme3.math.Vector4f;
 
 public class TerrainData extends RepositoryData {
 

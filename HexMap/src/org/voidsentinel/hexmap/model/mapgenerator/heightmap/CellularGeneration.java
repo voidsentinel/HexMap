@@ -9,7 +9,6 @@ package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
 import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.utils.FastNoise.CellularDistanceFunction;
 import org.voidsentinel.hexmap.utils.FastNoise.CellularReturnType;
-import org.voidsentinel.hexmap.utils.FastNoise.Interp;
 import org.voidsentinel.hexmap.utils.FastNoise.NoiseType;
 
 /**

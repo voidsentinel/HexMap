@@ -3,14 +3,9 @@ package org.voidsentinel.hexmap.model.mapgenerator;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.CellularGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.DiamondSquareGeneration;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.FaultLinesGeneration;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.FeastErosionOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.FlatGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.GenericTerrainTypeOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.HexBlurOperation;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.HexParticleDepositionGeneration;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.IslandOperation;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.PowerOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.CityMapOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.ElevationMapOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.FertilityMapOperation;
@@ -38,7 +33,7 @@ public class CaptitalimeGenerator extends MapGenerator {
 //		new FeastErosionOperation(0.05f, 1000).filter(heights);
 		new HexBlurOperation(6, 1).filter(heights);
 
-		TerrainImage.generateImage(heights);
+		TerrainImage.generateImage(heights, "heights");
 
 //    using heightmap for terrain & elevation
 		new GenericTerrainTypeOperation(map,

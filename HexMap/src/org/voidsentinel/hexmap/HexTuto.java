@@ -27,14 +27,17 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.system.AppSettings;
 import com.simsilica.lemur.Button;
 import com.simsilica.lemur.Command;
 import com.simsilica.lemur.Container;
 import com.simsilica.lemur.GuiGlobals;
 import com.simsilica.lemur.HAlignment;
+import com.simsilica.lemur.RollupPanel;
 import com.simsilica.lemur.VAlignment;
 import com.simsilica.lemur.component.IconComponent;
 import com.simsilica.lemur.style.BaseStyles;
+import com.simsilica.lemur.style.ElementId;
 
 /**
  * @author guipatry
@@ -52,7 +55,7 @@ public class HexTuto extends SimpleApplication {
 	@Override
 	public void simpleInitApp() {
 		assetManager.registerLocator(".", FileLocator.class);
-		
+
 		
 		GuiGlobals.initialize(this);
 		Alea.setSeed(654);
@@ -60,6 +63,7 @@ public class HexTuto extends SimpleApplication {
 		BaseStyles.loadGlassStyle();
 		GuiGlobals.getInstance().getStyles().setDefaultStyle("glass");
 
+		
 		// load look & Feel
 		ModList mods = ModLoader.getModsFromDirectories("assets/mod");
 		ModData std = mods.get("standard");
@@ -88,15 +92,18 @@ public class HexTuto extends SimpleApplication {
 		mouseInput.setCursorVisible(true);
 
 		// Create a simple container for our elements
-		Container myWindow = new Container();
-		guiNode.attachChild(myWindow);
-		myWindow.setLocalTranslation(0, 800, 0);
+		RollupPanel roll = new RollupPanel("View", new ElementId("viewPanel"), null);
+		guiNode.attachChild(roll);
+		roll.setLocalTranslation(0, this.settings.getHeight(), 0);
+
+		Container panel = new Container();
+		roll.setContents(panel);
 
 		Iterator<Map.Entry<String, AbstractCellColorExtractor>> it = colorMapperRepository.repository.datas.entrySet()
 		      .iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, AbstractCellColorExtractor> colorizer = it.next();
-			Button button = myWindow.addChild(new Button(colorizer.getKey()));
+			Button button = panel.addChild(new Button(colorizer.getKey()));
 			String iconName = colorizer.getValue().getIconName();
 			if (iconName != null) {
 				ImageData image = ImageRepository.datas.getData(iconName);
@@ -104,7 +111,7 @@ public class HexTuto extends SimpleApplication {
 					String fileName = image.getFilename();
 					if (fileName != null) {
 						IconComponent icon = new IconComponent(fileName);
-						icon.setIconSize(new Vector2f(32,32));
+						icon.setIconSize(new Vector2f(32, 32));
 						button.setIcon(icon);
 						button.setText(iconName);
 						button.setTextVAlignment(VAlignment.Center);
@@ -115,12 +122,20 @@ public class HexTuto extends SimpleApplication {
 			button.addClickCommands(new Command<Button>() {
 				@Override
 				public void execute(Button source) {
+					Button bt = roll.getTitleElement();
+					ImageData image = ImageRepository.datas.getData(iconName);
+					String fileName = image.getFilename();
+					IconComponent icon = new IconComponent(fileName);
+					icon.setIconSize(new Vector2f(32, 32));
+					bt.setIcon(icon);
+					bt.setText("");
+					roll.setOpen(false);
 					mapNode.setColorExtractor(colorMapperRepository.repository.getData(colorizer.getKey()));
 				}
 			});
 		}
 
-		Button hexButton = myWindow.addChild(new Button("Hexagon"));
+		Button hexButton = panel.addChild(new Button("Hexagon"));
 		hexButton.addClickCommands(new Command<Button>() {
 			@Override
 			public void execute(Button source) {
@@ -134,7 +149,7 @@ public class HexTuto extends SimpleApplication {
 			}
 		});
 
-		Button triButton = myWindow.addChild(new Button("Triangle"));
+		Button triButton = panel.addChild(new Button("Triangle"));
 		triButton.addClickCommands(new Command<Button>() {
 			@Override
 			public void execute(Button source) {
@@ -148,7 +163,7 @@ public class HexTuto extends SimpleApplication {
 			}
 		});
 
-		Button tri2Button = myWindow.addChild(new Button("Triangle 2"));
+		Button tri2Button = panel.addChild(new Button("Triangle 2"));
 		tri2Button.addClickCommands(new Command<Button>() {
 			@Override
 			public void execute(Button source) {

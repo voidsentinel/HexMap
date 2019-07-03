@@ -3,8 +3,6 @@
  */
 package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
 
-import java.util.logging.Logger;
-
 /**
  * @author guipatry
  *

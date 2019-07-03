@@ -69,7 +69,7 @@ public class GenericTerrainTypeOperation extends AbstractTerrainOperation {
 		LOG.info("       " + terrains.length + " terrains");
 
 		int nblevel = terrains.length - 1;
-		float stepsize = 1f / terrains.length;
+		// float stepsize = 1f / terrains.length;
 
 		TerrainData standard = TerrainRepository.datas.getData("standard");
 		if (standard == null) {
@@ -82,9 +82,9 @@ public class GenericTerrainTypeOperation extends AbstractTerrainOperation {
 			for (int x = 0; x < heights[0].length; x++) {
 				HexCell cell = map.getCell(new HexCoordinates(x, y));
 				if (cell.getHeight() <= map.getWaterHeight()) {
-					elevation = (int) Math.floor(heights[y][x]* nblevel);
+					elevation = (int) Math.floor(heights[y][x] * nblevel);
 				} else {
-					elevation = (int) Math.floor(heights[y][x] * nblevel+1f);
+					elevation = (int) Math.floor(heights[y][x] * nblevel + 1f);
 				}
 				elevation = Math.max(0, elevation);
 				elevation = Math.min(nblevel, elevation);

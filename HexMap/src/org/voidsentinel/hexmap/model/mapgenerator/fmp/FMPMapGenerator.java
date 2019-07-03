@@ -45,7 +45,7 @@ public class FMPMapGenerator extends MapGenerator {
 //		new PowerOperation(1.5).filter(heights);
 		new HexBlurOperation(6, 1).filter(heights);
 
-		TerrainImage.generateImage(heights);
+		TerrainImage.generateImage(heights, "heights");
 
 		heights = new GenericTerrainTypeOperation(map,
 		      new String[] { "FMP-sea", "FMP-reef", "FMP-swamp", "FMP-plain", "FMP-mountain" }, 1).filter(heights);

@@ -83,9 +83,8 @@ public class HexCoordinates {
 	 */
 	public HexCoordinates interpolate(final HexCoordinates b, final float t) {
 		int x = (int) (X + (float) ((b.X - X)) * t);
-		int y = (int) (Y + (float) ((b.Y - Y)) * t);
 		int z = (int) (Z + (float) ((b.Z - Z)) * t);
-		y = -x - z;
+		int y = -x - z;
 		HexCoordinates response = new HexCoordinates(x, y, z);
 		return response;
 	}
@@ -146,11 +145,6 @@ public class HexCoordinates {
 				}
 			}
 		}
-
-//				if ((x * x + z * z) < (distance * distance)) {
-//					HexCoordinates pos = new HexCoordinates(x + column, z + row);
-//					response.add(pos);
-//				}
 
 		return response;
 

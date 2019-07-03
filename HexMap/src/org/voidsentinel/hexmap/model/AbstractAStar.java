@@ -75,6 +75,7 @@ public abstract class AbstractAStar<E> {
 			if (getClass() != obj.getClass()) {
 				return false;
 			}
+			@SuppressWarnings("unchecked")
 			Node other = (Node) obj;
 			if (source == null) {
 				if (other.source != null) {
@@ -89,7 +90,6 @@ public abstract class AbstractAStar<E> {
 	}
 
 	public List<E> aStarSearch(E start, E goal) {
-//		LOG.info("A* for " + start + " to " + goal);
 
 		HashedList<E, Node> open = new HashedList<E, Node>();
 		Map<E, Node> closed = new HashMap<E, Node>();
@@ -128,12 +128,18 @@ public abstract class AbstractAStar<E> {
 							if (eNode == null || eNode.f > total) {
 								if (eNode == null) {
 									eNode = new Node(e);
+									eNode.g = cost;
+									eNode.h = heuristic;
+									eNode.f = total;
+									eNode.parent = current;
+									open.add(e, eNode);
+								} else {
+									// eNode is already in open, just change the values
+									eNode.g = cost;
+									eNode.h = heuristic;
+									eNode.f = total;
+									eNode.parent = current;
 								}
-								eNode.g = cost;
-								eNode.h = heuristic;
-								eNode.f = total;
-								eNode.parent = current;
-								open.add(e, eNode);
 							}
 						}
 					}

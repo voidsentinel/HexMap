@@ -7,6 +7,7 @@ import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
+import org.voidsentinel.hexmap.utils.TerrainImage;
 
 /**
  * Set The Humidity value for each cell of the map based on distance to water
@@ -25,6 +26,8 @@ public class HumidityMapOperation extends AbstractTerrainAction implements IMapO
 	 */
 	@Override
 	public void filter(HexMap map) {
+		float[][] values = new float[map.HEIGHT][map.WIDTH];
+
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
 		int distance = 0;
 		for (int y = 0; y < map.HEIGHT; y++) {
@@ -38,8 +41,12 @@ public class HumidityMapOperation extends AbstractTerrainAction implements IMapO
 				} else {
 					cell.setHumidity((float) (Math.pow(0.98d, cell.getDistanceToWater())));
 				}
+				values[y][x] = cell.getHumidity();
+
 			}
 		}
+		TerrainImage.generateImage(values, "humidity");
+
 	}
 
 }

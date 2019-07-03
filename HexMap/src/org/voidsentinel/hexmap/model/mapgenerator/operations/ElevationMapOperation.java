@@ -7,14 +7,13 @@ import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
-import org.voidsentinel.hexmap.utils.FastNoise;
 
 /**
  * 
  * @author voidSentinel
  *
  */
-public class ElevationMapOperation extends AbstractTerrainAction  implements IMapOperation {
+public class ElevationMapOperation extends AbstractTerrainAction implements IMapOperation {
 
 	private int	waterLevel;
 	private int	groundLevel;
@@ -35,9 +34,11 @@ public class ElevationMapOperation extends AbstractTerrainAction  implements IMa
 	 * org.voidsentinel.hexmap.model.HexMap)
 	 */
 	@Override
-	public void filter(HexMap map) {		
+	public void filter(HexMap map) {
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
-		
+		LOG.info("        from  0");
+		LOG.info("          to " + groundLevel+waterLevel);
+
 		float percent = 0f;
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
@@ -51,6 +52,7 @@ public class ElevationMapOperation extends AbstractTerrainAction  implements IMa
 				}
 			}
 		}
+
 	}
 
 }

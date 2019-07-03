@@ -15,7 +15,7 @@ import java.util.List;
 public class HexMapAStar extends AbstractAStar<HexCell> {
 
 	// the map used to
-	private HexMap						map	= null;
+	private HexMap map = null;
 
 	public HexMapAStar(HexMap map) {
 		this.map = map;
@@ -43,8 +43,9 @@ public class HexMapAStar extends AbstractAStar<HexCell> {
 		if (dest.getDistanceToWater() == 0) {
 			return 10000;
 		}
-		float value = 1f;
-		value = value + (float)Math.pow((double)Math.abs(source.getElevation() - dest.getElevation()), (double)(1.5f+dest.getHeight()));
+		float value = 1f; // base movement
+		value = value + Math.abs(source.getElevation() - dest.getElevation()); // harder to change height
+		value = value + dest.getHeight() / 5f; // don't like the height;
 		return value;
 	}
 

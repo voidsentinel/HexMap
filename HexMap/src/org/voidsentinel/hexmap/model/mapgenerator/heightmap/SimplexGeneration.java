@@ -7,7 +7,6 @@
 package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
 
 import org.voidsentinel.hexmap.utils.FastNoise;
-import org.voidsentinel.hexmap.utils.OpenSimplexNoise;
 
 /**
  * @author Xerces

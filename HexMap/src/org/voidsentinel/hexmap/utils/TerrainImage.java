@@ -45,29 +45,33 @@ public class TerrainImage {
 					float height = (float) (cell.getElevation() - min) * coeff;
 					float gray = Math.max(Math.min(height / 255f, 1f), 0f);
 					rgb = new Color(gray, gray, gray, 1f).getRGB();
-				} else {					
+				} else {
 					TerrainData terrain = cell.getTerrain();
 					if (terrain == null) {
-						LOG.warning(x+"/"+y+" possess no terrain");
+						LOG.warning(x + "/" + y + " possess no terrain");
 					}
 					ColorRGBA color = terrain.getBaseColor(cell.random);
 					rgb = color.asIntARGB();
 				}
 				if (y % 2 == 0) {
-					image.setRGB(x * 2, y * 2, rgb);
-					image.setRGB(x * 2 + 1, y * 2, rgb);
-					image.setRGB(x * 2, y * 2 + 1, rgb);
-					image.setRGB(x * 2 + 1, y * 2 + 1, rgb);
+					int px = x * 2;
+					int py = (map.HEIGHT * 2) - (y * 2) - 1;
+					image.setRGB(px + 0, py - 0, rgb);
+					image.setRGB(px + 1, py - 0, rgb);
+					image.setRGB(px + 0, py - 1, rgb);
+					image.setRGB(px + 1, py - 1, rgb);
 				} else {
-					image.setRGB(x * 2 + 1, y * 2, rgb);
-					image.setRGB(x * 2 + 2, y * 2, rgb);
-					image.setRGB(x * 2 + 1, y * 2 + 1, rgb);
-					image.setRGB(x * 2 + 2, y * 2 + 1, rgb);
+					int px = x * 2 + 1;
+					int py = (map.HEIGHT * 2) - (y * 2) - 1;
+					image.setRGB(px + 0, py - 0, rgb);
+					image.setRGB(px + 1, py - 0, rgb);
+					image.setRGB(px + 0, py - 1, rgb);
+					image.setRGB(px + 1, py - 1, rgb);
 				}
 			}
 		}
 
-		File outputfile = new File("terrain.jpg");
+		File outputfile = new File("terrain.png");
 		try {
 			ImageIO.write(image, "png", outputfile);
 		} catch (IOException e) {
@@ -76,41 +80,46 @@ public class TerrainImage {
 
 	}
 
-	static public void generateImage(float[][] heights) {
+	static public void generateImage(float[][] values, String filename) {
 		LOG.info("Generating Image : " + TerrainImage.class.getSimpleName());
-
-		BufferedImage image = new BufferedImage(heights[0].length * 2 + 1, heights.length * 2,
-		      BufferedImage.TYPE_INT_ARGB);
-		float min = findMinHeight(heights);
-		float max = findMaxHeight(heights);
+		final int WIDTH = values[0].length;
+		final int HEIGHT = values.length;
+		BufferedImage image = new BufferedImage(WIDTH * 2 + 1, HEIGHT * 2, BufferedImage.TYPE_INT_ARGB);
+		float min = findMinHeight(values);
+		float max = findMaxHeight(values);
 		float coeff = 1f / (max - min);
 		int rgb = 0;
+		int px = 0;
+		int py = 0;
+		try {
+			for (int x = 0; x < WIDTH; x++) {
+				for (int y = 0; y < HEIGHT; y++) {
 
-		for (int x = 0; x < heights[0].length; x++) {
-			for (int y = 0; y < heights.length; y++) {
-
-				float gray = Math.max(Math.min(1f, heights[y][x] * coeff), 0f);
-				try {
-					rgb = new Color(gray, gray, gray, 1f).getRGB();
-				} catch (Exception e) {
-					LOG.info("gray value : " + gray);
-					return;
-				}
-				if (y % 2 == 0) {
-					image.setRGB(x * 2, y * 2, rgb);
-					image.setRGB(x * 2 + 1, y * 2, rgb);
-					image.setRGB(x * 2, y * 2 + 1, rgb);
-					image.setRGB(x * 2 + 1, y * 2 + 1, rgb);
-				} else {
-					image.setRGB(x * 2 + 1, y * 2, rgb);
-					image.setRGB(x * 2 + 2, y * 2, rgb);
-					image.setRGB(x * 2 + 1, y * 2 + 1, rgb);
-					image.setRGB(x * 2 + 2, y * 2 + 1, rgb);
+					float gray = Math.max(Math.min(1f, values[y][x] * coeff), 0f);
+					try {
+						rgb = new Color(gray, gray, gray, 1f).getRGB();
+					} catch (Exception e) {
+						LOG.info("gray value : " + gray);
+						return;
+					}
+					if (y % 2 == 0) {
+						px = x * 2;
+						py = (HEIGHT * 2) - (y * 2) - 1;
+					} else {
+						px = x * 2 + 1;
+						py = (HEIGHT * 2) - (y * 2) - 1;
+					}
+					image.setRGB(px + 0, py - 0, rgb);
+					image.setRGB(px + 1, py - 0, rgb);
+					image.setRGB(px + 0, py - 1, rgb);
+					image.setRGB(px + 1, py - 1, rgb);
 				}
 			}
+		} catch (Exception e) {
+			LOG.severe(" px " + px + " py " + py + " WIDHT " + WIDTH + " HEIGHT " + HEIGHT);
+			throw (e);
 		}
-
-		File outputfile = new File("heights.jpg");
+		File outputfile = new File(filename + ".png");
 		try {
 			ImageIO.write(image, "png", outputfile);
 		} catch (IOException e) {
