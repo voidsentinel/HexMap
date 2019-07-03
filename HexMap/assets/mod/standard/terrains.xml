@@ -1,0 +1,122 @@
+<terrains>
+	<terrainMaterial>terrains_shaded.j3m</terrainMaterial>
+	<terrain id="standard">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color>#9F9F9F</color>
+		<borderColor>#55AA55</borderColor>
+	</terrain>
+	<terrain id="Ocean">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color>#0094FF</color>
+		<borderColor>#0094FF</borderColor>
+	</terrain>
+	<terrain id="Plains">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color> rgb(28, 232, 0)</color>
+		<borderColor>rgb(22, 191, 0)</borderColor>
+	</terrain>
+	<terrain id="Hills">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color> rgb(25, 221, 0)</color>
+		<borderColor>rgb(22, 191, 0)</borderColor>
+	</terrain>
+	<terrain id="Mountains">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color>rgb(255, 177, 10)</color>
+		<borderColor>rgb(206, 143, 8)</borderColor>
+	</terrain>
+
+	<terrain id="Arctic">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color> rgb(255, 255, 255)</color>
+		<borderColor>rgb(206, 206, 206)</borderColor>
+	</terrain>
+	<terrain id="Desert">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color> rgb(255, 233, 127)</color>
+		<borderColor>rgb(206, 200, 100)</borderColor>
+	</terrain>
+	<terrain id="Toundra">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color> rgb(124, 188, 154)</color>
+		<borderColor>rgb(100, 160, 120)</borderColor>
+	</terrain>
+
+	<terrain id="GrassLand">
+		<surface>0.0, 0.0, 1, 1</surface>
+		<side>0.0, 0.6, 0.5,0.7</side>
+		<color> rgb(94, 255, 58)</color>
+		<borderColor>rgb(22, 191, 0)</borderColor>
+	</terrain>
+	<terrain id="Forest">
+		<surface>0.0, 0.0, 1, 1</surface>
+		<side>0.0, 0.6, 0.5,0.7</side>
+		<color> rgb(28, 232, 0)</color>
+		<borderColor>rgb(22, 191, 0)</borderColor>
+	</terrain>
+	<terrain id="Jungle">
+		<surface>0.0, 0.0, 1, 1</surface>
+		<side>0.0, 0.6, 0.5,0.7</side>
+		<color> rgb(94, 140, 58)</color>
+		<borderColor>rgb(22, 191, 0)</borderColor>
+	</terrain>
+	<terrain id="Swamp">
+		<surface>0.0, 0.0, 1, 1</surface>
+		<side>0.0, 0.6, 0.5,0.7</side>
+		<color> rgb(125, 140, 58)</color>
+		<borderColor>rgb(22, 191, 0)</borderColor>
+	</terrain>
+
+
+	<terrain id="Sea">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color> rgb(263, 229, 170)</color>
+		<borderColor>rgb(263, 229, 170)</borderColor>
+	</terrain>
+	<terrain id="Rivers">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color> rgb(263, 229, 170)</color>
+		<borderColor>rgb(263, 229, 170)</borderColor>
+	</terrain>
+
+	<terrain id="FMP-sea">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color>#0026FF</color>
+		<borderColor>#0094FF</borderColor>
+	</terrain>
+	<terrain id="FMP-reef">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color> rgb(247, 225, 84)</color>
+		<borderColor>rgb(263, 229, 170)</borderColor>
+	</terrain>
+	<terrain id="FMP-swamp">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color>rgb(198, 196, 107)</color>
+		<borderColor>rgb(247, 238, 170)</borderColor>
+	</terrain>
+	<terrain id="FMP-plain">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color>rgb (0,196, 107)</color>
+		<borderColor>rgb (230,247, 170)</borderColor>
+	</terrain>
+	<terrain id="FMP-mountain">
+		<uvcenter>0.5, 0.5</uvcenter>
+		<uvsize>1.0</uvsize>
+		<color>rgb(204, 153, 65)</color>
+		<borderColor>rgb(204, 153, 65)</borderColor>
+	</terrain>
+</terrains>

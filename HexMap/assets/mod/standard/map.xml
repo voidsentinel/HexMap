@@ -1,0 +1,35 @@
+<map>
+	<image id="heightColorMapperIcon">icons/peaks.png</image>
+	<mapColorMapper id="heightColorMapper"
+		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor"
+		default="true" icon="heightColorMapperIcon"
+		text="map.heightColorMapper"
+		groundColorMap="colorMap/groundColormap.png"
+		waterColorMap="colorMap/waterColormap.png" />
+
+	<image id="heatColorMapperIcon">icons/thermometer-hot.png</image>
+	<mapColorMapper id="heatColorMapper"
+		class="org.voidsentinel.hexmap.view.mapColor.TemperatureColorExtractor"
+		icon="heatColorMapperIcon" colorMap="colorMap/tempColorMap.png" />
+
+	<image id="fertilityColorMapperIcon">icons/grass.png</image>
+	<mapColorMapper id="fertilityColorMapper"
+		class="org.voidsentinel.hexmap.view.mapColor.FertilityColorExtractor"
+		icon="fertilityColorMapperIcon" colorMap="colorMap/soilFertility2.png" />
+
+	<image id="humidityColorMapperIcon">icons/raining.png</image>
+	<mapColorMapper id="humidityColorMapper"
+		class="org.voidsentinel.hexmap.view.mapColor.HumidityColorExtractor"
+		icon="humidityColorMapperIcon" colorMap="colorMap/humidity2.png" />
+
+	<image id="cityColorMapperIcon">icons/village.png</image>
+	<mapColorMapper id="cityColorMapper"
+		class="org.voidsentinel.hexmap.view.mapColor.CityValueColorExtractor"
+		icon="cityColorMapperIcon" colorMap="colorMap/cityColorMap.png" />
+
+	<image id="pathColorMapperIcon">icons/path.png</image>
+	<mapColorMapper id="pathColorMapper"
+		class="org.voidsentinel.hexmap.view.mapColor.PathValueColorExtractor"
+		icon="pathColorMapperIcon" colorMap="colorMap/cityColorMap.png" />
+
+</map>

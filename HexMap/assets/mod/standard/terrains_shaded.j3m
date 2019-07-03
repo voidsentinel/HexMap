@@ -1,0 +1,11 @@
+Material shadedTerrain : Common/MatDefs/Light/Lighting.j3md {
+     MaterialParameters {
+         Shininess: 8.0
+         DiffuseMap : terrains_1.png
+         UseMaterialColors : true
+         Ambient  : 0.5 0.5 0.5 1.0
+         Diffuse  : 1.0 1.0 1.0 1.0
+         Specular : 0.0 0.0 0.0 1.0
+         UseVertexColor : true
+     }
+}

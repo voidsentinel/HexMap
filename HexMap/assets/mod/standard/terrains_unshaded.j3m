@@ -1,0 +1,6 @@
+Material My Terrain :Common/MatDefs/Misc/Unshaded.j3md {
+     MaterialParameters {
+        ColorMap : terrains_1.png
+        VertexColor : true
+     }
+}

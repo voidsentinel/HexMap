@@ -1,0 +1,81 @@
+package org.voidsentinel.hexmap.view;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.voidsentinel.hexmap.model.HexCell;
+import org.voidsentinel.hexmap.model.HexMap;
+import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
+
+import com.jme3.math.Triangle;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+
+/**
+ * generate and store the representation of a chunk of the map. also store
+ * vertices that allow for selection of an hex. The colors and texture of the
+ * representation can be modified
+ * 
+ * @author guipatry
+ *
+ */
+public abstract class AbstractHexGridChunk {
+	//
+	static final public String					CHUNK_PREFIX	= "CHUNK_";
+
+	// the (part of) map to display
+	protected HexMap								map;
+	final protected int							xStart;
+	final protected int							zStart;
+	final protected int							xEnd;
+	final protected int							zEnd;
+	// the geometryNode corresponding to the (part of) map
+	protected Node							representation	= null;
+	protected Map<Vector3f, HexCell>			points			= new HashMap<Vector3f, HexCell>();
+
+	// the colorExtractor
+	protected AbstractCellColorExtractor	colorExtractor;
+
+	public AbstractHexGridChunk(HexMap map, int xstart, int zstart, int chunkSize,
+	      AbstractCellColorExtractor colorExtractor) {
+		this.map = map;
+		this.xStart = xstart;
+		this.zStart = zstart;
+		this.xEnd = Math.min(xstart + chunkSize, map.WIDTH - 1);
+		this.zEnd = Math.min(zstart + chunkSize, map.HEIGHT - 1);
+		this.colorExtractor = colorExtractor;
+		this.representation = new Node(CHUNK_PREFIX+xStart+"_"+zStart);
+	}
+
+	/**
+	 * generate the geometry for a given map
+	 * 
+	 * @param map
+	 * @return the generated geometry.
+	 */
+	public abstract void generateGeometry();
+
+	public abstract void regenerateColor(AbstractCellColorExtractor colorExtractor);
+
+	/**
+	 * return the representation of the part of the map.
+	 * 
+	 * @return the representation (Geometry) if it has already be generated, null
+	 *         otherwise
+	 */
+	public Node getRepresentation() {
+		return representation;
+	}
+
+	public HexCell getCell(Triangle collisionTriangle) {
+		HexCell response = null;
+		if (response == null)
+			response = points.get(collisionTriangle.get3());
+		if (response == null)
+			response = points.get(collisionTriangle.get2());
+		if (response == null)
+			response = points.get(collisionTriangle.get3());
+		return response;
+	}
+}

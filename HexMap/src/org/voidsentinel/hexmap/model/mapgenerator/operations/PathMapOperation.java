@@ -1,0 +1,63 @@
+package org.voidsentinel.hexmap.model.mapgenerator.operations;
+
+import java.util.List;
+
+import org.voidsentinel.hexmap.model.HexCell;
+import org.voidsentinel.hexmap.model.HexCoordinates;
+import org.voidsentinel.hexmap.model.HexMap;
+import org.voidsentinel.hexmap.model.HexMapAStar;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
+
+/**
+ * Set The PathPrevalence value for each cell of the map. This is done by
+ * running a number of path serach, adding a small value to each cell of each
+ * path. It is supposed that cell with a high number of path that goe sthrought
+ * are important
+ * 
+ * @author voidSentinel
+ *
+ */
+public class PathMapOperation extends AbstractTerrainAction implements IMapOperation {
+
+	@Override
+	public void filter(HexMap map) {
+		LOG.info("   Operation : " + this.getClass().getSimpleName());
+		int count = 0;
+
+		float[][] prevalence = new float[map.HEIGHT][map.WIDTH];
+		HexMapAStar star = new HexMapAStar(map);
+
+		for (int x = 0; x < map.WIDTH; x++) {
+			HexCell start = map.getCell(x, 0);
+			HexCell end = map.getCell(map.WIDTH - 1 - x, map.HEIGHT - 1);
+			if (start.getDistanceToWater() > 0 && end.getDistanceToWater() > 0) {
+				List<HexCell> list = star.aStarSearch(start, end);
+				for (HexCell hexCell : list) {
+					prevalence[hexCell.hexCoordinates.row][hexCell.hexCoordinates.column]++;
+				}
+			}
+		}
+
+		for (int y = 0; y < map.HEIGHT; y++) {
+			HexCell start = map.getCell(0, y);
+			HexCell end = map.getCell(map.WIDTH - 1, map.HEIGHT - 1 - y);
+			if (start.getDistanceToWater() > 0 && end.getDistanceToWater() > 0) {
+				List<HexCell> list = star.aStarSearch(start, end);
+				for (HexCell hexCell : list) {
+					prevalence[hexCell.hexCoordinates.row][hexCell.hexCoordinates.column]++;
+				}
+			}
+		}
+
+		this.normalize(prevalence);
+
+		for (int y = 0; y < map.HEIGHT; y++) {
+			for (int x = 0; x < map.WIDTH; x++) {
+				HexCell cell = map.getCell(new HexCoordinates(x, y));
+				cell.setPathPrevalence(prevalence[y][x]);
+			}
+		}
+
+	}
+
+}
