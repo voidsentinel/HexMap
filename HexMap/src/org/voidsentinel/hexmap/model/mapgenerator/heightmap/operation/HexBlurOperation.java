@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
+package org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation;
 
 import java.util.logging.Logger;
 
@@ -25,8 +25,10 @@ public class HexBlurOperation extends AbstractTerrainOperation {
 	/**
 	 * constructor for the Blur operation
 	 * 
-	 * @param centerCoeff weight of the center value
-	 * @param outerCoeff  weight of each of the neighborgs
+	 * @param centerCoeff
+	 *           weight of the center value
+	 * @param outerCoeff
+	 *           weight of each of the neighborgs
 	 */
 	public HexBlurOperation(int centerCoeff, int outerCoeff) {
 		this.centerCoeff = centerCoeff;
@@ -38,12 +40,13 @@ public class HexBlurOperation extends AbstractTerrainOperation {
 	}
 
 	/**
-	 * Blur the
+	 * Blur the table using the coefficient defined in constructor
 	 * 
-	 * @param height : the 2D table of height to blur. Will be modified
+	 * @param height
+	 *           : the 2D table of height to blur. Will be modified
 	 * @return the blurred 2D table
 	 */
-	public float[][] filter(float[][] height) {
+	public void filter(float[][] height) {
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
 
 		float[][] copy = new float[height.length][height[0].length];
@@ -59,7 +62,8 @@ public class HexBlurOperation extends AbstractTerrainOperation {
 				count = centerCoeff;
 				for (Direction dir : Direction.values()) {
 					neighbor = center.direction(dir);
-					if (neighbor.column > 0 && neighbor.column < height[0].length && neighbor.row > 0 && neighbor.row < height.length) {
+					if (neighbor.column > 0 && neighbor.column < height[0].length && neighbor.row > 0
+							&& neighbor.row < height.length) {
 						value = value + height[neighbor.row][neighbor.column] * outerCoeff;
 						count = count + outerCoeff;
 					}
@@ -76,8 +80,6 @@ public class HexBlurOperation extends AbstractTerrainOperation {
 				height[y][x] = copy[y][x];
 			}
 		}
-
-		return copy;
 	}
 
 }

@@ -5,6 +5,7 @@ import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.CellularG
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.DiamondSquareGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FlatGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.HexBlurOperation;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.LevelOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.CityMapOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.ElevationMapOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.FertilityMapOperation;
@@ -16,7 +17,7 @@ import org.voidsentinel.hexmap.model.mapgenerator.operations.TemperatureMapOpera
 import org.voidsentinel.hexmap.model.mapgenerator.operations.WaterLevelOperation;
 import org.voidsentinel.hexmap.utils.TerrainImage;
 
-public class CaptitalismGenerator extends MapGenerator {
+public class CapitalismGenerator extends MapGenerator {
 
 	public void generate(HexMap map) {
 		LOG.info("Generating map " + map.WIDTH + "/" + map.HEIGHT + " using " + this.getClass().getSimpleName());
@@ -25,8 +26,7 @@ public class CaptitalismGenerator extends MapGenerator {
 		heightmap.addGenerator(new FlatGeneration(0f));
 		heightmap.addGenerator(new DiamondSquareGeneration());		
 		heightmap.addGenerator(new CellularGeneration(1f));
-		heightmap.addOperation(new HexBlurOperation(6, 1));
-		heightmap.addOperation(new HexBlurOperation(6, 1));
+//		heightmap.addOperation(new HexBlurOperation(6, 1));
 		
 		heightmap.filter(map);
 

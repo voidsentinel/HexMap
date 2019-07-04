@@ -11,7 +11,7 @@ import org.voidsentinel.hexmap.mod.ModData;
 import org.voidsentinel.hexmap.mod.ModList;
 import org.voidsentinel.hexmap.mod.ModLoader;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.CaptitalimeGenerator;
+import org.voidsentinel.hexmap.model.mapgenerator.CapitalismGenerator;
 import org.voidsentinel.hexmap.model.mapgenerator.MapGenerator;
 import org.voidsentinel.hexmap.utils.Alea;
 import org.voidsentinel.hexmap.utils.TerrainImage;
@@ -27,7 +27,6 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import com.jme3.system.AppSettings;
 import com.simsilica.lemur.Button;
 import com.simsilica.lemur.Command;
 import com.simsilica.lemur.Container;
@@ -70,7 +69,7 @@ public class HexTuto extends SimpleApplication {
 		ModLoader.loadMod(std, this.assetManager);
 
 		// generate the map
-		MapGenerator generator = new CaptitalimeGenerator();
+		MapGenerator generator = new CapitalismGenerator();
 		HexMap map = new HexMap(256, 128);
 		generator.generate(map);
 		TerrainImage.generateImage(map, true);

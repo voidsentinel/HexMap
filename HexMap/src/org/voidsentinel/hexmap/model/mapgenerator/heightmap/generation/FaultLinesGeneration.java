@@ -1,9 +1,8 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
+package org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation;
 
-import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.utils.Alea;
 
 /**
@@ -17,47 +16,24 @@ import org.voidsentinel.hexmap.utils.Alea;
  */
 public class FaultLinesGeneration extends AbstractTerrainGenerator {
 
-	private int							lineCount	= 1;
-	private HexMap						map			= null;
-
-	/**
-	 * constructor. By defaut, the number of fault-line will be the horizontal +
-	 * vertical size of the map
-	 * 
-	 * @param map the map to be generated
-	 **/
-	public FaultLinesGeneration(HexMap map) {
-		this(map, 1f);
-	}
+	private int lineCount = 1;
 
 	/**
 	 * constructor
 	 * 
-	 * @param map   the map to be generated
-	 * @param scale a value that is used as a coefficient to the default number of
-	 *              fault-line to be created.
+	 * @param count
+	 *           the number of fault-line to use.
 	 */
-	public FaultLinesGeneration(HexMap map, float scale) {
-		this(map, (int) ((map.WIDTH + map.HEIGHT) * scale));
-	}
-
-	/**
-	 * constructor
-	 * 
-	 * @param map   the map to be generated
-	 * @param count the number of fault-line to use.
-	 */
-	public FaultLinesGeneration(HexMap map, int count) {
+	public FaultLinesGeneration(int count) {
 		lineCount = count;
-		this.map = map;
 	}
 
 	/**
 	 * 
 	 */
-	public float[][] generate(float[][] heights) {
+	public float[][] generate(int xSize, int ySize) {
 		LOG.info("   Operation : " + this.getClass().getSimpleName() + " " + lineCount);
-		float[][] copy = new float[map.HEIGHT][map.WIDTH];
+		float[][] copy = new float[ySize][xSize];
 		float size = 1;
 		for (int i = 0; i < lineCount; i++) {
 			if (Alea.nextBoolean()) {
@@ -66,19 +42,12 @@ public class FaultLinesGeneration extends AbstractTerrainGenerator {
 				size = -0.1f;
 			}
 			if (Alea.nextBoolean()) {
-				splitH(copy, size);
+				splitH(copy, size, xSize, ySize);
 			} else {
-				splitV(copy, size);
+				splitV(copy, size, xSize, ySize);
 			}
 		}
 		this.normalize(copy);
-
-		for (int y = 0; y < heights.length; y++) {
-			for (int x = 0; x < heights[0].length; x++) {
-				heights[y][x] += copy[y][x];
-			}
-		}
-
 		return copy;
 	}
 
@@ -86,22 +55,25 @@ public class FaultLinesGeneration extends AbstractTerrainGenerator {
 	 * set an imaginary horizontal line. Change the height of any cell over and
 	 * under the line
 	 * 
-	 * @param heights the map on which we work.
-	 * @param size    the height modification
-	 * @param side    if 1, cell over the line are lowered and cell under are
-	 *                heightened. if -1 the inverse is true.
+	 * @param heights
+	 *           the map on which we work.
+	 * @param variation
+	 *           the height modification
+	 * @param side
+	 *           if 1, cell over the line are lowered and cell under are heightened.
+	 *           if -1 the inverse is true.
 	 */
-	private float[][] splitH(float[][] heights, float size) {
-		int y1 = Alea.nextInt(map.HEIGHT);
-		int y2 = Alea.nextInt(map.HEIGHT);
+	private float[][] splitH(float[][] heights, float variation, int xSize, int ySize) {
+		int y1 = Alea.nextInt(ySize);
+		int y2 = Alea.nextInt(ySize);
 
-		for (int x = 0; x < map.WIDTH; x++) {
-			int y3 = y1 + (int) (((float) (x)) / ((float) map.WIDTH) * (y2 - y1));
+		for (int x = 0; x < xSize; x++) {
+			int y3 = y1 + (int) (((float) (x)) / ((float) xSize) * (y2 - y1));
 			for (int y = 0; y < y3; y++) {
-				heights[y][x] += +size;
+				heights[y][x] += +variation;
 			}
-			for (int y = y3 + 1; y < map.HEIGHT; y++) {
-				heights[y][x] += -size;
+			for (int y = y3 + 1; y < ySize; y++) {
+				heights[y][x] += -variation;
 			}
 		}
 
@@ -112,22 +84,22 @@ public class FaultLinesGeneration extends AbstractTerrainGenerator {
 	 * set an imaginary Vertical line. Change the height of any cell before and
 	 * after the line
 	 * 
-	 * @param map  the map on which we work.
-	 * @param size the height modification
-	 * @param side if 1, cell before the line are lowered and cell after are
-	 *             heightened. if -1 the inverse is true.
+	 * @param heights
+	 *           the map on which we work.
+	 * @param variation
+	 *           the height modification
 	 */
-	private float[][] splitV(float[][] heights, float size) {
-		int x1 = Alea.nextInt(map.WIDTH);
-		int x2 = Alea.nextInt(map.WIDTH);
+	private float[][] splitV(float[][] heights, float variation, int xSize, int ySize) {
+		int x1 = Alea.nextInt(xSize);
+		int x2 = Alea.nextInt(xSize);
 
-		for (int y = 0; y < map.HEIGHT; y++) {
-			int x3 = x1 + (int) (((float) (y)) / ((float) map.HEIGHT) * (x2 - x1));
+		for (int y = 0; y < ySize; y++) {
+			int x3 = x1 + (int) (((float) (y)) / ((float) ySize) * (x2 - x1));
 			for (int x = 0; x < x3; x++) {
-				heights[y][x] += size;
+				heights[y][x] += variation;
 			}
-			for (int x = x3 + 1; x < map.WIDTH; x++) {
-				heights[y][x] += -size;
+			for (int x = x3 + 1; x < xSize; x++) {
+				heights[y][x] += -variation;
 			}
 		}
 

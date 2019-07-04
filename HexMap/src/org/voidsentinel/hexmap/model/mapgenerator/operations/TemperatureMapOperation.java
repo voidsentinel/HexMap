@@ -62,7 +62,7 @@ public class TemperatureMapOperation extends AbstractTerrainAction implements IM
 		}
 		this.normalize(temperature);
 
-		TerrainImage.generateImage(temperature, "temperature");
+		TerrainImage.generateImage(temperature, this.getClass().getSimpleName());
 
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {

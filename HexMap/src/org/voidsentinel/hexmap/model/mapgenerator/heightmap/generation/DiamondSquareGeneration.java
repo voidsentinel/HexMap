@@ -4,30 +4,26 @@
  * @copyright 2018
  * @author    VoidSentinel
  */
-package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
+package org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation;
 
 import org.voidsentinel.hexmap.utils.Alea;
 
 /**
  * This operation fill the table with values from a diamond square algorythm.
- * The map is upscaled to a square table of the nearest power of 2 size, the
- * values are generated and then clipped to the original table. The value of the
- * original table if multiplied by the new values.
+ * The map is upscaled to a square table of size equal to the nearest power of 2 ,
+ *  the values are generated and then clipped to the original table size. 
  * 
  * @author VoidSentinel
  *
  */
 public class DiamondSquareGeneration extends AbstractTerrainGenerator {
 
-
 	public DiamondSquareGeneration() {
 	}
 
-	public float[][] generate(float[][] data) {
+	public float[][] generate(int xSize, int ySize) {
 		LOG.info("   Operation : " + DiamondSquareGeneration.class.getSimpleName());
-		int width = data[0].length;
-		int height = data.length;
-		int val = Math.max(width, height);
+		int val = Math.max(xSize, ySize);
 		LOG.info("      max initial size  : " + val);
 		int power = 32 - Integer.numberOfLeadingZeros(val - 1);
 		LOG.info("      max power  : " + power);
@@ -36,12 +32,6 @@ public class DiamondSquareGeneration extends AbstractTerrainGenerator {
 		float[][] copy = new float[size][size];
 		copy = plasma(copy);
 		this.normalize(copy);
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				data[y][x] = data[y][x] + copy[y][x];
-			}
-		}
-		this.normalize(data);
 		return copy;
 	}
 
@@ -64,17 +54,17 @@ public class DiamondSquareGeneration extends AbstractTerrainGenerator {
 
 		float h = 500.0f;// the range (-h -> +h) for the average offset
 
-//		Random r = new Random(mseed);// for the new value in range of h
+		// Random r = new Random(mseed);// for the new value in range of h
 		// side length is distance of a single square side
 		// or distance of diagonal in diamond
 		for (int sideLength = DATA_SIZE - 1;
-		      // side length must be >= 2 so we always have
-		      // a new value (if its 1 we overwrite existing values
-		      // on the last iteration)
-		      sideLength >= 2;
-		      // each iteration we are looking at smaller squares
-		      // diamonds, and we decrease the variation of the offset
-		      sideLength /= 2, h /= 2.0) {
+				// side length must be >= 2 so we always have
+				// a new value (if its 1 we overwrite existing values
+				// on the last iteration)
+				sideLength >= 2;
+				// each iteration we are looking at smaller squares
+				// diamonds, and we decrease the variation of the offset
+				sideLength /= 2, h /= 2.0) {
 			// half the length of the side of a square
 			// or distance from diamond center to one corner
 			// (just to make calcs below a little clearer)
@@ -86,17 +76,17 @@ public class DiamondSquareGeneration extends AbstractTerrainGenerator {
 					// x, y is upper left corner of square
 					// calculate average of existing corners
 					float avg = data[x][y] + // top left
-					      data[x + sideLength][y] + // top right
-					      data[x][y + sideLength] + // lower left
-					      data[x + sideLength][y + sideLength];// lower right
+							data[x + sideLength][y] + // top right
+							data[x][y + sideLength] + // lower left
+							data[x + sideLength][y + sideLength];// lower right
 					avg /= 4.0;
 
 					// center is average plus random offset
 					data[x + halfSide][y + halfSide] =
-					      // We calculate random value in range of 2h
-					      // and then subtract h so the end value is
-					      // in the range (-h, +h)
-					      avg + (Alea.nextFloat() * 2 * h) - h;
+							// We calculate random value in range of 2h
+							// and then subtract h so the end value is
+							// in the range (-h, +h)
+							avg + (Alea.nextFloat() * 2 * h) - h;
 
 					valmax = Math.max(valmax, data[x + halfSide][y + halfSide]);
 					valmin = Math.min(valmin, data[x + halfSide][y + halfSide]);
@@ -118,9 +108,9 @@ public class DiamondSquareGeneration extends AbstractTerrainGenerator {
 					// note we must use mod and add DATA_SIZE for subtraction
 					// so that we can wrap around the array to find the corners
 					float avg = data[(x - halfSide + DATA_SIZE - 1) % (DATA_SIZE - 1)][y] + // left of center
-					      data[(x + halfSide) % (DATA_SIZE - 1)][y] + // right of center
-					      data[x][(y + halfSide) % (DATA_SIZE - 1)] + // below center
-					      data[x][(y - halfSide + DATA_SIZE - 1) % (DATA_SIZE - 1)]; // above center
+							data[(x + halfSide) % (DATA_SIZE - 1)][y] + // right of center
+							data[x][(y + halfSide) % (DATA_SIZE - 1)] + // below center
+							data[x][(y - halfSide + DATA_SIZE - 1) % (DATA_SIZE - 1)]; // above center
 					avg /= 4.0;
 
 					// new value = average plus random offset

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
+package org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation;
 
 import org.voidsentinel.hexmap.utils.Alea;
 import org.voidsentinel.hexmap.utils.ImprovedNoise;
@@ -79,23 +79,17 @@ public class FBMGeneration extends AbstractTerrainGenerator {
 		return (total + 1) / 2; // tries to get it from 0 to 1
 	}
 
-	public float[][] generate(float[][] height) {
+	public float[][] generate(int xSize, int ySize) {
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
 
-		float[][] copy = new float[height.length][height[0].length];
-		for (int y = 0; y < height.length; y++) {
-			for (int x = 0; x < height[0].length; x++) {
+		float[][] copy = new float[ySize][xSize];
+		for (int y = 0; y < ySize; y++) {
+			for (int x = 0; x < xSize; x++) {
 				copy[y][x] = (float) (noise(x / scale, y / scale));
 			}
 		}
 
 		this.normalize(copy);
-		for (int y = 0; y < height.length; y++) {
-			for (int x = 0; x < height[0].length; x++) {
-				height[y][x] += copy[y][x];
-			}
-		}
-
 		return copy;
 	}
 

@@ -1,10 +1,13 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
+package org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation;
 
 /**
- * @author guipatry
+ * Change the value of each cell to it's nth power, the n being set in
+ * constructor
+ * 
+ * @author voidSentinel
  *
  */
 public class PowerOperation extends AbstractTerrainOperation {
@@ -18,18 +21,17 @@ public class PowerOperation extends AbstractTerrainOperation {
 	/**
 	 * Blur the
 	 * 
-	 * @param height : the 2D table of height to blur. Will be modified
+	 * @param height
+	 *           : the 2D table of height to blur. Will be modified
 	 * @return the blurred 2D table
 	 */
-	public float[][] filter(float[][] height) {
-//		LOG.info("   Operation : " + this.getClass().getSimpleName());
-
+	public void filter(float[][] height) {
+		LOG.info("   Operation : " + this.getClass().getSimpleName() + "(" + power + ")");
 		for (int y = 0; y < height.length; y++) {
 			for (int x = 0; x < height[0].length; x++) {
 				height[y][x] = (float) Math.pow(height[y][x], power);
 			}
 		}
 
-		return height;
 	}
 }

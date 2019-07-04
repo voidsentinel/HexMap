@@ -9,7 +9,6 @@ package org.voidsentinel.hexmap.model.mapgenerator.operations;
 import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.model.HexCell;
-import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.TerrainData;
 import org.voidsentinel.hexmap.model.repositories.TerrainRepository;

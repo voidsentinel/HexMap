@@ -26,8 +26,6 @@ public class FertilityMapOperation extends AbstractTerrainAction implements IMap
 
 		FastNoise noise = new FastNoise();
 		float value;
-		float valueMin = 3f;
-		float valueMax = 0f;
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(new HexCoordinates(x, y));
@@ -38,16 +36,10 @@ public class FertilityMapOperation extends AbstractTerrainAction implements IMap
 				}
 				values[y][x] = value;
 				cell.setFertility(value);
-				if (value < valueMin) {
-					valueMin = value;
-				}
-				if (value > valueMax) {
-					valueMax = value;
-				}
 			}
 		}
 
-		TerrainImage.generateImage(values, "soilFertility");
+		TerrainImage.generateImage(values, this.getClass().getSimpleName());
 
 	}
 

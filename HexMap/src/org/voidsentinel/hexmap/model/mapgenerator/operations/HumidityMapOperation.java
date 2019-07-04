@@ -45,7 +45,7 @@ public class HumidityMapOperation extends AbstractTerrainAction implements IMapO
 
 			}
 		}
-		TerrainImage.generateImage(values, "humidity");
+		TerrainImage.generateImage(values, this.getClass().getSimpleName());
 
 	}
 

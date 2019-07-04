@@ -83,6 +83,8 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 		float maxvalue = -500;
 		float value;
 		HexCell selectedCell = null;
+		xmin = Math.max(xmin, map.WIDTH/10);
+		xmax = Math.min(xmax, map.WIDTH - map.WIDTH/10);		
 		for (int y = Math.max(ymin, 0); y < Math.min(ymax, map.HEIGHT); y++) {
 			for (int x = Math.max(xmin, 0); x < Math.min(xmax, map.WIDTH); x++) {
 				HexCell cell = map.getCell(x, y);

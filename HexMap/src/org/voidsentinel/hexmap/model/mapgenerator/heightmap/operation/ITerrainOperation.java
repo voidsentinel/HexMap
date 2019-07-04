@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
+package org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation;
 
 /**
  * a TerrainOperation perform a specific operation on a heightfield, modifying
@@ -15,9 +15,9 @@ public interface ITerrainOperation {
 	/**
 	 * Act on the given map height to perform a specific operation
 	 * 
-	 * @param map the heightfield that will be modified.
-	 * @return the modified heightfield (so that we can chain operations)
+	 * @param map
+	 *           the heightfield that will be modified.
 	 */
-	public float[][] filter(float[][] height);
+	public void filter(float[][] height);
 
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
+package org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation;
 
 /**
  * @author guipatry
@@ -9,7 +9,7 @@ package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
  */
 public class IslandOperation extends AbstractTerrainOperation {
 
-	public float[][] generate(float[][] heights) {
+	public void generate(float[][] heights) {
 		LOG.info("   Generation : " + this.getClass().getSimpleName());
 		float[][] copy = new float[heights.length][heights[0].length];
 		
@@ -26,6 +26,5 @@ public class IslandOperation extends AbstractTerrainOperation {
 		}
 		this.normalize(heights);
 
-		return copy;
 	}
 }

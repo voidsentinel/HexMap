@@ -61,7 +61,7 @@ public class PathMapOperation extends AbstractTerrainAction implements IMapOpera
 			}
 		}
 
-		TerrainImage.generateImage(prevalence, "path");
+		TerrainImage.generateImage(prevalence, this.getClass().getSimpleName());
 
 	}
 
