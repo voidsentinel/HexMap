@@ -1,7 +1,9 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
+package org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation;
+
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 
 /**
  * @author Xerces
@@ -16,8 +18,7 @@ public abstract class AbstractTerrainOperation extends AbstractTerrainAction imp
 	 * voidsentinel.hexagons.model.BoardMap)
 	 */
 	@Override
-	public float[][] filter(float[][] height) {
-		return height;
+	public void filter(float[][] height) {
 	}
 
 }

@@ -1,7 +1,9 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
+package org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation;
+
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 
 /**
  * @author guipatry
@@ -17,8 +19,8 @@ public abstract class AbstractTerrainGenerator extends AbstractTerrainAction imp
 	 * (float[][])
 	 */
 	@Override
-	public float[][] generate(float[][] data) {
-		return data;
+	public float[][] generate(int xSize, int ySize) {
+		return null;
 	}
 
 }

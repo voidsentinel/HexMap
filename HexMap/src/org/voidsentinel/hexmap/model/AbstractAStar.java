@@ -17,7 +17,6 @@ import org.voidsentinel.hexmap.utils.HashedList;
  *
  */
 public abstract class AbstractAStar<E> {
-	private static final Logger LOG = Logger.getLogger(AbstractAStar.class.toString());
 
 	/**
 	 * A Node from the movement graph Contains the parent node, as well as the

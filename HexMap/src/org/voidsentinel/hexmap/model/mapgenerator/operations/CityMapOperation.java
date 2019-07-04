@@ -49,7 +49,6 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 		}
 
 		normalize(cities);
-		TerrainImage.generateImage(cities, "cities-value");
 
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
@@ -58,9 +57,10 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 			}
 		}
 
+		TerrainImage.generateImage(cities, this.getClass().getSimpleName());
+		
 		// put a city
 		int step = map.WIDTH / 4;
-		int radius = Math.max(map.WIDTH, map.HEIGHT) / 5;
 		 for (int i = 0; i < 3; i++) {
 			selectedCell = findCityPosition(map, cities, 0, map.WIDTH, 0, map.HEIGHT);
 			createCity(selectedCell, map, cities, step/2);
@@ -74,8 +74,6 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 			if (selectedCell != null)
 				createCity(selectedCell, map, cities, step/4);
 		}
-
-		TerrainImage.generateImage(cities, "cities-choice");
 
 	}
 

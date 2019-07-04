@@ -4,7 +4,7 @@
  * @copyright 2018
  * @author    VoidSentinel
  */
-package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
+package org.voidsentinel.hexmap.model.mapgenerator.operations;
 
 import java.util.logging.Logger;
 
@@ -20,39 +20,21 @@ import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
  * @author Xerces
  *
  */
-public class GenericTerrainTypeOperation extends AbstractTerrainOperation {
-	private static final Logger	LOG	= Logger.getLogger(GenericTerrainTypeOperation.class.toString());
+public class BiomeOperation implements IMapOperation {
+	private static final Logger	LOG	= Logger.getLogger(BiomeOperation.class.toString());
 
 	private HexMap						map;
 	private String[]					terrains;
 
-	public GenericTerrainTypeOperation(HexMap map, String[] terrainstypes, int levels) {
-		this.map = map;
+	public BiomeOperation(String[] terrainstypes, int levels) {
 		this.terrains = new String[terrainstypes.length * levels];
 		int index = 0;
 		for (String string : terrainstypes) {
 			for (int i = 0; i < levels; i++) {
 				terrains[index++] = string;
 			}
-
 		}
 
-	}
-
-	public GenericTerrainTypeOperation(HexMap map, String[] terrainsTypes, int[] terrainsCoeff) {
-		this.map = map;
-		int sum = 0;
-		for (int i : terrainsCoeff) {
-			sum += i;
-		}
-
-		this.terrains = new String[sum];
-		int index = 0;
-		for (int t = 0; t < terrainsTypes.length; t++) {
-			for (int i = 0; i < terrainsCoeff[t]; i++) {
-				terrains[index++] = terrainsTypes[t];
-			}
-		}
 	}
 
 	/**
@@ -64,8 +46,8 @@ public class GenericTerrainTypeOperation extends AbstractTerrainOperation {
 	 * <li>4 = moutains
 	 * </ul>
 	 */
-	public float[][] filter(float[][] heights) {
-		LOG.info("   Operation : " + GenericTerrainTypeOperation.class.getSimpleName());
+	public void filter(HexMap map) {
+		LOG.info("   Operation : " + BiomeOperation.class.getSimpleName());
 		LOG.info("       " + terrains.length + " terrains");
 
 		int nblevel = terrains.length - 1;
@@ -76,26 +58,23 @@ public class GenericTerrainTypeOperation extends AbstractTerrainOperation {
 			LOG.severe("   Impossible de trouver le terrain standard");
 		}
 
-		this.normalize(heights);
 		int elevation = 0;
-		for (int y = 0; y < heights.length; y++) {
-			for (int x = 0; x < heights[0].length; x++) {
-				HexCell cell = map.getCell(new HexCoordinates(x, y));
+		for (int y = 0; y < map.HEIGHT; y++) {
+			for (int x = 0; x < map.WIDTH; x++) {
+				HexCell cell = map.getCell(x, y);
 				if (cell.getHeight() <= map.getWaterHeight()) {
-					elevation = (int) Math.floor(heights[y][x] * nblevel);
+					elevation = (int) Math.floor(cell.getHeight() * nblevel);
 				} else {
-					elevation = (int) Math.floor(heights[y][x] * nblevel + 1f);
+					elevation = (int) Math.floor(cell.getHeight() * nblevel + 1f);
 				}
 				elevation = Math.max(0, elevation);
 				elevation = Math.min(nblevel, elevation);
 
 				cell.setElevation(elevation);
-				cell.setHeight(heights[y][x]);
 				cell.setTerrain(TerrainRepository.datas.getData(terrains[elevation]));
 			}
 		}
-
-		return heights;
+		map.reCalculateProperties();
 	}
 
 }
