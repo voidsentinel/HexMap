@@ -70,7 +70,7 @@ public class HexTuto extends SimpleApplication {
 
 		// generate the map
 		MapGenerator generator = new CapitalismGenerator();
-		HexMap map = new HexMap(256, 128);
+		HexMap map = new HexMap(256, 256);
 		generator.generate(map);
 		TerrainImage.generateImage(map, true);
 

@@ -24,7 +24,7 @@ public class TemperatureMapOperation extends AbstractTerrainAction implements IM
 	public void filter(HexMap map) {
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
 
-		final float LATITATTENUATION = (maxTemperature - minTemperature) / map.HEIGHT; // expressed in °/ cell
+		final float LATITATTENUATION = (maxTemperature - minTemperature) / (map.HEIGHT*1.1f); // expressed in °/ cell
 
 		float[][] temperature = new float[map.HEIGHT][map.WIDTH];
 		OpenSimplexNoise osn = new OpenSimplexNoise();
@@ -38,7 +38,7 @@ public class TemperatureMapOperation extends AbstractTerrainAction implements IM
 			// temp depends on latitude
 			int latitude = Math.abs(y - middle); // 0 at equateur, middle at pole
 			float latitudeAttenuation = LATITATTENUATION * latitude; // 0.5° / cell
-			float baseTemperatrure = maxTemperature - latitudeAttenuation;
+			float baseTemperature = maxTemperature - latitudeAttenuation;
 
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(new HexCoordinates(x, y));
@@ -47,10 +47,10 @@ public class TemperatureMapOperation extends AbstractTerrainAction implements IM
 				// local variation
 				float variation = (float) (osn.eval(x / 10f, y / 10f)) * 2f;
 
-				float value = (baseTemperatrure - heightattenuation + variation);
+				float value = (baseTemperature - heightattenuation + variation);
 
 				if (cell.getDistanceToWater() == 0) {
-					value = value - 3f;
+					value = value - 5f;
 				}
 
 				value = (value - minTemperature) / (maxTemperature - minTemperature);
