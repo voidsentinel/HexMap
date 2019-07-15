@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.utils.HashedList;
 
@@ -24,7 +23,9 @@ public abstract class AbstractAStar<E> {
 	 *
 	 */
 	private class Node implements Comparable<Node> {
+		@SuppressWarnings("unused")
 		public float	g			= 0f;
+		@SuppressWarnings("unused")
 		public float	h			= 0f;
 		public float	f			= 0f;
 		public E			source	= null;
@@ -88,6 +89,15 @@ public abstract class AbstractAStar<E> {
 
 	}
 
+	/**
+	 * return a list of position from start to goal, with the minimum value
+	 * 
+	 * @param start
+	 *           the start element
+	 * @param goal
+	 *           the goal element
+	 * @return
+	 */
 	public List<E> aStarSearch(E start, E goal) {
 
 		HashedList<E, Node> open = new HashedList<E, Node>();
@@ -151,9 +161,31 @@ public abstract class AbstractAStar<E> {
 		return new ArrayList<E>();
 	}
 
+	/**
+	 * return the list of neighbours of the source
+	 * 
+	 * @param source
+	 * @return
+	 */
 	public abstract List<E> getNeihbours(E source);
 
+	/**
+	 * return the cost to go from one source to dest. Dest should be one of sources
+	 * neighbours.
+	 * 
+	 * @param source
+	 * @param dest
+	 * @return
+	 */
 	public abstract float getCost(E source, E dest);
 
+	/**
+	 * return the estimated distance from start to goal. Should under-evaluate the
+	 * distance
+	 * 
+	 * @param source
+	 * @param dest
+	 * @return
+	 */
 	public abstract float getDistance(E source, E dest);
 }

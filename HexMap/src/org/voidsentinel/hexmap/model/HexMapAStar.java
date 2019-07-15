@@ -15,10 +15,10 @@ import java.util.List;
 public class HexMapAStar extends AbstractAStar<HexCell> {
 
 	// the map used to
-	private HexMap map = null;
+	//private HexMap map = null;
 
 	public HexMapAStar(HexMap map) {
-		this.map = map;
+//		this.map = map;
 	}
 
 	/*

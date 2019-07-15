@@ -5,7 +5,6 @@ package org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation;
 
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCoordinates;
-import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.utils.Alea;
 
 /**

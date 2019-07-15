@@ -6,12 +6,13 @@ package org.voidsentinel.hexmap.model;
 import org.voidsentinel.hexmap.utils.Alea;
 
 /**
- * This class is a cell in the map. It possess come caracteristics 
+ * This class is a cell in the map. It possess come caracteristics
+ * 
  * @author guipatry
  *
  */
 public class HexCell {
-	
+
 	public final HexCoordinates	hexCoordinates;
 	public final int					random;
 
@@ -21,11 +22,12 @@ public class HexCell {
 	private float						temperature			= 0.5f;
 	private float						humidity				= 0f;
 	private float						fertility			= 0.5f;
-	
+	private boolean					hasCity				= false;
+
 	// technical data
 	private int							distanceToWater	= -1;												// unknown
 	private float						pathPrevalence		= 0f;												// path going by this point
-	private float                 cityValue         = 0f;
+	private float						cityValue			= 0f;
 	private HexCell[]					neighbor				= new HexCell[Direction.NBDIRECTIONS];	// neighbors
 
 	// biome
@@ -61,7 +63,8 @@ public class HexCell {
 	}
 
 	/**
-	 * @param terrain the terrain to set
+	 * @param terrain
+	 *           the terrain to set
 	 */
 	public void setTerrain(TerrainData terrain) {
 		this.terrain = terrain;
@@ -75,7 +78,8 @@ public class HexCell {
 	}
 
 	/**
-	 * @param temperature the temperature to set
+	 * @param temperature
+	 *           the temperature to set
 	 */
 	public void setTemperature(float temperature) {
 		this.temperature = temperature;
@@ -89,7 +93,8 @@ public class HexCell {
 	}
 
 	/**
-	 * @param height the height to set
+	 * @param height
+	 *           the height to set
 	 */
 	public void setHeight(float height) {
 		this.height = height;
@@ -103,7 +108,8 @@ public class HexCell {
 	}
 
 	/**
-	 * @param humidity the humidity to set
+	 * @param humidity
+	 *           the humidity to set
 	 */
 	public void setHumidity(float humidity) {
 		this.humidity = humidity;
@@ -124,7 +130,8 @@ public class HexCell {
 	}
 
 	/**
-	 * @param fertility the fertility to set
+	 * @param fertility
+	 *           the fertility to set
 	 */
 	public void setFertility(float fertility) {
 		this.fertility = fertility;
@@ -138,7 +145,8 @@ public class HexCell {
 	}
 
 	/**
-	 * @param distanceToWater the distanceToWater to set
+	 * @param distanceToWater
+	 *           the distanceToWater to set
 	 */
 	public void setDistanceToWater(int distanceToWater) {
 		this.distanceToWater = distanceToWater;
@@ -152,13 +160,16 @@ public class HexCell {
 	}
 
 	/**
-	 * @param pathPrevalence the pathPrevalence to set
+	 * @param pathPrevalence
+	 *           the pathPrevalence to set
 	 */
 	public void setPathPrevalence(float pathPrevalence) {
 		this.pathPrevalence = pathPrevalence;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -169,7 +180,9 @@ public class HexCell {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -202,10 +215,25 @@ public class HexCell {
 	}
 
 	/**
-	 * @param cityValue the cityValue to set
+	 * @param cityValue
+	 *           the cityValue to set
 	 */
 	public void setCityValue(float cityValue) {
 		this.cityValue = cityValue;
+	}
+
+	/**
+	 * @return the hasCity
+	 */
+	public boolean isHasCity() {
+		return hasCity;
+	}
+
+	/**
+	 * @param hasCity the hasCity to set
+	 */
+	public void setHasCity(boolean hasCity) {
+		this.hasCity = hasCity;
 	}
 
 }

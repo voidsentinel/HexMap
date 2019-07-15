@@ -3,8 +3,6 @@
  */
 package org.voidsentinel.hexmap.view.ihm;
 
-import java.util.logging.Logger;
-
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.view.HexGrid;
 import org.voidsentinel.hexmap.view.HexMetrics;
@@ -32,7 +30,7 @@ import com.jme3.scene.control.AbstractControl;
  */
 public class StepCameraControl extends AbstractControl implements ActionListener {
 
-	private static final Logger	LOG					= Logger.getLogger(StepCameraControl.class.toString());
+	// private static final Logger	LOG					= Logger.getLogger(StepCameraControl.class.toString());
 
 	// ** Total time for a movement
 	private static float				MVTTIME				= 20.0f;

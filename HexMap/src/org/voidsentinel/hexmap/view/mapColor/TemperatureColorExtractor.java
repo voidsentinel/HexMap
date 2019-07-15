@@ -35,6 +35,7 @@ public class TemperatureColorExtractor extends FileMappedColorExtractor {
 	 * @return the color at attribute %
 	 */
 	public ColorRGBA getColor(HexCell cell, HexMap map) {
+//		return ColorRGBA.Blue.clone().interpolateLocal(ColorRGBA.Red, cell.getTemperature());
 		return getColor(cell.getTemperature());
 	}
 

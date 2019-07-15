@@ -28,12 +28,13 @@ import com.jme3.asset.plugins.FileLocator;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.simsilica.lemur.Button;
+import com.simsilica.lemur.Button.ButtonAction;
 import com.simsilica.lemur.Command;
 import com.simsilica.lemur.Container;
 import com.simsilica.lemur.GuiGlobals;
-import com.simsilica.lemur.HAlignment;
+import com.simsilica.lemur.Panel;
 import com.simsilica.lemur.RollupPanel;
-import com.simsilica.lemur.VAlignment;
+import com.simsilica.lemur.TextField;
 import com.simsilica.lemur.component.IconComponent;
 import com.simsilica.lemur.style.BaseStyles;
 import com.simsilica.lemur.style.ElementId;
@@ -54,23 +55,26 @@ public class HexTuto extends SimpleApplication {
 	@Override
 	public void simpleInitApp() {
 		assetManager.registerLocator(".", FileLocator.class);
+		assetManager.registerLocator("./assets/", FileLocator.class);
 
-		
-		GuiGlobals.initialize(this);
 		Alea.setSeed(654);
+		GuiGlobals.initialize(this);
 		// Load the 'glass' style
 		BaseStyles.loadGlassStyle();
 		GuiGlobals.getInstance().getStyles().setDefaultStyle("glass");
-
-		
+		//
+//		BaseStyles.loadStyleResources("/themes/medieval/medieval.groovy");
+//		GuiGlobals.getInstance().getStyles().setDefaultStyle("medieval");
 		// load look & Feel
 		ModList mods = ModLoader.getModsFromDirectories("assets/mod");
 		ModData std = mods.get("standard");
 		ModLoader.loadMod(std, this.assetManager);
 
+		
+		
 		// generate the map
 		MapGenerator generator = new CapitalismGenerator();
-		HexMap map = new HexMap(256, 256);
+		HexMap map = new HexMap(256, 128);
 		generator.generate(map);
 		TerrainImage.generateImage(map, true);
 
@@ -90,31 +94,50 @@ public class HexTuto extends SimpleApplication {
 		getFlyByCamera().setEnabled(false);
 		mouseInput.setCursorVisible(true);
 
-		// Create a simple container for our elements
+     // 
+		Container tooltip = new Container();
+		guiNode.attachChild(tooltip);
+		TextField hooverField = new TextField("");
+		tooltip.attachChild(hooverField);
+		tooltip.setLocalTranslation(0, settings.getHeight(), 0);
+		
+		// Create a simple container for view elements
 		RollupPanel roll = new RollupPanel("View", new ElementId("viewPanel"), null);
 		guiNode.attachChild(roll);
-		roll.setLocalTranslation(0, this.settings.getHeight(), 0);
-
+		roll.setLocalTranslation(0, this.settings.getHeight()-25, 0);
+		// set the initial icon
+		Button bt = roll.getTitleElement();	
+		AbstractCellColorExtractor extract = colorMapperRepository.repository.getDefaultMapper();
+		ImageData image = ImageRepository.datas.getData(extract.getIconName());
+		String fileName = image.getFilename();
+		IconComponent icon = new IconComponent(fileName);
+		icon.setIconSize(new Vector2f(32, 32));
+		bt.setIcon(icon);
+		bt.setText("");
+		roll.setOpen(false);
+      // set the possibles actions
 		Container panel = new Container();
 		roll.setContents(panel);
-
 		Iterator<Map.Entry<String, AbstractCellColorExtractor>> it = colorMapperRepository.repository.datas.entrySet()
-		      .iterator();
+				.iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, AbstractCellColorExtractor> colorizer = it.next();
 			Button button = panel.addChild(new Button(colorizer.getKey()));
+			tooltip.setBackground(button.getBackground().clone());
+			hooverField.setBackground(button.getBackground().clone());
 			String iconName = colorizer.getValue().getIconName();
 			if (iconName != null) {
-				ImageData image = ImageRepository.datas.getData(iconName);
+				image = ImageRepository.datas.getData(iconName);
 				if (image != null) {
-					String fileName = image.getFilename();
+					fileName = image.getFilename();
 					if (fileName != null) {
-						IconComponent icon = new IconComponent(fileName);
+						icon = new IconComponent(fileName);
 						icon.setIconSize(new Vector2f(32, 32));
 						button.setIcon(icon);
-						button.setText(iconName);
-						button.setTextVAlignment(VAlignment.Center);
-						button.setTextHAlignment(HAlignment.Right);
+						button.setText("");
+						// button.setText(iconName);
+						// button.setTextVAlignment(VAlignment.Center);
+						// button.setTextHAlignment(HAlignment.Right);
 					}
 				}
 			}
@@ -132,49 +155,64 @@ public class HexTuto extends SimpleApplication {
 					mapNode.setColorExtractor(colorMapperRepository.repository.getData(colorizer.getKey()));
 				}
 			});
+			button.addCommands(Button.ButtonAction.HighlightOn, new Command<Button>() {
+				@Override
+				public void execute(Button source) {
+					// set the tooltip using the name
+					hooverField.setText(colorizer.getValue().getTextName());
+				}
+			});
+			button.addCommands(Button.ButtonAction.HighlightOff, new Command<Button>() {
+				@Override
+				public void execute(Button source) {
+					// set the tooltip using the name
+					hooverField.setText("");
+				}
+			});
 		}
 
-		Button hexButton = panel.addChild(new Button("Hexagon"));
-		hexButton.addClickCommands(new Command<Button>() {
-			@Override
-			public void execute(Button source) {
-				try {
-					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkSlopped");
-				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
 
-		Button triButton = panel.addChild(new Button("Triangle"));
-		triButton.addClickCommands(new Command<Button>() {
-			@Override
-			public void execute(Button source) {
-				try {
-					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkTriangle");
-				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		Button tri2Button = panel.addChild(new Button("Triangle 2"));
-		tri2Button.addClickCommands(new Command<Button>() {
-			@Override
-			public void execute(Button source) {
-				try {
-					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkTriangle2");
-				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+//		Button hexButton = panel.addChild(new Button("Hexagon"));
+//		hexButton.addClickCommands(new Command<Button>() {
+//			@Override
+//			public void execute(Button source) {
+//				try {
+//					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkSlopped");
+//				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
+//						| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//
+//		Button triButton = panel.addChild(new Button("Triangle"));
+//		triButton.addClickCommands(new Command<Button>() {
+//			@Override
+//			public void execute(Button source) {
+//				try {
+//					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkTriangle");
+//				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
+//						| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//
+//		Button tri2Button = panel.addChild(new Button("Triangle 2"));
+//		tri2Button.addClickCommands(new Command<Button>() {
+//			@Override
+//			public void execute(Button source) {
+//				try {
+//					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkTriangle2");
+//				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
+//						| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		});
 
 	}
 

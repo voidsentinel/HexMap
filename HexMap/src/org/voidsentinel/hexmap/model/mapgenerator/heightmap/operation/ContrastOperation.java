@@ -13,6 +13,12 @@ public class ContrastOperation extends AbstractTerrainOperation {
 
 	private float contrast = 32f;
 
+	public ContrastOperation(float contrast) {
+		contrast = Math.min(contrast, 1f);
+		contrast = Math.max(contrast, -1f);
+		this.contrast = (int) (255 * contrast);
+	}
+
 	@Override
 	public void filter(float[][] height) {
 		// TODO Auto-generated method stub
@@ -34,7 +40,7 @@ public class ContrastOperation extends AbstractTerrainOperation {
 		}
 
 		TerrainImage.generateImage(height, "after");
-		
+
 	}
 
 }

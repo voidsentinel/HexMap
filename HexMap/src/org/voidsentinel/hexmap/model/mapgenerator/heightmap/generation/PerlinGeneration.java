@@ -16,7 +16,7 @@ import org.voidsentinel.hexmap.utils.FastNoise;
  * @author VoidSentinel
  *
  */
-public class SimplexGeneration extends AbstractTerrainGenerator {
+public class PerlinGeneration extends AbstractTerrainGenerator {
 
 	float	xscale	= 0f;
 	float	zscale	= 0f;
@@ -31,7 +31,7 @@ public class SimplexGeneration extends AbstractTerrainGenerator {
 	 *           noise. Higher values give flatter map, since the values between 2
 	 *           points change more slowly
 	 */
-	public SimplexGeneration(float xscale, float zscale, float xoffset, float zoffset) {
+	public PerlinGeneration(float xscale, float zscale, float xoffset, float zoffset) {
 		this.xscale = xscale;
 		this.zscale = zscale;
 		this.xoffset = xoffset;
@@ -47,7 +47,7 @@ public class SimplexGeneration extends AbstractTerrainGenerator {
 	 *           noise. Higher values give flatter map, since the values between 2
 	 *           points change more slowly
 	 */
-	public SimplexGeneration(float xscale, float zscale) {
+	public PerlinGeneration(float xscale, float zscale) {
 		this(xscale, zscale, 0f, 0f);
 	}
 
@@ -59,7 +59,7 @@ public class SimplexGeneration extends AbstractTerrainGenerator {
 	 *           noise. Higher values give flatter map, since the values between 2
 	 *           points change more slowly
 	 */
-	public SimplexGeneration(float scale) {
+	public PerlinGeneration(float scale) {
 		this(scale, scale, 0f, 0f);
 	}
 
@@ -75,7 +75,7 @@ public class SimplexGeneration extends AbstractTerrainGenerator {
 	 * @return a float table of size [zSize][xSize]
 	 */
 	public float[][] generate(int xSize, int zSize) {
-		LOG.info("   Operation : " + SimplexGeneration.class.getSimpleName());
+		LOG.info("   Operation : " + PerlinGeneration.class.getSimpleName());
 
 		float xpos = 0f;
 		float zpos = 0f;
@@ -85,7 +85,7 @@ public class SimplexGeneration extends AbstractTerrainGenerator {
 			zpos = z / zscale + zoffset;
 			for (int x = 0; x < xSize; x++) {
 				xpos = x / xscale + xoffset;
-				copy[z][x] = noise.GetSimplex(xpos, zpos);
+				copy[z][x] = noise.GetPerlin(xpos, zpos);
 			}
 		}
 		this.normalize(copy);

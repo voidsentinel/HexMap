@@ -3,7 +3,8 @@
 	<mapColorMapper id="heightColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor"
 		default="true" icon="heightColorMapperIcon"
-		text="map.heightColorMapper"
+		text="map.heightColorMapper.label"
+		tooltip="map.heightColorMapper.tooltip"
 		groundColorMap="colorMap/groundColormap.png"
 		waterColorMap="colorMap/waterColormap.png" />
 

@@ -9,10 +9,16 @@ import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainActio
 import org.voidsentinel.hexmap.utils.TerrainImage;
 
 /**
- * Set The PathPrevalence value for each cell of the map. This is done by
- * running a number of path serach, adding a small value to each cell of each
- * path. It is supposed that cell with a high number of path that goe sthrought
- * are important
+ * Set The city for each cell of the map. This is done by looking at
+ * pathprevalence (ie a path that is commonly used is a good place to get a
+ * city), cell fertility (a good thing to have) temperature (moderate is
+ * privilegied), humidity (moderate is priviliegied), height (mountain get a
+ * malus). Place in border of an water are favored (less for river than open
+ * water).
+ * <p>
+ * Place 4 big and 8 small cities on tghe map, based on thoses values.
+ * each city have an interdiction zone where no other city can be created. the
+ * size is dependent on the city size.
  * 
  * @author voidSentinel
  *
@@ -54,37 +60,39 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(x, y);
 				cell.setCityValue(cities[y][x]);
+				cell.setHasCity(true);
 			}
 		}
 
 		TerrainImage.generateImage(cities, this.getClass().getSimpleName());
-		
+
 		// put a city
-		int step = map.WIDTH / 4;
-		 for (int i = 0; i < 3; i++) {
+		int stepx = map.WIDTH / 4;
+		for (int i = 0; i < 3; i++) {
 			selectedCell = findCityPosition(map, cities, 0, map.WIDTH, 0, map.HEIGHT);
-			createCity(selectedCell, map, cities, step/2);
+			createCity(selectedCell, map, cities, stepx / 2);
 		}
 
 		for (int i = 0; i < 4; i++) {
-			selectedCell = findCityPosition(map, cities, step * i, step * (i + 1), 0, map.HEIGHT);
+			selectedCell = findCityPosition(map, cities, stepx * i, stepx * (i + 1), 0, map.HEIGHT);
 			if (selectedCell != null)
-				createCity(selectedCell, map, cities, step/4);
-			selectedCell = findCityPosition(map, cities, step * i, step * (i + 1), 0, map.HEIGHT);
+				createCity(selectedCell, map, cities, stepx / 4);
+			selectedCell = findCityPosition(map, cities, stepx * i, stepx * (i + 1), 0, map.HEIGHT);
 			if (selectedCell != null)
-				createCity(selectedCell, map, cities, step/4);
+				createCity(selectedCell, map, cities, stepx / 4);
 		}
 
 	}
-
 
 	private HexCell findCityPosition(HexMap map, float[][] cities, int xmin, int xmax, int ymin, int ymax) {
 		LOG.info("      searching city between " + xmin + "-" + xmax);
 		float maxvalue = -500;
 		float value;
 		HexCell selectedCell = null;
-		xmin = Math.max(xmin, map.WIDTH/10);
-		xmax = Math.min(xmax, map.WIDTH - map.WIDTH/10);		
+		xmin = Math.max(xmin, map.WIDTH / 10);
+		xmax = Math.min(xmax, map.WIDTH - map.WIDTH / 10);
+		ymin = Math.max(ymin, map.HEIGHT / 10);
+		ymax = Math.max(ymax, map.HEIGHT - map.HEIGHT / 10);
 		for (int y = Math.max(ymin, 0); y < Math.min(ymax, map.HEIGHT); y++) {
 			for (int x = Math.max(xmin, 0); x < Math.min(xmax, map.WIDTH); x++) {
 				HexCell cell = map.getCell(x, y);
