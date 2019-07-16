@@ -171,7 +171,7 @@ public class HexTuto extends SimpleApplication {
 			});
 		}
 
-		Button hexButton = panel.addChild(new Button("Hexagon"));
+		Button hexButton = panel.addChild(new Button("Slopped Hex"));
 		hexButton.addClickCommands(new Command<Button>() {
 			@Override
 			public void execute(Button source) {
@@ -185,12 +185,12 @@ public class HexTuto extends SimpleApplication {
 			}
 		});
 
-		Button triButton = panel.addChild(new Button("Triangle"));
+		Button triButton = panel.addChild(new Button("Flat Hex"));
 		triButton.addClickCommands(new Command<Button>() {
 			@Override
 			public void execute(Button source) {
 				try {
-					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkTriangle");
+					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkFlat");
 				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 				      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					// TODO Auto-generated catch block

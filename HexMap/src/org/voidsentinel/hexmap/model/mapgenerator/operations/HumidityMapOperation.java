@@ -7,6 +7,7 @@ import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
+import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.utils.TerrainImage;
 import org.voidsentinel.hexmap.utils.FastNoise.NoiseType;
 
@@ -28,10 +29,12 @@ public class HumidityMapOperation extends AbstractTerrainAction implements IMapO
 	@Override
 	public void filter(HexMap map) {
 		float[][] values = new float[map.HEIGHT][map.WIDTH];
+
+		FastNoise noise = new FastNoise();
 		noise.SetNoiseType(NoiseType.Perlin);
 		noise.SetFractalOctaves(6);
 		noise.SetGradientPerturbAmp(1.5f);
-      FastNoise noise = new FastNoise(Alea.nextInt());
+
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
 		int distance = 0;
 		float toWater = 0f;
