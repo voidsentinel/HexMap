@@ -57,7 +57,7 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 				colorizeCellCorner(hexCell, MeshUtility);
 			}
 		}
-		perturbatePositions(MeshUtility);
+//		perturbatePositions(MeshUtility);
 
 		Mesh mesh = MeshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
@@ -84,8 +84,8 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 		List<Vector3f> vertices = meshUtil.getVertices();
 		FastNoise noise = new FastNoise(Alea.nextInt());
 		for (Vector3f vertex : vertices) {
-			Vector3f perturb = new Vector3f(noise.GetNoise(vertex.x, vertex.z), 0f, noise.GetNoise(vertex.z, vertex.y));
-//			vertex.addLocal(perturb);
+			Vector3f perturb = new Vector3f(noise.GetNoise(vertex.x, vertex.z), 0f, noise.GetNoise(vertex.x+100, vertex.z+100));
+			vertex.addLocal(perturb.multLocal(1f*HexMetrics.OUTERRADIUS*0.15f));
 		}
 
 	}

@@ -36,11 +36,11 @@ public class PathValueColorExtractor extends FileMappedColorExtractor {
 	 */
 	public ColorRGBA getColor(HexCell cell, HexMap map) {
 		float value;
-		
+
 		if (cell.getDistanceToWater() == 0) {
 			value = 0f;
 		} else {
-			value = cell.getPathPrevalence();			
+			value = cell.getPathPrevalence() < 0.15f ? 0f : cell.getPathPrevalence();
 		}
 		return getColor(value);
 	}

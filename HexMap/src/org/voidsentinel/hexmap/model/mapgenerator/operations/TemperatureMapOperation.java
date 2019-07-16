@@ -45,7 +45,7 @@ public class TemperatureMapOperation extends AbstractTerrainAction implements IM
 				// less heat in altitude
 				float heightattenuation = HEIGHTATTENUATION * cell.getElevation(); // 1.2° / elevation
 				// local variation
-				float variation = (float) (osn.eval(x / 10f, y / 10f)) * 2f;
+				float variation = (float) (osn.eval(x / 10f, y / 10f)) * 10f -5f ;
 
 				float value = (baseTemperature - heightattenuation + variation);
 

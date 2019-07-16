@@ -171,48 +171,33 @@ public class HexTuto extends SimpleApplication {
 			});
 		}
 
+		Button hexButton = panel.addChild(new Button("Hexagon"));
+		hexButton.addClickCommands(new Command<Button>() {
+			@Override
+			public void execute(Button source) {
+				try {
+					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkSlopped");
+				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
+				      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 
-//		Button hexButton = panel.addChild(new Button("Hexagon"));
-//		hexButton.addClickCommands(new Command<Button>() {
-//			@Override
-//			public void execute(Button source) {
-//				try {
-//					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkSlopped");
-//				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-//						| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//
-//		Button triButton = panel.addChild(new Button("Triangle"));
-//		triButton.addClickCommands(new Command<Button>() {
-//			@Override
-//			public void execute(Button source) {
-//				try {
-//					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkTriangle");
-//				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-//						| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//
-//		Button tri2Button = panel.addChild(new Button("Triangle 2"));
-//		tri2Button.addClickCommands(new Command<Button>() {
-//			@Override
-//			public void execute(Button source) {
-//				try {
-//					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkTriangle2");
-//				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-//						| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		});
+		Button triButton = panel.addChild(new Button("Triangle"));
+		triButton.addClickCommands(new Command<Button>() {
+			@Override
+			public void execute(Button source) {
+				try {
+					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkTriangle");
+				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
+				      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 
 	}
 
