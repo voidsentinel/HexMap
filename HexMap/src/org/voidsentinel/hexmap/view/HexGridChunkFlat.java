@@ -37,19 +37,23 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 	 */
 	public void generateGeometry() {
 		Material mat = TerrainRepository.getTerrainMaterial();
-		MeshUtil MeshUtility = new MeshUtil();
+		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
 			for (int x = xStart; x <= xEnd; x++) {
 				hexCell = map.getCell(x, z);
-				triangulateCellCenter(hexCell, MeshUtility);
-				triangulateCellBridge(hexCell, MeshUtility);
-				triangulateCellCorner(hexCell, MeshUtility);
-				triangulateCellSide(hexCell, MeshUtility);
+				triangulateCellCenter(hexCell, meshUtility);
+				colorizeCellCenter(hexCell, meshUtility);
+				triangulateCellBridge(hexCell, meshUtility);
+				colorizeCellBridge(hexCell, meshUtility);
+				triangulateCellCorner(hexCell, meshUtility);
+				colorizeCellCorner(hexCell, meshUtility);
+				triangulateCellSide(hexCell, meshUtility);
+				colorizeCellSide(hexCell, meshUtility);
 			}
 		}
 
-		Mesh mesh = MeshUtility.generateMesh();
+		Mesh mesh = meshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
 		terrain.setMaterial(mat);
 		representation.attachChild(terrain);
@@ -62,12 +66,13 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 		for (int z = zStart; z <= zEnd; z++) {
 			for (int x = xStart; x <= xEnd; x++) {
 				hexCell = map.getCell(x, z);
-//				colorizeCellCenter(hexCell, meshUtility);
-//				colorizeCellBridge(hexCell, meshUtility);
-//				colorizeCellCorner(hexCell, meshUtility);
+				colorizeCellCenter(hexCell, meshUtility);
+				colorizeCellBridge(hexCell, meshUtility);
+				colorizeCellCorner(hexCell, meshUtility);
+				colorizeCellSide(hexCell, meshUtility);
 			}
 		}
-		((Geometry)(representation.getChild("ground"))).getMesh().setBuffer(Type.Color, 4, meshUtility.getColorArray());
+		((Geometry) (representation.getChild("ground"))).getMesh().setBuffer(Type.Color, 4, meshUtility.getColorArray());
 	}
 
 	/**
@@ -83,11 +88,10 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 		int index = MeshUtility.getVerticeCount();
 		Vector3f normal = new Vector3f();
 		int offsetDir = 0;
-		ColorRGBA color = colorExtractor.getColor(cell, map);
 
 		MeshUtility.addVertice(center);
 		MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
-		MeshUtility.addColor(color);
+		points.put(center, cell);
 
 		for (Direction direction : Direction.values()) {
 			offsetDir = direction.ordinal();
@@ -98,11 +102,25 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 			MeshUtility.addVertice(v3);
 			MeshUtility.addNormal(normal);
 			MeshUtility.addNormal(normal);
-			MeshUtility.addColor(color);
-			MeshUtility.addColor(color);
 			MeshUtility.addTriangle(index, index + offsetDir * 2 + 2, index + offsetDir * 2 + 1);
+			points.put(v2, cell);
 		}
 		// add the center to the list of points to be used for selection
+	}
+
+	/**
+	 * generate the internal hexagon
+	 * 
+	 * @param cell
+	 * @param MeshUtility
+	 */
+	private void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
+		ColorRGBA color = colorExtractor.getColor(cell, map);
+		MeshUtility.addColor(color);
+		for (Direction direction : Direction.values()) {
+			MeshUtility.addColor(color);
+			MeshUtility.addColor(color);
+		}
 	}
 
 	/**
@@ -125,7 +143,6 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 	 * @param MeshUtility
 	 */
 	private void triangulateBridgeDirection(HexCell cell, Direction direction, MeshUtil MeshUtility) {
-		HexCell neighbor = cell.getNeighbor(direction);
 		Vector3f center = HexMetrics.getCellCenter(cell);
 		Vector3f bridge = HexMetrics.getBridgeVector(direction.ordinal());
 		Vector3f v1 = center.add(HexMetrics.getFirstCornerVector(direction.ordinal()));
@@ -133,17 +150,25 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 		Vector3f v3 = v1.add(bridge);
 		Vector3f v4 = v2.add(bridge);
 
+		MeshUtility.addQuad(v1, v2, v3, v4);
+		points.put(v4, cell);
+
+	}
+
+	private void colorizeCellBridge(HexCell cell, MeshUtil MeshUtility) {
+		for (Direction direction : Direction.values()) {
+			colorizeBridgeDirection(cell, direction, MeshUtility);
+		}
+	}
+
+	private void colorizeBridgeDirection(HexCell cell, Direction direction, MeshUtil MeshUtility) {
+		HexCell neighbor = cell.getNeighbor(direction);
 		ColorRGBA c1 = colorExtractor.getColor(cell, map);
 		ColorRGBA c2 = c1.clone();
 		if ((neighbor != null && neighbor.getElevation() != cell.getElevation()) || neighbor == null) {
 			c2.multLocal(0.85f);
 		}
-		MeshUtility.addQuad(v1, v2, v3, v4);
 		MeshUtility.addQuadColors(c1, c1, c2, c2);
-
-		// add v4 to the list of point for selection, with the highest cell as
-		// destination
-
 	}
 
 	/**
@@ -155,7 +180,6 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 	private void triangulateCellCorner(HexCell cell, MeshUtil meshUtility) {
 		for (Direction direction : Direction.values()) {
 			triangulateCornerDirection(cell, direction, meshUtility);
-
 		}
 	}
 
@@ -169,8 +193,6 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 	private void triangulateCornerDirection(HexCell cell, Direction direction, MeshUtil meshUtility) {
 		int index = meshUtility.getVerticeCount();
 		Vector3f center = HexMetrics.getCellCenter(cell);
-		HexCell h1 = cell.getNeighbor(direction);
-		HexCell h2 = cell.getNeighbor(direction.previous());
 		Vector3f normal = new Vector3f();
 
 		Vector3f v1 = center.add(HexMetrics.getFirstCornerVector(direction.ordinal()));
@@ -181,6 +203,31 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 		Vector3f v3 = v1.add(o1);
 		Vector3f v4 = v1.add(o2);
 
+		Triangle.computeTriangleNormal(v1, v2, v4, normal);
+		meshUtility.addVertice(v1);
+		meshUtility.addVertice(v2);
+		meshUtility.addVertice(v3);
+		meshUtility.addVertice(v4);
+		meshUtility.addNormal(normal);
+		meshUtility.addNormal(normal);
+		meshUtility.addNormal(normal);
+		meshUtility.addNormal(normal);
+		meshUtility.addTriangle(index, index + 1, index + 3);
+		meshUtility.addTriangle(index, index + 2, index + 1);
+
+		// add one of the points to the list of point for selection, with the highest
+		// cell as  destination
+	}
+
+	private void colorizeCellCorner(HexCell cell, MeshUtil meshUtility) {
+		for (Direction direction : Direction.values()) {
+			colorizeCornerDirection(cell, direction, meshUtility);
+		}
+	}
+
+	private void colorizeCornerDirection(HexCell cell, Direction direction, MeshUtil meshUtility) {
+		HexCell h1 = cell.getNeighbor(direction);
+		HexCell h2 = cell.getNeighbor(direction.previous());
 		ColorRGBA c0 = colorExtractor.getColor(cell, map);
 		ColorRGBA c1 = c0;
 		ColorRGBA c2 = c0;
@@ -202,27 +249,10 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 			c2 = c1;
 			c3 = c1;
 		}
-
-		Triangle.computeTriangleNormal(v1, v2, v4, normal);
-		meshUtility.addVertice(v1);
-		meshUtility.addVertice(v2);
-		meshUtility.addVertice(v3);
-		meshUtility.addVertice(v4);
-		meshUtility.addNormal(normal);
-		meshUtility.addNormal(normal);
-		meshUtility.addNormal(normal);
-		meshUtility.addNormal(normal);
 		meshUtility.addColor(c0);
 		meshUtility.addColor(c1);
 		meshUtility.addColor(c2);
 		meshUtility.addColor(c3);
-		meshUtility.addTriangle(index, index + 1, index + 3);
-		meshUtility.addTriangle(index, index + 2, index + 1);
-
-		// add one of the points to the list of point for selection, with the highest
-		// cell as
-		// destination
-
 	}
 
 	private void triangulateCellSide(HexCell cell, MeshUtil meshUtility) {
@@ -236,7 +266,6 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 			}
 
 			Vector3f center = HexMetrics.getCellCenter(cell);
-			ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(0.90f);
 			for (int h = 0; h < height; h++) {
 				Vector3f v1 = center.add(HexMetrics.corners[direction.ordinal()]);
 				Vector3f v2 = center.add(HexMetrics.corners[direction.next().ordinal()]);
@@ -247,8 +276,28 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 				v3.y = (cell.getElevation() - h - 1) * HexMetrics.CELL_ELEVATION;
 				v4.y = v3.y;
 				meshUtility.addQuad(v1, v2, v3, v4);
-				meshUtility.addQuadColors(c1, c1, c1, c1);
+				points.put(v4, cell);
 			}
+		}
+	}
+
+	private void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
+		for (Direction direction : Direction.values()) {
+			colorizeCellSideDirection(cell, direction, meshUtility);
+		}
+	}
+
+	private void colorizeCellSideDirection(HexCell cell, Direction direction, MeshUtil meshUtility) {
+		ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(0.90f);
+		HexCell neighbor = cell.getNeighbor(direction);
+		int height = 0;
+		if (neighbor != null && neighbor.getElevation() < cell.getElevation()) {
+			height = cell.getElevation() - neighbor.getElevation();
+		} else if (neighbor == null) {
+			height = cell.getElevation() + 1;
+		}
+		for (int h = 0; h < height; h++) {
+			meshUtility.addQuadColors(c1, c1, c1, c1);
 		}
 	}
 
