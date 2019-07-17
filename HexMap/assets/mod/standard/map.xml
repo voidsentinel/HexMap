@@ -1,4 +1,6 @@
 <map>
+	<image id="mapRepresentationIcon">icons/settings-knobs.png</image>
+	
 	<image id="heightColorMapperIcon">icons/peaks.png</image>
 	<mapColorMapper id="heightColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor"

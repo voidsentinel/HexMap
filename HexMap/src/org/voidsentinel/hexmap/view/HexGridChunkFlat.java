@@ -59,6 +59,14 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 		representation.attachChild(terrain);
 	}
 
+	/**
+	 * Should be called only if representation is non empty. Will extract the colors
+	 * for each cell with the new extractor, and fill the color buffer of the mesh
+	 * with the new values
+	 * 
+	 * @param colorExtractor
+	 *           the new colorExtractor to use.
+	 */
 	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
 		this.colorExtractor = colorExtractor;
 		MeshUtil meshUtility = new MeshUtil();
@@ -117,7 +125,7 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 	private void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		ColorRGBA color = colorExtractor.getColor(cell, map);
 		MeshUtility.addColor(color);
-		for (Direction direction : Direction.values()) {
+		for (@SuppressWarnings("unused") Direction direction : Direction.values()) {
 			MeshUtility.addColor(color);
 			MeshUtility.addColor(color);
 		}

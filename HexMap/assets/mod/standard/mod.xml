@@ -1,5 +1,6 @@
 <mod icon="icon.png" id="standard" description="Standard Representation">
 	<file name="terrains.xml" />
 	<file name="map.xml"/>
+	<file name="images.xml"/>
 	<text>text.properties</text>
 </mod>
