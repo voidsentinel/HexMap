@@ -17,6 +17,7 @@ import org.voidsentinel.hexmap.utils.Alea;
 import org.voidsentinel.hexmap.utils.TerrainImage;
 import org.voidsentinel.hexmap.view.HexGrid;
 import org.voidsentinel.hexmap.view.HexMetrics;
+import org.voidsentinel.hexmap.view.ihm.DropDownButton;
 import org.voidsentinel.hexmap.view.ihm.ImageData;
 import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 import org.voidsentinel.hexmap.view.ihm.StepCameraControl;
@@ -37,7 +38,6 @@ import com.simsilica.lemur.TextField;
 import com.simsilica.lemur.component.ColoredComponent;
 import com.simsilica.lemur.component.IconComponent;
 import com.simsilica.lemur.core.GuiComponent;
-import com.simsilica.lemur.core.GuiControl;
 import com.simsilica.lemur.style.BaseStyles;
 import com.simsilica.lemur.style.ElementId;
 
@@ -102,6 +102,7 @@ public class HexTuto extends SimpleApplication {
 		addMapRepresentationRoll(0, hooverField);
 		addMapFeometryRoll(1, hooverField);
 		addExitButton(hooverField, "Quit game");
+
 	}
 
 	/**
@@ -117,30 +118,23 @@ public class HexTuto extends SimpleApplication {
 	}
 
 	private void addMapRepresentationRoll(int position, TextField hooverField) {
-		// Create a simple container for view elements
-		RollupPanel roll = new RollupPanel("View", new ElementId("viewPanel"), null);
-
-		guiNode.attachChild(roll);
-		roll.setLocalTranslation(position * 32, this.settings.getHeight() - 25, 0);
-
-		// set the initial icon
-		Button bt = roll.getTitleElement();
+		// defaul value
 		AbstractCellColorExtractor extract = colorMapperRepository.repository.getDefaultMapper();
 		ImageData image = ImageRepository.datas.getData(extract.getIconName());
 		String fileName = image.getFilename();
 		IconComponent icon = new IconComponent(fileName);
-		icon.setIconSize(new Vector2f(32, 32));
-		bt.setIcon(icon);
-		bt.setText("");
-		roll.setOpen(false);
-		// set the possibles actions
-		Container panel = new Container();
-		roll.setContents(panel);
+
+		// Create a simple container for view elements
+		DropDownButton ddb = new DropDownButton("", icon, new ElementId("visual"));
+		guiNode.attachChild(ddb);
+		ddb.setLocalTranslation(position * (DropDownButton.ICONSIZE+2), this.settings.getHeight() - DropDownButton.ICONSIZE, 0);
+		ddb.setHooverField(hooverField);
+
 		Iterator<Map.Entry<String, AbstractCellColorExtractor>> it = colorMapperRepository.repository.datas.entrySet()
 		      .iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, AbstractCellColorExtractor> colorizer = it.next();
-			Button button = createMenuButton(panel, colorizer.getKey(), colorizer.getKey(), hooverField, colorizer.getValue().getTextName());
+			icon = null;
 			String iconName = colorizer.getValue().getIconName();
 			if (iconName != null) {
 				image = ImageRepository.datas.getData(iconName);
@@ -149,118 +143,73 @@ public class HexTuto extends SimpleApplication {
 					if (fileName != null) {
 						icon = new IconComponent(fileName);
 						icon.setIconSize(new Vector2f(32, 32));
-						button.setIcon(icon);
-						button.setText("");
-						// button.setText(iconName);
-						// button.setTextVAlignment(VAlignment.Center);
-						// button.setTextHAlignment(HAlignment.Right);
 					}
 				}
 			}
-			button.addClickCommands(new Command<Button>() {
-				@Override
-				public void execute(Button source) {
-					// change the title element to match the selected one
-					Button bt = roll.getTitleElement();
-					ImageData image = ImageRepository.datas.getData(iconName);
-					String fileName = image.getFilename();
-					IconComponent icon = new IconComponent(fileName);
-					icon.setIconSize(new Vector2f(32, 32));
-					bt.setIcon(icon);
-					bt.setText("");
-					roll.setOpen(false);
-					// chage the color of the selected icon
-					
-					GuiComponent iconB = source.getIcon();
-					if (iconB != null) {
-						((ColoredComponent)iconB).setColor(ColorRGBA.Yellow);						
-					}
-					// change the extractor
-					mapNode.setColorExtractor(colorMapperRepository.repository.getData(colorizer.getKey()));
-				}
-			});
+			ddb.addButton("", icon, colorizer.getValue().getTextName(),
+			      new VisualCommand(colorMapperRepository.repository.getData(colorizer.getKey())));
 		}
 	}
 
 	private void addMapFeometryRoll(int position, final TextField hooverField) {
-		// Create a simple container for view elements
-		RollupPanel roll = new RollupPanel("Setting", new ElementId("geometryPanel"), null);
-		guiNode.attachChild(roll);
-		roll.setLocalTranslation(position * 32, this.settings.getHeight() - 25, 0);
-
-		// set the initial icon
-		Button bt = roll.getTitleElement();
+		// defaul value
 		ImageData image = ImageRepository.datas.getData("mapRepresentationIcon");
 		String fileName = image.getFilename();
 		IconComponent icon = new IconComponent(fileName);
-		icon.setIconSize(new Vector2f(32, 32));
-		bt.setIcon(icon);
-		bt.setText("");
-		roll.setOpen(false);
 
-		Container panel = new Container();
-		roll.setContents(panel);
+		// Create a simple container for view elements
+		DropDownButton ddb = new DropDownButton("", icon, new ElementId("geometry"));
+		guiNode.attachChild(ddb);
+		ddb.setLocalTranslation(position * (DropDownButton.ICONSIZE+2), this.settings.getHeight() - DropDownButton.ICONSIZE, 0);
+      ddb.setHooverField(hooverField);
+      
+	   ddb.addButton("Medium",   null, "", new GeometryCommand("org.voidsentinel.hexmap.view.HexGridChunkSlopped"));
+	   ddb.addButton("Low",      null, "", new GeometryCommand("org.voidsentinel.hexmap.view.HexGridChunkFlat"));
+	   ddb.addButton("very Low", null, "", new GeometryCommand("org.voidsentinel.hexmap.view.HexGridChunkFlatSimple"));
+	
+	}
+	
+	
+	protected class VisualCommand implements Command<Button> {
+		AbstractCellColorExtractor extractor = null;
 
-		Button hexButton = createMenuButton(panel, "Medium", "mediumButton", hooverField, "medium representatuon");
-		hexButton.addClickCommands(new Command<Button>() {
-			@Override
-			public void execute(Button source) {
+		public VisualCommand(AbstractCellColorExtractor initial) {
+			this.extractor = initial;
+		}
+
+		@Override
+		public void execute(Button source) {
+			if (extractor != null) {
+				mapNode.setColorExtractor(extractor);
+			}
+		}
+	}
+
+		
+	protected class GeometryCommand implements Command<Button> {
+		String geometry = null;
+
+		public GeometryCommand(String initial) {
+			this.geometry = initial;
+		}
+
+		@Override
+		public void execute(Button source) {
+			if (geometry != null) {
 				try {
-					GuiComponent iconB = source.getIcon();
-					if (iconB != null) {
-						((ColoredComponent)iconB).setColor(ColorRGBA.Yellow);						
-					}
-					source.setColor(ColorRGBA.Yellow);
-					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkSlopped");
-					roll.setOpen(false);
+					mapNode.setMeshGeneration(geometry);
 				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 				      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}				
 			}
-		});
-
-		Button triButton = createMenuButton(panel, "Low", "low", hooverField, "low representatuon");
-		triButton.addClickCommands(new Command<Button>() {
-			@Override
-			public void execute(Button source) {
-				try {
-					GuiComponent iconB = source.getIcon();
-					if (iconB != null) {
-						((ColoredComponent)iconB).setColor(ColorRGBA.Yellow);						
-					}
-					source.setColor(ColorRGBA.Yellow);
-					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkFlat");
-					roll.setOpen(false);
-				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		Button veryLowRep = createMenuButton(panel, "Very low", "verylow", hooverField, "very low representatuon");
-		veryLowRep.addClickCommands(new Command<Button>() {
-			@Override
-			public void execute(Button source) {
-				try {
-					mapNode.setMeshGeneration("org.voidsentinel.hexmap.view.HexGridChunkFlatSimple");
-					roll.setOpen(false);
-				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
+		}
 	}
 
 	private Button createMenuButton(Container panel, String text, String id, TextField hooverField, String toolipText) {
 		Button hexButton = createButton(id, text, hooverField, toolipText);
-	   panel.addChild(hexButton);
+		panel.addChild(hexButton);
 		return hexButton;
 	}
 
@@ -283,8 +232,8 @@ public class HexTuto extends SimpleApplication {
 		});
 		return hexButton;
 	}
-	
-	private void addExitButton(TextField hooverField, String toolipText) {		
+
+	private void addExitButton(TextField hooverField, String toolipText) {
 		Button bt = createButton("exitButton", "", hooverField, toolipText);
 		ImageData image = ImageRepository.datas.getData("exitIcon");
 		String fileName = image.getFilename();
@@ -298,7 +247,7 @@ public class HexTuto extends SimpleApplication {
 				HexTuto.getInstance().stop();
 			}
 		});
-		
+
 		guiNode.attachChild(bt);
 		bt.setLocalTranslation(this.settings.getWidth() - 35, this.settings.getHeight() - 25, 0);
 
