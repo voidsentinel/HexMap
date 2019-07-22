@@ -98,7 +98,7 @@ public class HexTuto extends SimpleApplication {
 		Container panel = new Container();
 		guiNode.attachChild(panel);
 		
-		panel.setBackground(new QuadBackgroundComponent(new ColorRGBA(0.36f, 0.54f, 0.66f, 0.9f)));
+		panel.setBackground(new QuadBackgroundComponent(new ColorRGBA(0.36f, 0.54f, 0.66f, 0.75f)));
 		panel.setPreferredSize(new Vector3f(settings.getWidth(),  25f, 0f));
 		panel.setLocalTranslation(0, settings.getHeight(), 0);
 		
@@ -139,10 +139,12 @@ public class HexTuto extends SimpleApplication {
 		ddb.setLocalTranslation(position * (DropDownButton.ICONSIZE+2), this.settings.getHeight() - hooverField.getPreferredSize().y-1, 0);
 		ddb.setHooverField(hooverField);
 
+		int count = -1;
 		Iterator<Map.Entry<String, AbstractCellColorExtractor>> it = colorMapperRepository.repository.datas.entrySet()
 		      .iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, AbstractCellColorExtractor> colorizer = it.next();
+			count++;
 			icon = null;
 			String iconName = colorizer.getValue().getIconName();
 			if (iconName != null) {
@@ -157,6 +159,9 @@ public class HexTuto extends SimpleApplication {
 			}
 			ddb.addButton("", icon, colorizer.getValue().getTextName(),
 			      new VisualCommand(colorMapperRepository.repository.getData(colorizer.getKey())));
+			if (extract == colorizer.getValue()) {
+				ddb.setSelected(count);
+			}
 		}
 	}
 

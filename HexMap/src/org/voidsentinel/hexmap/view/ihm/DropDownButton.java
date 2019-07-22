@@ -31,13 +31,13 @@ import com.simsilica.lemur.style.ElementId;
  */
 public class DropDownButton extends Button {
 
-	public static float			ICONSIZE			= 32f;
+	public static float	ICONSIZE			= 32f;
 
-	private boolean				opened			= false;
-	private Container				contents			= null;
-	private Button					lastSelected	= null;
-	private TextField				hooverField		= null;
-	private String					toolTip			= "";
+	private boolean		opened			= false;
+	private Container		contents			= null;
+	private Button			lastSelected	= null;
+	private TextField		hooverField		= null;
+	private String			toolTip			= "";
 
 	public DropDownButton(String text, IconComponent icon, ElementId elementId) {
 		super(text, true, elementId, GuiGlobals.getInstance().getStyles().getDefaultStyle());
@@ -67,8 +67,8 @@ public class DropDownButton extends Button {
 		bt.setIcon(icon);
 		bt.setTextVAlignment(VAlignment.Center);
 
-		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent.create(ImageRepository.datas.getData("buttonBackdround").getFilename(), 1f,
-		      6, 6, 10, 10, .1f, false);
+		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent
+		      .create(ImageRepository.datas.getData("buttonBackdround").getFilename(), 1f, 5, 5, 11, 11, .1f, false);
 		bt.setBackground(btTexture);
 //		bt.setBackground(new QuadBackgroundComponent(new ColorRGBA(0.36f, 0.54f, 0.66f, 0.5f)));
 		if (helpString != null) {
@@ -91,6 +91,23 @@ public class DropDownButton extends Button {
 				HexTuto.getInstance().getGuiNode().detachChild(contents);
 			}
 		}
+	}
+
+	public void setSelected(int position) {
+		Button bt = (Button) contents.getChild(position);
+
+		if (lastSelected != null && bt != lastSelected) {
+			lastSelected.setColor(ColorRGBA.White);
+			if (lastSelected.getIcon() != null) {
+				((ColoredComponent) lastSelected.getIcon()).setColor(ColorRGBA.White);
+			}
+		}
+
+		if (bt.getIcon() != null) {
+			((ColoredComponent) bt.getIcon()).setColor(ColorRGBA.Yellow);
+		}
+		bt.setColor(ColorRGBA.Yellow);
+		lastSelected = bt;
 	}
 
 	public boolean isOpen() {
