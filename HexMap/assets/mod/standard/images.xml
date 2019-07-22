@@ -1,3 +1,4 @@
 <images>
 	<image id="exitIcon">icons/power-button.png</image>
+	<image id="buttonBackdround">border.png</image>
 </images>
