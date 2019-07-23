@@ -29,15 +29,15 @@ import com.jme3.asset.plugins.FileLocator;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
+import com.jme3.texture.Texture;
 import com.simsilica.lemur.Button;
 import com.simsilica.lemur.Command;
 import com.simsilica.lemur.Container;
 import com.simsilica.lemur.GuiGlobals;
-import com.simsilica.lemur.RollupPanel;
 import com.simsilica.lemur.TextField;
-import com.simsilica.lemur.component.ColoredComponent;
+import com.simsilica.lemur.VAlignment;
 import com.simsilica.lemur.component.IconComponent;
-import com.simsilica.lemur.core.GuiComponent;
+import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.style.BaseStyles;
 import com.simsilica.lemur.style.ElementId;
 
@@ -94,11 +94,20 @@ public class HexTuto extends SimpleApplication {
 		getFlyByCamera().setEnabled(false);
 		mouseInput.setCursorVisible(true);
 
+		
+		Container panel = new Container();
+		guiNode.attachChild(panel);
+		
+		panel.setBackground(new QuadBackgroundComponent(new ColorRGBA(0.36f, 0.54f, 0.66f, 0.75f)));
+		panel.setPreferredSize(new Vector3f(settings.getWidth(),  25f, 0f));
+		panel.setLocalTranslation(0, settings.getHeight(), 0);
+		
 		TextField hooverField = new TextField("", new ElementId("tooltipElement"));
-		guiNode.attachChild(hooverField);
-		hooverField.setLocalTranslation(5, settings.getHeight(), 0);
 		hooverField.setColor(ColorRGBA.White);
-
+		hooverField.setPreferredSize(new Vector3f(settings.getWidth(),  25f, 0f));
+		hooverField.setTextVAlignment(VAlignment.Center);
+      panel.addChild(hooverField);		
+		
 		addMapRepresentationRoll(0, hooverField);
 		addMapFeometryRoll(1, hooverField);
 		addExitButton(hooverField, "Quit game");
@@ -127,13 +136,15 @@ public class HexTuto extends SimpleApplication {
 		// Create a simple container for view elements
 		DropDownButton ddb = new DropDownButton("", icon, new ElementId("visual"));
 		guiNode.attachChild(ddb);
-		ddb.setLocalTranslation(position * (DropDownButton.ICONSIZE+2), this.settings.getHeight() - DropDownButton.ICONSIZE, 0);
+		ddb.setLocalTranslation(position * (DropDownButton.ICONSIZE+2), this.settings.getHeight() - hooverField.getPreferredSize().y-1, 0);
 		ddb.setHooverField(hooverField);
 
+		int count = -1;
 		Iterator<Map.Entry<String, AbstractCellColorExtractor>> it = colorMapperRepository.repository.datas.entrySet()
 		      .iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, AbstractCellColorExtractor> colorizer = it.next();
+			count++;
 			icon = null;
 			String iconName = colorizer.getValue().getIconName();
 			if (iconName != null) {
@@ -148,6 +159,9 @@ public class HexTuto extends SimpleApplication {
 			}
 			ddb.addButton("", icon, colorizer.getValue().getTextName(),
 			      new VisualCommand(colorMapperRepository.repository.getData(colorizer.getKey())));
+			if (extract == colorizer.getValue()) {
+				ddb.setSelected(count);
+			}
 		}
 	}
 
@@ -160,7 +174,7 @@ public class HexTuto extends SimpleApplication {
 		// Create a simple container for view elements
 		DropDownButton ddb = new DropDownButton("", icon, new ElementId("geometry"));
 		guiNode.attachChild(ddb);
-		ddb.setLocalTranslation(position * (DropDownButton.ICONSIZE+2), this.settings.getHeight() - DropDownButton.ICONSIZE, 0);
+		ddb.setLocalTranslation(position * (DropDownButton.ICONSIZE+2), this.settings.getHeight() - hooverField.getPreferredSize().y-1, 0);
       ddb.setHooverField(hooverField);
       
 	   ddb.addButton("Medium",   null, "", new GeometryCommand("org.voidsentinel.hexmap.view.HexGridChunkSlopped"));

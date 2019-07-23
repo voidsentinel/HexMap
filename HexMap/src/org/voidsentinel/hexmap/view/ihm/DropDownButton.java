@@ -19,6 +19,7 @@ import com.simsilica.lemur.component.ColoredComponent;
 import com.simsilica.lemur.component.IconComponent;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.component.SpringGridLayout;
+import com.simsilica.lemur.component.TbtQuadBackgroundComponent;
 import com.simsilica.lemur.style.ElementId;
 
 /**
@@ -34,7 +35,6 @@ public class DropDownButton extends Button {
 	private Button			lastSelected	= null;
 	private TextField		hooverField		= null;
 	private String			toolTip			= "";
-	
 
 	public DropDownButton(String text, IconComponent icon, ElementId elementId) {
 		super(text, true, elementId, GuiGlobals.getInstance().getStyles().getDefaultStyle());
@@ -47,7 +47,8 @@ public class DropDownButton extends Button {
 
 		contents = new Container(elementId.child("content"));
 		contents.setLayout(new SpringGridLayout(Axis.Y, Axis.X, FillMode.First, FillMode.Even));
-		//contents.setBackground(new QuadBackgroundComponent(new ColorRGBA(1, 0.56f, 0f, 0.5f)));// chrome yellow		
+		contents.setBackground(new QuadBackgroundComponent(new ColorRGBA(1, 0.56f, 0f, 0.5f)));// chrome yellow		
+
 	}
 
 	public DropDownButton(String text, String iconFile, ElementId elementId) {
@@ -61,7 +62,11 @@ public class DropDownButton extends Button {
 			icon.setIconSize(new Vector2f(ICONSIZE, ICONSIZE));
 		bt.setIcon(icon);
 		bt.setTextVAlignment(VAlignment.Center);
-		bt.setBackground(new QuadBackgroundComponent(new ColorRGBA(0.36f, 0.54f, 0.66f, 0.5f)));
+
+		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent
+		      .create(ImageRepository.datas.getData("buttonBackdround").getFilename(), 1f, 5, 5, 11, 11, .1f, false);
+		bt.setBackground(btTexture);
+//		bt.setBackground(new QuadBackgroundComponent(new ColorRGBA(0.36f, 0.54f, 0.66f, 0.5f)));
 		if (helpString != null) {
 			bt.setUserData("tooltip", helpString);
 			bt.addCommands(ButtonAction.HighlightOn, new HighlightOnCommand());
@@ -82,6 +87,23 @@ public class DropDownButton extends Button {
 				HexTuto.getInstance().getGuiNode().detachChild(contents);
 			}
 		}
+	}
+
+	public void setSelected(int position) {
+		Button bt = (Button) contents.getChild(position);
+
+		if (lastSelected != null && bt != lastSelected) {
+			lastSelected.setColor(ColorRGBA.White);
+			if (lastSelected.getIcon() != null) {
+				((ColoredComponent) lastSelected.getIcon()).setColor(ColorRGBA.White);
+			}
+		}
+
+		if (bt.getIcon() != null) {
+			((ColoredComponent) bt.getIcon()).setColor(ColorRGBA.Yellow);
+		}
+		bt.setColor(ColorRGBA.Yellow);
+		lastSelected = bt;
 	}
 
 	public boolean isOpen() {
