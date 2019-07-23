@@ -7,7 +7,6 @@ import org.voidsentinel.hexmap.HexTuto;
 
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
-import com.jme3.math.Vector3f;
 import com.simsilica.lemur.Axis;
 import com.simsilica.lemur.Button;
 import com.simsilica.lemur.Command;
@@ -48,8 +47,7 @@ public class DropDownButton extends Button {
 
 		contents = new Container(elementId.child("content"));
 		contents.setLayout(new SpringGridLayout(Axis.Y, Axis.X, FillMode.First, FillMode.Even));
-		//contents.setBackground(new QuadBackgroundComponent(new ColorRGBA(1, 0.56f, 0f, 0.5f)));// chrome yellow
-		
+		//contents.setBackground(new QuadBackgroundComponent(new ColorRGBA(1, 0.56f, 0f, 0.5f)));// chrome yellow		
 	}
 
 	public DropDownButton(String text, String iconFile, ElementId elementId) {
