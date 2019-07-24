@@ -3,7 +3,11 @@
  */
 package org.voidsentinel.hexmap.view.ihm;
 
+import java.util.Iterator;
+import java.util.List;
+
 import org.voidsentinel.hexmap.HexTuto;
+import org.voidsentinel.hexmap.utils.ColorParser;
 
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
@@ -15,9 +19,7 @@ import com.simsilica.lemur.FillMode;
 import com.simsilica.lemur.GuiGlobals;
 import com.simsilica.lemur.TextField;
 import com.simsilica.lemur.VAlignment;
-import com.simsilica.lemur.component.ColoredComponent;
 import com.simsilica.lemur.component.IconComponent;
-import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.component.SpringGridLayout;
 import com.simsilica.lemur.component.TbtQuadBackgroundComponent;
 import com.simsilica.lemur.style.ElementId;
@@ -28,26 +30,40 @@ import com.simsilica.lemur.style.ElementId;
  */
 public class DropDownButton extends Button {
 
-	public static float	ICONSIZE			= 32f;
+	public static float	ICONSIZE			= 24f;
 
 	private boolean		opened			= false;
 	private Container		contents			= null;
 	private Button			lastSelected	= null;
 	private TextField		hooverField		= null;
 	private String			toolTip			= "";
+	private boolean		showSelected	= true;
+
+	final ColorRGBA		BROWN				= ColorParser.parse("#854C30");
 
 	public DropDownButton(String text, IconComponent icon, ElementId elementId) {
+		this(text, icon, elementId, true);
+	}
+
+	public DropDownButton(String text, IconComponent icon, ElementId elementId, boolean showLastSelected) {
 		super(text, true, elementId, GuiGlobals.getInstance().getStyles().getDefaultStyle());
 		if (icon != null)
 			icon.setIconSize(new Vector2f(ICONSIZE, ICONSIZE));
 		this.setIcon(icon);
 		this.setTextVAlignment(VAlignment.Center);
-		this.setBackground(new QuadBackgroundComponent(new ColorRGBA(0, 0.5f, 1f, 0.5f)));// azure
+
+		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent.create(
+				ImageRepository.datas.getData("buttonSelectedBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
+		this.setBackground(btTexture);
+
+		this.showSelected = showLastSelected;
+
 		this.addClickCommands(new ToggleOpenCommand());
 
 		contents = new Container(elementId.child("content"));
 		contents.setLayout(new SpringGridLayout(Axis.Y, Axis.X, FillMode.First, FillMode.Even));
-		contents.setBackground(new QuadBackgroundComponent(new ColorRGBA(1, 0.56f, 0f, 0.5f)));// chrome yellow		
+		// contents.setBackground(new QuadBackgroundComponent(new ColorRGBA(1, 0.56f,
+		// 0f, 0.5f)));// chrome yellow
 
 	}
 
@@ -57,16 +73,19 @@ public class DropDownButton extends Button {
 
 	public void addButton(String titleString, IconComponent icon, String helpString, Command<Button> command) {
 		Button bt = new Button(titleString, this.getElementId().child("menuButton" + contents.getChildren().size()),
-		      GuiGlobals.getInstance().getStyles().getDefaultStyle());
+				GuiGlobals.getInstance().getStyles().getDefaultStyle());
 		if (icon != null)
 			icon.setIconSize(new Vector2f(ICONSIZE, ICONSIZE));
 		bt.setIcon(icon);
 		bt.setTextVAlignment(VAlignment.Center);
 
 		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent
-		      .create(ImageRepository.datas.getData("buttonBackdround").getFilename(), 1f, 5, 5, 11, 11, .1f, false);
+				.create(ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
 		bt.setBackground(btTexture);
-//		bt.setBackground(new QuadBackgroundComponent(new ColorRGBA(0.36f, 0.54f, 0.66f, 0.5f)));
+		// bt.setBackground(new QuadBackgroundComponent(new ColorRGBA(0.36f, 0.54f,
+		// 0.66f, 0.5f)));
+		// bt.setBackground(new QuadBackgroundComponent(new
+		// IconComponent(ImageRepository.datas.getData("buttonBackground").getFilename()).getImageTexture()));
 		if (helpString != null) {
 			bt.setUserData("tooltip", helpString);
 			bt.addCommands(ButtonAction.HighlightOn, new HighlightOnCommand());
@@ -81,29 +100,56 @@ public class DropDownButton extends Button {
 			opened = open;
 			if (open) {
 				HexTuto.getInstance().getGuiNode().attachChild(contents);
-				contents.setLocalTranslation(this.getLocalTranslation().x,
-				      this.getLocalTranslation().y - this.getSize().y - 2, 0);
+				contents.setLocalTranslation(this.getWorldTranslation().x,
+						this.getWorldTranslation().y - this.getSize().y - 2, 0);
 			} else {
 				HexTuto.getInstance().getGuiNode().detachChild(contents);
 			}
 		}
 	}
 
+	/**
+	 * change the representation of the dropdonw button. does not act on the
+	 * selection (ie does not perform the click command)
+	 * 
+	 * @param bt
+	 */
 	public void setSelected(int position) {
 		Button bt = (Button) contents.getChild(position);
+		setSelected(bt);
+	}
 
-		if (lastSelected != null && bt != lastSelected) {
-			lastSelected.setColor(ColorRGBA.White);
-			if (lastSelected.getIcon() != null) {
-				((ColoredComponent) lastSelected.getIcon()).setColor(ColorRGBA.White);
+	/**
+	 * change the representation of the dropdonw button. does not act on the
+	 * selection (ie does not perform the click command)
+	 * 
+	 * @param bt
+	 */
+	public void setSelected(Button bt) {
+		if (showSelected) {
+			// clear the currently selected
+			if (lastSelected != null && bt != lastSelected) {
+				TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent.create(
+						ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
+				lastSelected.setBackground(btTexture);
 			}
-		}
 
-		if (bt.getIcon() != null) {
-			((ColoredComponent) bt.getIcon()).setColor(ColorRGBA.Yellow);
+			// copy source info into ddb button, if needed
+			if (bt.getIcon() != null) {
+				setIcon(bt.getIcon().clone());
+			} else {
+				setIcon(null);
+			}
+			setText(bt.getText());
+
+			// change the newly selected
+			TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent.create(
+					ImageRepository.datas.getData("buttonSelectedBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
+			bt.setBackground(btTexture);
+
+			// remember the currenlty selected
+			lastSelected = bt;
 		}
-		bt.setColor(ColorRGBA.Yellow);
-		lastSelected = bt;
 	}
 
 	public boolean isOpen() {
@@ -118,7 +164,8 @@ public class DropDownButton extends Button {
 	}
 
 	/**
-	 * @param hooverField the hooverField to set
+	 * @param hooverField
+	 *           the hooverField to set
 	 */
 	public void setHooverField(TextField hooverField) {
 		this.hooverField = hooverField;
@@ -132,7 +179,8 @@ public class DropDownButton extends Button {
 	}
 
 	/**
-	 * @param toolTip the toolTip to set
+	 * @param toolTip
+	 *           the toolTip to set
 	 */
 	public void setToolTip(String toolTip) {
 		this.toolTip = toolTip;
@@ -146,6 +194,7 @@ public class DropDownButton extends Button {
 	protected class ToggleOpenCommand implements Command<Button> {
 		@Override
 		public void execute(Button source) {
+			System.out.println(source.getElementId().getId() + " cliqué");
 			setOpen(!isOpen());
 		}
 	}
@@ -159,28 +208,9 @@ public class DropDownButton extends Button {
 
 		@Override
 		public void execute(Button source) {
-			// put old selected as correct color
-			if (lastSelected != null) {
-				lastSelected.setColor(ColorRGBA.White);
-				if (lastSelected.getIcon() != null) {
-					((ColoredComponent) lastSelected.getIcon()).setColor(ColorRGBA.White);
-				}
-			}
-			// copy source info into ddb button
-			if (source.getIcon() != null) {
-				setIcon(source.getIcon().clone());
-			} else {
-				setIcon(null);
-			}
-			setText(source.getText());
-			setOpen(false);
-			// change it into the list (for next display)
-			if (source.getIcon() != null) {
-				((ColoredComponent) source.getIcon()).setColor(ColorRGBA.Yellow);
-			}
-			source.setColor(ColorRGBA.Yellow);
-			// select the option and close the menu
-			lastSelected = source;
+			// change the look
+			setSelected(source);
+			// close the menu
 			setOpen(false);
 			// execute
 			if (internal != null)

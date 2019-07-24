@@ -1,7 +1,5 @@
-<map>
-	<image id="mapRepresentationIcon">icons/settings-knobs.png</image>
-	
-	<image id="heightColorMapperIcon">icons/peaks.png</image>
+<map>	
+	<image id="heightColorMapperIcon">icons/map-height.png</image>
 	<mapColorMapper id="heightColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor"
 		default="true" icon="heightColorMapperIcon"
@@ -10,27 +8,27 @@
 		groundColorMap="colorMap/groundColormap.png"
 		waterColorMap="colorMap/waterColormap.png" />
 
-	<image id="heatColorMapperIcon">icons/thermometer-hot.png</image>
+	<image id="heatColorMapperIcon">icons/map-temperature.png</image>
 	<mapColorMapper id="heatColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.TemperatureColorExtractor"
 		icon="heatColorMapperIcon" colorMap="colorMap/tempColorMap.png" />
 
-	<image id="fertilityColorMapperIcon">icons/grass.png</image>
+	<image id="fertilityColorMapperIcon">icons/map-fertility.png</image>
 	<mapColorMapper id="fertilityColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.FertilityColorExtractor"
 		icon="fertilityColorMapperIcon" colorMap="colorMap/soilFertility2.png" />
 
-	<image id="humidityColorMapperIcon">icons/raining.png</image>
+	<image id="humidityColorMapperIcon">icons/map-humidity.png</image>
 	<mapColorMapper id="humidityColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.HumidityColorExtractor"
 		icon="humidityColorMapperIcon" colorMap="colorMap/humidity2.png" />
 
-	<image id="cityColorMapperIcon">icons/village.png</image>
+	<image id="cityColorMapperIcon">icons/map-cities.png</image>
 	<mapColorMapper id="cityColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.CityValueColorExtractor"
 		icon="cityColorMapperIcon" colorMap="colorMap/cityColorMap.png" />
 
-	<image id="pathColorMapperIcon">icons/path.png</image>
+	<image id="pathColorMapperIcon">icons/map-path.png</image>
 	<mapColorMapper id="pathColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.PathValueColorExtractor"
 		icon="pathColorMapperIcon" colorMap="colorMap/cityColorMap.png" />
