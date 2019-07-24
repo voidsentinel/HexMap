@@ -240,20 +240,24 @@ public class ModLoader {
 	}
 
 	private static void loadImage(Element node, String directory) {
-		
 		String id = node.getAttributeValue("id");
-		String file = directory +'/'+node.getValue().trim();
-		ImageData data = new ImageData(id, file);
-		ImageRepository.datas.addData(data, true);
-		LOG.log(Level.INFO, "   loading image " + id + " as " + data.getFilename());
+		if (ImageRepository.datas.getData(id) == null) {
+			String file = directory + '/' + node.getValue().trim();
+			ImageData data = new ImageData(id, file);
+			ImageRepository.datas.addData(data);
+			LOG.log(Level.INFO, "   loading image " + id + " as " + data.getFilename());
+		} else {
+			LOG.log(Level.INFO, "   image " + id + " ignored as already existing");
+		}
 	}
-	
+
 	/**
 	 * Load a property file
-	 * @param node the XML node containing the information
+	 * 
+	 * @param node      the XML node containing the information
 	 * @param directory the directory of the current XML file
 	 */
-	private static void loadText(Element node, String directory) {		
+	private static void loadText(Element node, String directory) {
 //		String file = directory +'/'+node.getValue().trim();
 //		Configurations configs = new Configurations();
 //		
@@ -265,7 +269,6 @@ public class ModLoader {
 //			LOG.log(Level.SEVERE, e.getLocalizedMessage());
 //		}
 	}
-	
 
 	/**
 	 * Load a terrain
@@ -275,46 +278,47 @@ public class ModLoader {
 	 */
 	private static void loadTerrain(Element node, String directory) {
 		String id = node.getAttributeValue("id");
-		boolean clear = node.getAttributeValue("clear") == null ? false
-		      : Boolean.getBoolean(node.getAttributeValue("clear"));
-		LOG.log(Level.INFO, "   loading terrain " + id);
-		TerrainData terrain = new TerrainData(id);
 
-		// get the Center UV coordinates
-		List<Element> uvt = node.getChildren("uvcenter");
-		Iterator<Element> ituvt = uvt.iterator();
-		while (ituvt.hasNext()) {
-			Element uvn = ituvt.next();
-			Vector2f uv = VectorUtils.vector2fFromString(uvn.getValue());
-			terrain.uvCenter.add(uv);
-		}
+		if (TerrainRepository.datas.getData(id) == null) {
+			LOG.log(Level.INFO, "   loading terrain " + id);
+			TerrainData terrain = new TerrainData(id);
 
-		Element uvSize = node.getChild("uvsize");
-		if (uvSize != null)
-			terrain.setUVSize(Float.parseFloat(uvSize.getValue().trim()));
-
-		// get the colors
-		List<Element> uvc = node.getChildren("color");
-		Iterator<Element> ituvc = uvc.iterator();
-		while (ituvc.hasNext()) {
-			Element uvn = ituvc.next();
-			ColorRGBA color = ColorParser.parse(uvn.getValue().trim());
-			if (color != null) {
-				terrain.baseColors.add(color);
+			// get the Center UV coordinates
+			List<Element> uvt = node.getChildren("uvcenter");
+			Iterator<Element> ituvt = uvt.iterator();
+			while (ituvt.hasNext()) {
+				Element uvn = ituvt.next();
+				Vector2f uv = VectorUtils.vector2fFromString(uvn.getValue());
+				terrain.uvCenter.add(uv);
 			}
-		}
-		// get the border colors
-		List<Element> uvb = node.getChildren("borderColor");
-		Iterator<Element> ituvb = uvb.iterator();
-		while (ituvb.hasNext()) {
-			Element uvn = ituvb.next();
-			ColorRGBA color = ColorParser.parse(uvn.getValue().trim());
-			if (color != null) {
-				terrain.borderColor = color;
-			}
-		}
 
-		TerrainRepository.datas.addData(terrain, clear);
+			Element uvSize = node.getChild("uvsize");
+			if (uvSize != null)
+				terrain.setUVSize(Float.parseFloat(uvSize.getValue().trim()));
+
+			// get the colors
+			List<Element> uvc = node.getChildren("color");
+			Iterator<Element> ituvc = uvc.iterator();
+			while (ituvc.hasNext()) {
+				Element uvn = ituvc.next();
+				ColorRGBA color = ColorParser.parse(uvn.getValue().trim());
+				if (color != null) {
+					terrain.baseColors.add(color);
+				}
+			}
+			// get the border colors
+			List<Element> uvb = node.getChildren("borderColor");
+			Iterator<Element> ituvb = uvb.iterator();
+			while (ituvb.hasNext()) {
+				Element uvn = ituvb.next();
+				ColorRGBA color = ColorParser.parse(uvn.getValue().trim());
+				if (color != null) {
+					terrain.borderColor = color;
+				}
+			}
+
+			TerrainRepository.datas.addData(terrain);
+		}
 	}
 
 	private static void loadTerrainMaterial(Element node, String directory) {
@@ -327,59 +331,59 @@ public class ModLoader {
 		;
 	};
 
-	
 	private static void loadMapColorMapper(Element node, String directory) {
 		String className = null;
 		String id = node.getAttributeValue("id").trim().toLowerCase();
+		if (colorMapperRepository.repository.getData(id) == null) {
 
-		if (node.getAttributeValue("class") != null) {
-			className = node.getAttributeValue("class").trim();
-			Class<?> clazz;
-			try {
-				clazz = Class.forName(className);
-				Constructor<?> constructor = clazz.getConstructor(String.class);
-				Object instance = constructor.newInstance(id);
-				colorMapperRepository.repository.addData((AbstractCellColorExtractor) (instance), true);
-			} catch (ClassNotFoundException e) {
-				LOG.log(Level.SEVERE, "Impossible to find class " + className);
-			} catch (NoSuchMethodException e) {
-				LOG.log(Level.SEVERE, "Impossible to find class constructor" + className);
-			} catch (SecurityException e) {
-				LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className+ "due to security");
-			} catch (InstantiationException e) {
-				LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
-			} catch (IllegalAccessException e) {
-				LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
-			} catch (IllegalArgumentException e) {
-				LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
-			} catch (InvocationTargetException e) {
-				LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+			if (node.getAttributeValue("class") != null) {
+				className = node.getAttributeValue("class").trim();
+				Class<?> clazz;
+				try {
+					clazz = Class.forName(className);
+					Constructor<?> constructor = clazz.getConstructor(String.class);
+					Object instance = constructor.newInstance(id);
+					colorMapperRepository.repository.addData((AbstractCellColorExtractor) (instance));
+				} catch (ClassNotFoundException e) {
+					LOG.log(Level.SEVERE, "Impossible to find class " + className);
+				} catch (NoSuchMethodException e) {
+					LOG.log(Level.SEVERE, "Impossible to find class constructor" + className);
+				} catch (SecurityException e) {
+					LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className + "due to security");
+				} catch (InstantiationException e) {
+					LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+				} catch (IllegalAccessException e) {
+					LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+				} catch (IllegalArgumentException e) {
+					LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+				} catch (InvocationTargetException e) {
+					LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+				}
 			}
-		}
 
-		AbstractCellColorExtractor colorExt = colorMapperRepository.repository.getData(id);
-		String icon = node.getAttributeValue("icon");
-		if (icon != null) {
-			colorExt.setIconName(icon.trim().toLowerCase());
-		}
-		String text = node.getAttributeValue("icon");
-		if (text != null) {
-			colorExt.setTextName(text.trim().toLowerCase());
-		} else {
-			colorExt.setTextName(id);			
-		}
+			AbstractCellColorExtractor colorExt = colorMapperRepository.repository.getData(id);
+			String icon = node.getAttributeValue("icon");
+			if (icon != null) {
+				colorExt.setIconName(icon.trim().toLowerCase());
+			}
+			String text = node.getAttributeValue("icon");
+			if (text != null) {
+				colorExt.setTextName(text.trim().toLowerCase());
+			} else {
+				colorExt.setTextName(id);
+			}
 
-		List<Attribute> attributes = node.getAttributes();
-		removeAttribute("id", attributes);
-		removeAttribute("class", attributes);
-		removeAttribute("icon", attributes);
-		removeAttribute("text", attributes);
-		
+			List<Attribute> attributes = node.getAttributes();
+			removeAttribute("id", attributes);
+			removeAttribute("class", attributes);
+			removeAttribute("icon", attributes);
+			removeAttribute("text", attributes);
 
-		Iterator<Attribute> it = attributes.iterator();
-		while (it.hasNext()) {
-			Attribute attribute = it.next();
-			colorExt.addDataParameters(attribute.getName().toLowerCase(), attribute.getValue(), directory + "/");
+			Iterator<Attribute> it = attributes.iterator();
+			while (it.hasNext()) {
+				Attribute attribute = it.next();
+				colorExt.addDataParameters(attribute.getName().toLowerCase(), attribute.getValue(), directory + "/");
+			}
 		}
 	}
 

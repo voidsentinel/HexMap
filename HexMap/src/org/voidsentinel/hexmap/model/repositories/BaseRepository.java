@@ -26,12 +26,12 @@ public class BaseRepository<T extends RepositoryData> {
 	 *              added to the parameters of th eold.
 	 * @exception IllegalArgumentException if data is null
 	 */
-	public void addData(T data, boolean clear) throws IllegalArgumentException {
+	public void addData(T data) throws IllegalArgumentException {
 		if (data == null) {
 			throw new IllegalArgumentException();
 		}
 		T source = datas.get(data.id.toLowerCase());
-		if (source == null || clear) {
+		if (source == null) {
 			source = data;
 			datas.put(data.id.toLowerCase(), data);
 		} else {

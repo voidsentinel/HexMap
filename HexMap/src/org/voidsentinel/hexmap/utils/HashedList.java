@@ -1,5 +1,5 @@
 /**
- * 
+ * Project HexMap
  */
 package org.voidsentinel.hexmap.utils;
 
@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * @author guipatry
+ * This class store data both as a list and a hashmap, allowing access both by
+ * key (hash) or by index. This allows for a
+ * 
+ * @author VoidSentinel
  *
  */
 public class HashedList<K, V extends Comparable<V>> {
@@ -15,20 +18,34 @@ public class HashedList<K, V extends Comparable<V>> {
 	public ArrayList<V>	list	= new ArrayList<V>();
 	public HashMap<K, V>	map	= new HashMap<K, V>();
 
+	/**
+	 * access by index to an alement in the list
+	 * 
+	 * @param index the 0-based index
+	 * @return the data, or null if not existing
+	 */
 	public V get(int index) {
 		return list.get(index);
 	}
 
+	/**
+	 * access by key to an element in the map
+	 * 
+	 * @param key the key of the data to be accessed
+	 * @return the data, or null if not existing
+	 */
 	public V get(K key) {
 		return map.get(key);
 	}
 
 	/**
-	 * add a couple key / value in the data
+	 * add a couple key / value in the data. the data is added to both the list and
+	 * the map. If the data was present in the list, it is removed from its old
+	 * position before beeing added at the end.
 	 * 
 	 * @param k the key
 	 * @param v the object
-	 * @return the previous object with the same key, or null if no such obejct
+	 * @return the previous object with the same key, or null if no such object
 	 *         existed
 	 */
 	public V add(K k, V v) {
@@ -41,6 +58,9 @@ public class HashedList<K, V extends Comparable<V>> {
 	}
 
 	/**
+	 * remove an object designated by it's key. the object is first removed from the
+	 * map, and if it was present in it, is then removed from the list (removal from
+	 * list imply a costly full list scan, thus the check)
 	 * 
 	 * @param k the key to remove
 	 * @return
@@ -53,10 +73,18 @@ public class HashedList<K, V extends Comparable<V>> {
 		return old;
 	}
 
+	/**
+	 * return the size of the list
+	 * 
+	 * @return
+	 */
 	public int size() {
 		return list.size();
 	}
 
+	/**
+	 * Sort the list using an insertion sort (effective if list is nearly sorted)
+	 */
 	public void insertionSort() {
 		int i, j;
 		for (i = 1; i < list.size(); i++) {
