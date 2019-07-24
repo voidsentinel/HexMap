@@ -179,6 +179,7 @@ public class HexTuto extends SimpleApplication {
       
 	   ddb.addButton("Medium",   null, "", new GeometryCommand("org.voidsentinel.hexmap.view.HexGridChunkSlopped"));
 	   ddb.addButton("Low",      null, "", new GeometryCommand("org.voidsentinel.hexmap.view.HexGridChunkFlat"));
+	   ddb.addButton("Low",      null, "", new GeometryCommand("org.voidsentinel.hexmap.view.HexGridChunkFlatSimple2"));
 	   ddb.addButton("very Low", null, "", new GeometryCommand("org.voidsentinel.hexmap.view.HexGridChunkFlatSimple"));
 	
 	}

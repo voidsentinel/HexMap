@@ -22,10 +22,10 @@ import com.jme3.scene.VertexBuffer.Type;
  * @author guipatry
  *
  */
-public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
+public class HexGridChunkFlatSimple2 extends AbstractHexGridChunk {
 
-	public HexGridChunkFlatSimple(HexMap map, int xstart, int zstart, int chunkSize,
-	      AbstractCellColorExtractor colorExtractor) {
+	public HexGridChunkFlatSimple2(HexMap map, int xstart, int zstart, int chunkSize,
+			AbstractCellColorExtractor colorExtractor) {
 		super(map, xstart, zstart, chunkSize, colorExtractor);
 	}
 
@@ -33,7 +33,7 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 	 * generate and store the geometry for a given map
 	 * 
 	 * @param map
-	 * @return the generated geometry. 
+	 * @return the generated geometry.
 	 */
 	public void generateGeometry() {
 		Material mat = TerrainRepository.getTerrainMaterial();
@@ -60,7 +60,8 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 	 * for each cell with the new extractor, and fill the color buffer of the mesh
 	 * with the new values
 	 * 
-	 * @param colorExtractor the new colorExtractor to use.
+	 * @param colorExtractor
+	 *           the new colorExtractor to use.
 	 */
 	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
 		this.colorExtractor = colorExtractor;
@@ -84,29 +85,54 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 	 */
 	private void triangulateCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		Vector3f center = HexMetrics.getCellCenter(cell);
+		Vector3f v0 = null;
+		Vector3f v1 = null;
 		Vector3f v2 = null;
+		Vector3f v3 = null;
+		Vector3f v4 = null;
 		int index = MeshUtility.getVerticeCount();
 		int offsetDir = 0;
 		int offsetDirNext = 0;
 
 		MeshUtility.addVertice(center);
 		MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
-//		points.put(center, cell);
+		// points.put(center, cell);
 
 		for (Direction direction : Direction.values()) {
 			offsetDir = direction.ordinal();
+
+			v1 = center.add(HexMetrics.getFirstCornerVector(offsetDir));
+			v0 = center.add(HexMetrics.getSecondCornerVector(offsetDir));
 			v2 = center.add(HexMetrics.getFirstCornerVector(offsetDir, 1f));
+
+			MeshUtility.addVertice(v1);
+			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
 			MeshUtility.addVertice(v2);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
-			if (direction.ordinal() % 2 == 0) {
-				points.put(v2, cell);
-			}
+
+			Vector3f bridge = HexMetrics.getBridgeVector(offsetDir);
+			v3 = v1.add(bridge);
+			v4 = v0.add(bridge);
+			MeshUtility.addVertice(v3);
+			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
+			MeshUtility.addVertice(v4);
+			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
+
+		   points.put(v1, cell);
+		   points.put(v4, cell);
+
 		}
 
 		for (Direction direction : Direction.values()) {
 			offsetDir = direction.ordinal();
 			offsetDirNext = direction.next().ordinal();
-			MeshUtility.addTriangle(index, index + offsetDirNext + 1, index + offsetDir + 1);
+			MeshUtility.addTriangle(index, index + offsetDirNext * 4 + 1, index + offsetDir * 4 + 1);
+			MeshUtility.addTriangle(index + offsetDir * 4 + 1, index + offsetDir * 4 + 3, index + offsetDir * 4 + 2);
+			MeshUtility.addTriangle(index + offsetDirNext * 4 + 1, index + offsetDirNext * 4 + 2,
+					index + offsetDir * 4 + 4);
+
+			MeshUtility.addTriangle(index + offsetDir * 4 + 1, index + offsetDirNext * 4 + 1, index + offsetDir * 4 + 4);
+			MeshUtility.addTriangle(index + offsetDir * 4 + 1, index + offsetDir * 4 + 4, index + offsetDir * 4 + 3);
 		}
 
 	}
@@ -119,10 +145,33 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 	 */
 	private void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		ColorRGBA color = colorExtractor.getColor(cell, map);
+		ColorRGBA color2 = color.mult(0.8f);
 		MeshUtility.addColor(color);
 		for (@SuppressWarnings("unused")
 		Direction direction : Direction.values()) {
+			HexCell neighbor = cell.getNeighbor(direction);
+			HexCell neighborp = cell.getNeighbor(direction.previous());
+
+			// internal point
 			MeshUtility.addColor(color);
+
+			// corner
+			if (neighbor == null || neighborp == null) {
+				MeshUtility.addColor(color2);
+			} else if (neighbor.getElevation() != cell.getElevation() || neighborp.getElevation() != cell.getElevation()) {
+				MeshUtility.addColor(color2);
+			} else {
+				MeshUtility.addColor(color);
+			}
+
+			// bridge
+			if (neighbor == null || neighbor.getElevation() != cell.getElevation()) {
+				MeshUtility.addColor(color2);
+				MeshUtility.addColor(color2);
+			} else {
+				MeshUtility.addColor(color);
+				MeshUtility.addColor(color);
+			}
 		}
 	}
 
