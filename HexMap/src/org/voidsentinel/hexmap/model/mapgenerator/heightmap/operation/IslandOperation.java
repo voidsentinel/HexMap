@@ -7,24 +7,23 @@ package org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation;
  * @author guipatry
  *
  */
-public class IslandOperation extends AbstractTerrainOperation {
+public class IslandOperation extends AbstractTerrainOperation  {
 
-	public void generate(float[][] heights) {
-		LOG.info("   Generation : " + this.getClass().getSimpleName());
-		float[][] copy = new float[heights.length][heights[0].length];
+	public void filter(float[][] height) {
+		LOG.info("   Operation : " + this.getClass().getSimpleName());
 		
-		int centerX = heights[0].length / 2;
-		int centerY = heights.length / 2;
+		int centerX = height[0].length / 2;
+		int centerY = height.length / 2;
+		float coeff = 0f;
 		
-		for (int y = 0; y < heights.length; y++) {
+		for (int y = 0; y < height.length; y++) {
 			float coeffY= 1f - ((float)Math.abs(y-centerY)/ (float)(centerY)); 
-			for (int x = 0; x < heights[0].length; x++) {
+			for (int x = 0; x < height[0].length; x++) {
 				float coeffX= 1f - ((float)Math.abs(x-centerX)/ (float)(centerX)); 
-				copy[y][x] = coeffX*coeffY;
-				heights[y][x] = heights[y][x]*copy[y][x];
+				coeff = Math.min(coeffX,coeffY);
+				height[y][x] = height[y][x]*coeff;
 			}
 		}
-		this.normalize(heights);
 
 	}
 }

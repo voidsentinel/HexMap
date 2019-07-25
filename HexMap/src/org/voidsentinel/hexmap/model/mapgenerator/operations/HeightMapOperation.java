@@ -50,7 +50,6 @@ public class HeightMapOperation extends AbstractTerrainAction implements IMapOpe
 			AbstractTerrainOperation operation = op.next();
 			operation.filter(values);
 		}
-		normalize(values);
 
 		// Mpa conversion
 		for (int y = 0; y < map.HEIGHT; y++) {

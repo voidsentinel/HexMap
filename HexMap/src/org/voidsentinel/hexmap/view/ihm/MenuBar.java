@@ -3,12 +3,8 @@
  */
 package org.voidsentinel.hexmap.view.ihm;
 
-import com.jme3.math.Vector3f;
-import com.simsilica.lemur.Axis;
 import com.simsilica.lemur.Button;
 import com.simsilica.lemur.Container;
-import com.simsilica.lemur.FillMode;
-import com.simsilica.lemur.component.BoxLayout;
 import com.simsilica.lemur.style.ElementId;
 
 /**
@@ -17,7 +13,7 @@ import com.simsilica.lemur.style.ElementId;
  */
 public class MenuBar extends Container {
 
-	private boolean leftToRight = true;
+	private boolean	leftToRight	= true;
 
 	public MenuBar(ElementId elementId) {
 		this(elementId, true);
@@ -26,15 +22,19 @@ public class MenuBar extends Container {
 	public MenuBar(ElementId elementId, boolean leftToRight) {
 		super(elementId);
 		this.leftToRight = leftToRight;
-		this.setLayout(new BoxLayout(Axis.X, FillMode.None));
+		this.setLayout(new MigLayout(null));
 	}
 
 	public void addChild(Button button) {
-		if (!leftToRight) {
-			Vector3f currentPosition = this.getLocalTranslation();
-			this.setLocalTranslation(currentPosition.x - button.getPreferredSize().x, currentPosition.y, currentPosition.z);
+		addChild(button, false);
+	}
+	
+	public void addChild(Button button, boolean rightSide) {
+		if (rightSide) {
+			addChild(button, "east");			
+		} else {
+			addChild(button);
 		}
-		super.addChild(button);		
 	}
 
 }
