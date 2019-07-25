@@ -1,4 +1,10 @@
 <images>
+	<image id="settingsIcon">icons/ihm-cog.png</image>
 	<image id="exitIcon">icons/power-button.png</image>
-	<image id="buttonBackdround">border2.png</image>
+	<image id="mapRepresentationIcon">icons/settings-knobs.png</image>
+	
+	<image id="buttonBackground">ihm/buttonSquare_beige_pressed.png</image>
+	<image id="buttonSelectedBackground">ihm/buttonSquare_brown_pressed.png</image>
+	<image id="panelBackground">ihm/panelInset_brown.png</image>
+	
 </images>
