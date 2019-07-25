@@ -9,6 +9,7 @@ import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.PerlinGen
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.SimplexGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.FastErosionOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.HexBlurOperation;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.IslandOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.BiomeOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.CityMapOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.ElevationMapOperation;
@@ -30,18 +31,18 @@ public class CapitalismGenerator extends MapGenerator {
 		heightmap.addGenerator(new SimplexGeneration(0.25f), 0.33f);
 		
 		heightmap.addGenerator(new FaultLinesGeneration(map.WIDTH + map.HEIGHT));
-//		heightmap.addGenerator(new DiamondSquareGeneration());
-//		heightmap.addGenerator(new DiamondSquareGeneration());
+		heightmap.addGenerator(new DiamondSquareGeneration());
 		heightmap.addGenerator(new CellularGeneration(1f), 0.5f);
 
 		heightmap.addOperation(new HexBlurOperation(3, 1));
 		heightmap.addOperation(new FastErosionOperation(0.2f, 64));
-
+		//heightmap.addOperation(new IslandOperation());
+		
 		heightmap.filter(map);
 
 		new BiomeOperation(new String[] { "FMP-sea", "FMP-reef", "FMP-swamp", "FMP-plain", "FMP-mountain" }, 5)
 		      .filter(map);
-		new WaterLevelOperation(0.2f).filter(map);
+		new WaterLevelOperation(0.30f).filter(map);
 		new ElevationMapOperation(5, 20).filter(map);
 		new TemperatureMapOperation().filter(map);
 		new HumidityMapOperation().filter(map);
