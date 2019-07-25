@@ -50,6 +50,7 @@ public class BiomeOperation implements IMapOperation {
 		LOG.info("       " + terrains.length + " terrains");
 
 		int nblevel = terrains.length - 1;
+		// float stepsize = 1f / terrains.length;
 
 		TerrainData standard = TerrainRepository.datas.getData("standard");
 		if (standard == null) {

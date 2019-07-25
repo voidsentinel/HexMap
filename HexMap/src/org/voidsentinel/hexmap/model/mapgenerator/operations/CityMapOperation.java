@@ -16,9 +16,9 @@ import org.voidsentinel.hexmap.utils.TerrainImage;
  * malus). Place in border of an water are favored (less for river than open
  * water).
  * <p>
- * Place 4 big and 8 small cities on tghe map, based on thoses values. each city
- * have an interdiction zone where no other city can be created. the size is
- * dependent on the city size.
+ * Place 4 big and 8 small cities on tghe map, based on thoses values.
+ * each city have an interdiction zone where no other city can be created. the
+ * size is dependent on the city size.
  * 
  * @author voidSentinel
  *
@@ -111,18 +111,16 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 	}
 
 	private void createCity(HexCell cell, HexMap map, float[][] cities, int radius) {
-		if (cell != null) {
-			LOG.info(" City at " + cell.hexCoordinates);
-			List<HexCoordinates> list = cell.hexCoordinates.inRange(radius);
-			for (HexCoordinates coord : list) {
-				HexCell cell2 = map.getCell(coord);
-				if (cell2 != null) {
-					cities[cell2.hexCoordinates.row][cell2.hexCoordinates.column] = 0f;
-					cell2.setCityValue(0f);
-				}
+		LOG.info(" City at " + cell.hexCoordinates);
+		List<HexCoordinates> list = cell.hexCoordinates.inRange(radius);
+		for (HexCoordinates coord : list) {
+			HexCell cell2 = map.getCell(coord);
+			if (cell2 != null) {
+				cities[cell2.hexCoordinates.row][cell2.hexCoordinates.column] = 0f;
+				cell2.setCityValue(0f);
 			}
-			cities[cell.hexCoordinates.row][cell.hexCoordinates.column] = 0f;
-			cell.setCityValue(1f);
 		}
+		cities[cell.hexCoordinates.row][cell.hexCoordinates.column] = 0f;
+		cell.setCityValue(1f);
 	}
 }

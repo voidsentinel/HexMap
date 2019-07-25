@@ -9,16 +9,18 @@ package org.voidsentinel.hexmap.mod;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.FileBasedConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.jdom2.Attribute;
@@ -27,8 +29,8 @@ import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.voidsentinel.hexmap.model.TerrainData;
 import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
+import org.voidsentinel.hexmap.model.repositories.TextRepository;
 import org.voidsentinel.hexmap.utils.ColorParser;
-import org.voidsentinel.hexmap.utils.I18nMultiFile;
 import org.voidsentinel.hexmap.utils.VectorUtils;
 import org.voidsentinel.hexmap.view.ihm.ImageData;
 import org.voidsentinel.hexmap.view.ihm.ImageRepository;
@@ -256,8 +258,16 @@ public class ModLoader {
 	 * @param directory the directory of the current XML file
 	 */
 	private static void loadText(Element node, String directory) {
-		LOG.log(Level.INFO, "   loading texts in " + directory + "/" + node.getValue());
-		I18nMultiFile.add(directory, node.getValue().trim());
+//		String file = directory +'/'+node.getValue().trim();
+//		Configurations configs = new Configurations();
+//		
+//		try {
+//			Configuration config = configs.properties(new File(file));			
+//			TextRepository.addConfiguration(config);
+//		LOG.log(Level.INFO, "   loading text " + file);
+//		} catch (ConfigurationException e) {
+//			LOG.log(Level.SEVERE, e.getLocalizedMessage());
+//		}
 	}
 
 	/**
