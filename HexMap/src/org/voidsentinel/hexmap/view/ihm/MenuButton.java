@@ -5,9 +5,11 @@ package org.voidsentinel.hexmap.view.ihm;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.HexTuto;
 import org.voidsentinel.hexmap.utils.ColorParser;
+import org.voidsentinel.hexmap.utils.I18nMultiFile;
 import org.voidsentinel.hexmap.view.ihm.IHMEventController.IHMAction;
 
 import com.jme3.math.ColorRGBA;
@@ -31,6 +33,7 @@ import com.simsilica.lemur.style.ElementId;
  *
  */
 public class MenuButton extends Button implements IIHMEventListener {
+	private static final Logger			LOG		= Logger.getLogger(MenuButton.class.toString());
 
 	public static float	ICONSIZE			= 24f;
 
@@ -68,7 +71,7 @@ public class MenuButton extends Button implements IIHMEventListener {
 		this.setBackground(btTexture);
 
 		this.showSelected = showLastSelected;
-		this.firstLevel = firstLevel;
+		this.firstLevel = firstlevel;
 
 		this.addClickCommands(new ToggleOpenCommand());
 
@@ -169,9 +172,10 @@ public class MenuButton extends Button implements IIHMEventListener {
 			bt.addCommands(ButtonAction.HighlightOff, new HighlightOffCommand());
 		}
 		// add the close command (if the is not a menu...
-		if (!MenuButton.class.isInstance(bt)) {
+		if (!MenuButton.class.isInstance(bt)) {			
 			bt.addClickCommands(new CloseCommand());
 		}
+		contents.addChild(bt);
 	}
 
 	/**
@@ -181,6 +185,7 @@ public class MenuButton extends Button implements IIHMEventListener {
 	 */
 	public void setOpen(boolean open) {
 		if (open != opened) {
+			LOG.info("> Setting Open "+this.getElementId().getId());
 			opened = open;
 			if (open) {
 				HexTuto.getInstance().getGuiNode().attachChild(contents);
@@ -188,11 +193,12 @@ public class MenuButton extends Button implements IIHMEventListener {
 					contents.setLocalTranslation(this.getWorldTranslation().x,
 					      this.getWorldTranslation().y - this.getSize().y - 2, 0);
 				} else {
-					contents.setLocalTranslation(this.getWorldTranslation().x + this.getSize().x,
+					contents.setLocalTranslation(this.getWorldTranslation().x + this.getPreferredSize().x,
 					      this.getWorldTranslation().y, 0);
 				}
 
 			} else {
+				LOG.info("> Setting Close"+this.getElementId().getId());
 				HexTuto.getInstance().getGuiNode().detachChild(contents);
 			}
 		}
@@ -269,14 +275,19 @@ public class MenuButton extends Button implements IIHMEventListener {
 	 */
 	@Override
 	public void signalAction(Panel source, IHMAction action) {
+		LOG.info("> Receiving IHM Event "+action.toString()+ " from "+source.getElementId().getId()
+				+" to "+this.getElementId().getId());
+
 		switch (action) {
 		case MENU_OPEN:
 			if (!source.getElementId().getId().startsWith(this.getElementId().getId())) {
+				LOG.info("> Closing the menu "+this.getElementId().getId());
 				this.setOpen(false);
 			}
 			break;
 		case MENU_CLOSE:
 			if (source.getElementId().getId().startsWith(this.getElementId().getId())) {
+				LOG.info("> Closing the menu "+this.getElementId().getId());
 				this.setOpen(false);
 			}
 			break;
@@ -313,6 +324,13 @@ public class MenuButton extends Button implements IIHMEventListener {
 	 */
 	public void setToolTip(String toolTip) {
 		this.toolTip = toolTip;
+		if (toolTip != null) {
+			this.setUserData("tooltip", toolTip);
+		} else {
+			this.setUserData("tooltip", "");
+		}
+		this.addCommands(ButtonAction.HighlightOn, new HighlightOnCommand());
+		this.addCommands(ButtonAction.HighlightOff, new HighlightOffCommand());
 	}
 
 	/**
@@ -324,15 +342,16 @@ public class MenuButton extends Button implements IIHMEventListener {
 	protected class ToggleOpenCommand implements Command<Button> {
 		@Override
 		public void execute(Button source) {
+			LOG.info("> Toggling "+source.getElementId().getId());
+			// and act
+			setOpen(!isOpen());
 			// if needed signal that this menu will open
 			// (no need to signal for close)
-			if (!isOpen()) {
+			if (isOpen()) {
 				IHMEventController.signalEvent(source, IHMEventController.IHMAction.MENU_OPEN);
 			} else {
 				IHMEventController.signalEvent(source, IHMEventController.IHMAction.MENU_CLOSE);
 			}
-			// and act
-			setOpen(!isOpen());
 
 		}
 	}

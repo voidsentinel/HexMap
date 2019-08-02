@@ -8,8 +8,9 @@ import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 
 /**
- * get the height at wich the water start (based on the % of cells under), and then set the distance to nearest
- * water cell for each cell
+ * get the height at wich the water start (based on the % of cells under), and
+ * then set the distance to nearest water cell for each cell
+ * 
  * @author voidSentinel
  *
  */
@@ -30,14 +31,14 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 	@Override
 	public void filter(HexMap map) {
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
-		
+
 		int[] number = new int[10000];
 		int height = 0;
 		// check how many hex at a given altitude (by increment of 1/10000)
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(x, y);
-				height = (int) Math.min(9999f, cell.getHeight() * 10000f);
+				height = (int) Math.max(0, Math.min(9999f, cell.getHeight() * 10000f));
 				number[height]++;
 			}
 		}

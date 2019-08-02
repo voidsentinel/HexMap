@@ -9,13 +9,8 @@ package org.voidsentinel.hexmap.mod;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +29,8 @@ import org.voidsentinel.hexmap.view.ihm.ImageData;
 import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 import org.voidsentinel.hexmap.view.mapColor.colorMapperRepository;
+import org.voidsentinel.hexmap.view.representation.MapRepresentation;
+import org.voidsentinel.hexmap.view.representation.MapRepresentationRepository;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.plugins.FileLocator;
@@ -228,6 +225,10 @@ public class ModLoader {
 			loadMapColorMapper(node, directory);
 			break;
 		}
+		case "mapRepresentation": {
+			loadMapRepresentation(node, directory);
+			break;
+		}
 		default:
 			List<Element> childs = node.getChildren();
 			Iterator<Element> it = childs.iterator();
@@ -354,20 +355,23 @@ public class ModLoader {
 			AbstractCellColorExtractor colorExt = colorMapperRepository.repository.getData(id);
 			String icon = node.getAttributeValue("icon");
 			if (icon != null) {
-				colorExt.setIconName(icon.trim().toLowerCase());
+				colorExt.setIconName(icon.trim());
 			}
-			String text = node.getAttributeValue("icon");
+			String text = node.getAttributeValue("text");
 			if (text != null) {
-				colorExt.setTextName(text.trim().toLowerCase());
-			} else {
-				colorExt.setTextName(id);
+				colorExt.setTextName(text.trim());
 			}
-
+			
+			String tooltip = node.getAttributeValue("tooltip");
+			if (text != null) {
+				colorExt.setTooltipName(tooltip.trim());
+			}
 			List<Attribute> attributes = node.getAttributes();
 			removeAttribute("id", attributes);
 			removeAttribute("class", attributes);
 			removeAttribute("icon", attributes);
 			removeAttribute("text", attributes);
+			removeAttribute("tooltip", attributes);
 
 			Iterator<Attribute> it = attributes.iterator();
 			while (it.hasNext()) {
@@ -377,6 +381,54 @@ public class ModLoader {
 		}
 	}
 
+	private static void loadMapRepresentation(Element node, String directory) {
+		String className = null;
+		String id = node.getAttributeValue("id").trim().toLowerCase();
+		// if not already present
+		if (MapRepresentationRepository.repository.getData(id) == null) {
+			MapRepresentation representation = new MapRepresentation(id);
+			
+			if (node.getAttributeValue("class") != null) {
+				className = node.getAttributeValue("class").trim();
+				representation.setClassName(className);
+			}
+
+			String icon = node.getAttributeValue("icon");
+			if (icon != null) {
+				representation.setIconName(icon.trim());
+			}
+			String text = node.getAttributeValue("text");
+			if (text != null) {
+				representation.setLabelName(text.trim());
+			}			
+			String tooltip = node.getAttributeValue("tooltip");
+			if (tooltip != null) {
+				representation.setTooltipName(tooltip.trim());
+			}
+			String material = node.getAttributeValue("material");
+			if (material != null) {
+				representation.setMaterialName(material.trim());
+			}
+
+			MapRepresentationRepository.repository.addData(representation);
+			
+			List<Attribute> attributes = node.getAttributes();
+			removeAttribute("id", attributes);
+			removeAttribute("class", attributes);
+			removeAttribute("icon", attributes);
+			removeAttribute("text", attributes);
+			removeAttribute("tooltip", attributes);
+			removeAttribute("material", attributes);
+
+			Iterator<Attribute> it = attributes.iterator();
+			while (it.hasNext()) {
+				Attribute attribute = it.next();
+				representation.addDataParameters(attribute.getName().toLowerCase(), attribute.getValue(), directory + "/");
+			}
+		}
+	}
+	
+	
 	public static void removeAttribute(String id, List<Attribute> attributes) {
 		Iterator<Attribute> it = attributes.iterator();
 		while (it.hasNext()) {
