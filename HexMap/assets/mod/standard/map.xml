@@ -42,18 +42,13 @@
 		text="map.pathColorMapper.label" tooltip="map.pathColorMapper.tooltip"
 		icon="pathColorMapperIcon" colorMap="colorMap/cityColorMap.png" />
 
-	<mapRepresentation id="gridChunkSlopped"
-		class="org.voidsentinel.hexmap.view.representation.HexGridChunkSlopped"
-		material="terrains_shaded.j3m" text="map.HexGridChunkSlopped.label" 
-		tooltip = "map.HexGridChunkSlopped.toolTip"/>
-
 	<mapRepresentation id="gridChunkFlatSimple"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimple"
 		material="terrains_unshaded.j3m"
 		text="map.HexGridChunkFlatSimple.label" tooltip = "map.HexGridChunkFlatSimple.toolTip"/>
 
 	<mapRepresentation id="gridChunkFlatSimple3"
-		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimple"
+		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimpleLighted"
 		material="terrains_shaded.j3m"
 		text="map.HexGridChunkFlatSimple3.label" tooltip = "map.HexGridChunkFlatSimple3.toolTip"/>
 
@@ -61,6 +56,12 @@
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimple2"
 		material="terrains_shaded.j3m" default="true" 
 		text="map.HexGridChunkFlatSimple2.label" tooltip = "map.HexGridChunkFlatSimple2.toolTip"/>
+
+	<mapRepresentation id="gridChunkSlopped"
+		class="org.voidsentinel.hexmap.view.representation.HexGridChunkSlopped"
+		material="terrains_shaded.j3m" text="map.HexGridChunkSlopped.label" 
+		tooltip = "map.HexGridChunkSlopped.toolTip"/>
+		
 	<mapRepresentation id="gridChunkFlatSimpleTron"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimpleTron"
 		material="terrains_unshaded.j3m" default="false" 

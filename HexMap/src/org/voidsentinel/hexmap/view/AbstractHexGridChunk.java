@@ -2,9 +2,11 @@ package org.voidsentinel.hexmap.view;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
 import com.jme3.material.Material;
@@ -21,6 +23,8 @@ import com.jme3.scene.Node;
  *
  */
 public abstract class AbstractHexGridChunk {
+	protected static final Logger LOG = Logger.getLogger(AbstractHexGridChunk.class.toString());
+
 	//
 	static final public String					CHUNK_PREFIX	= "CHUNK_";
 

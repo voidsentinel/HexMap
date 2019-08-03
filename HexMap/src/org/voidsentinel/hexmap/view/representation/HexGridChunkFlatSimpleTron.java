@@ -146,7 +146,7 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlatSimple2 {
 	 * @param cell
 	 * @param MeshUtility
 	 */
-	private void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
+	protected void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		ColorRGBA color = colorExtractor.getColor(cell, map);
 		ColorRGBA color2 = color.mult(0.8f);
 		MeshUtility.addColor(ColorRGBA.Black);
@@ -204,14 +204,14 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlatSimple2 {
 		}
 	}
 
-	private void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
+	protected void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
 		ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(0.75f);
 		for (Direction direction : Direction.values()) {
 			colorizeCellSideDirection(cell, direction, meshUtility, c1);
 		}
 	}
 
-	private void colorizeCellSideDirection(HexCell cell, Direction direction, MeshUtil meshUtility, ColorRGBA c1) {
+	protected void colorizeCellSideDirection(HexCell cell, Direction direction, MeshUtil meshUtility, ColorRGBA c1) {
 		HexCell neighbor = cell.getNeighbor(direction);
 		int height = 0;
 		if (neighbor != null && neighbor.getElevation() < cell.getElevation()) {

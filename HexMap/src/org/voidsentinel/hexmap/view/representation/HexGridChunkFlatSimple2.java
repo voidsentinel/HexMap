@@ -11,7 +11,6 @@ import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
@@ -146,7 +145,7 @@ public class HexGridChunkFlatSimple2 extends AbstractHexGridChunk {
 	 * @param cell
 	 * @param MeshUtility
 	 */
-	private void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
+	protected void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		ColorRGBA color = colorExtractor.getColor(cell, map);
 		ColorRGBA color2 = color.mult(0.8f);
 		MeshUtility.addColor(color);
@@ -204,14 +203,14 @@ public class HexGridChunkFlatSimple2 extends AbstractHexGridChunk {
 		}
 	}
 
-	private void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
+	protected void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
 		ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(0.90f);
 		for (Direction direction : Direction.values()) {
 			colorizeCellSideDirection(cell, direction, meshUtility, c1);
 		}
 	}
 
-	private void colorizeCellSideDirection(HexCell cell, Direction direction, MeshUtil meshUtility, ColorRGBA c1) {
+	protected void colorizeCellSideDirection(HexCell cell, Direction direction, MeshUtil meshUtility, ColorRGBA c1) {
 		HexCell neighbor = cell.getNeighbor(direction);
 		int height = 0;
 		if (neighbor != null && neighbor.getElevation() < cell.getElevation()) {
