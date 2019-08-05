@@ -13,7 +13,7 @@ import com.simsilica.lemur.style.ElementId;
  */
 public class MenuBar extends Container {
 
-	private boolean	leftToRight	= true;
+	private boolean leftToRight = true;
 
 	public MenuBar(ElementId elementId) {
 		this(elementId, true);
@@ -22,16 +22,17 @@ public class MenuBar extends Container {
 	public MenuBar(ElementId elementId, boolean leftToRight) {
 		super(elementId);
 		this.leftToRight = leftToRight;
-		this.setLayout(new MigLayout(null));
+		MigLayout layout = new MigLayout(null);
+		this.setLayout(layout);
 	}
 
-	public void addChild(Button button) {
+	public void addButton(Button button) {
 		addChild(button, false);
 	}
-	
-	public void addChild(Button button, boolean rightSide) {
+
+	public void addButton(Button button, boolean rightSide) {
 		if (rightSide) {
-			addChild(button, "east");			
+			addChild(button, "growx");
 		} else {
 			addChild(button);
 		}

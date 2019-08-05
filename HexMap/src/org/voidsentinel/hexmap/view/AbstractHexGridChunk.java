@@ -2,11 +2,14 @@ package org.voidsentinel.hexmap.view;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
+import com.jme3.material.Material;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -20,6 +23,8 @@ import com.jme3.scene.Node;
  *
  */
 public abstract class AbstractHexGridChunk {
+	protected static final Logger LOG = Logger.getLogger(AbstractHexGridChunk.class.toString());
+
 	//
 	static final public String					CHUNK_PREFIX	= "CHUNK_";
 
@@ -37,6 +42,7 @@ public abstract class AbstractHexGridChunk {
 
 	// the colorExtractor
 	protected AbstractCellColorExtractor	colorExtractor;
+	protected Material terrainMaterial = null;
 
 	/**
 	 * Constructor
@@ -108,4 +114,21 @@ public abstract class AbstractHexGridChunk {
 			response = points.get(collisionTriangle.get3());
 		return response;
 	}
+
+	/**
+	 * @return the terrainMaterial
+	 */
+	public Material getTerrainMaterial() {
+		return terrainMaterial;
+	}
+
+	/**
+	 * @param terrainMaterial the terrainMaterial to set
+	 */
+	public void setTerrainMaterial(Material terrainMaterial) {
+		this.terrainMaterial = terrainMaterial;
+	}
+	
+	
+	
 }

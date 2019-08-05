@@ -6,6 +6,7 @@ package org.voidsentinel.hexmap.view.ihm;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.simsilica.lemur.Panel;
 
@@ -14,6 +15,7 @@ import com.simsilica.lemur.Panel;
  *
  */
 public class IHMEventController {
+	private static final Logger			LOG		= Logger.getLogger(IHMEventController.class.toString());
 
 	public static enum IHMAction {
 		MENU_OPEN, MENU_CLOSE
@@ -30,6 +32,7 @@ public class IHMEventController {
 	}
 
 	public static void signalEvent(Panel source, IHMAction action) {
+		LOG.info("> Signaling IHM Event "+action.toString()+ " from "+source.getElementId().getId());
 		for (Iterator<IIHMEventListener> iterator = listener.iterator(); iterator.hasNext();) {
 			IIHMEventListener iihmEventListener = (IIHMEventListener) iterator.next();
 			iihmEventListener.signalAction(source, action);

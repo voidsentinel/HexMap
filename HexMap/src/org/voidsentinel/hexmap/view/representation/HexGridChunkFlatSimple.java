@@ -1,9 +1,12 @@
-package org.voidsentinel.hexmap.view;
+package org.voidsentinel.hexmap.view.representation;
 
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
+import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
+import org.voidsentinel.hexmap.view.HexMetrics;
+import org.voidsentinel.hexmap.view.MeshUtil;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
 import com.jme3.material.Material;
@@ -24,8 +27,10 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 
+	private float[] coeff = new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
+
 	public HexGridChunkFlatSimple(HexMap map, int xstart, int zstart, int chunkSize,
-	      AbstractCellColorExtractor colorExtractor) {
+			AbstractCellColorExtractor colorExtractor) {
 		super(map, xstart, zstart, chunkSize, colorExtractor);
 	}
 
@@ -33,10 +38,9 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 	 * generate and store the geometry for a given map
 	 * 
 	 * @param map
-	 * @return the generated geometry. 
+	 * @return the generated geometry.
 	 */
 	public void generateGeometry() {
-		Material mat = TerrainRepository.getTerrainMaterial();
 		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
@@ -51,7 +55,7 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 
 		Mesh mesh = meshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
-		terrain.setMaterial(mat);
+		terrain.setMaterial(terrainMaterial);
 		representation.attachChild(terrain);
 	}
 
@@ -60,7 +64,8 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 	 * for each cell with the new extractor, and fill the color buffer of the mesh
 	 * with the new values
 	 * 
-	 * @param colorExtractor the new colorExtractor to use.
+	 * @param colorExtractor
+	 *           the new colorExtractor to use.
 	 */
 	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
 		this.colorExtractor = colorExtractor;
@@ -91,7 +96,7 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 
 		MeshUtility.addVertice(center);
 		MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
-//		points.put(center, cell);
+		// points.put(center, cell);
 
 		for (Direction direction : Direction.values()) {
 			offsetDir = direction.ordinal();
@@ -117,8 +122,8 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 	 * @param cell
 	 * @param MeshUtility
 	 */
-	private void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
-		ColorRGBA color = colorExtractor.getColor(cell, map);
+	protected void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
+		ColorRGBA color = colorExtractor.getColor(cell, map).clone().mult(1.1f);
 		MeshUtility.addColor(color);
 		for (@SuppressWarnings("unused")
 		Direction direction : Direction.values()) {
@@ -152,14 +157,14 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 		}
 	}
 
-	private void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
-		ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(0.90f);
+	protected  void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
 		for (Direction direction : Direction.values()) {
+			ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(coeff[direction.ordinal()]);			
 			colorizeCellSideDirection(cell, direction, meshUtility, c1);
 		}
 	}
 
-	private void colorizeCellSideDirection(HexCell cell, Direction direction, MeshUtil meshUtility, ColorRGBA c1) {
+	protected void colorizeCellSideDirection(HexCell cell, Direction direction, MeshUtil meshUtility, ColorRGBA c1) {
 		HexCell neighbor = cell.getNeighbor(direction);
 		int height = 0;
 		if (neighbor != null && neighbor.getElevation() < cell.getElevation()) {

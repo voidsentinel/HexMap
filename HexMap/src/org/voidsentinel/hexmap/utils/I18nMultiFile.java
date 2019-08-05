@@ -21,7 +21,7 @@ import org.voidsentinel.hexmap.mod.ModLoader;
  *
  */
 public class I18nMultiFile {
-	private static final Logger			LOG		= Logger.getLogger(ModLoader.class.toString());
+	private static final Logger			LOG		= Logger.getLogger(I18nMultiFile.class.toString());
 
 	private static List<ResourceBundle>	bundles	= new ArrayList<ResourceBundle>();
 
@@ -52,10 +52,12 @@ public class I18nMultiFile {
 	public static String getText(String key) {
 		for (Iterator<ResourceBundle> iterator = bundles.iterator(); iterator.hasNext();) {
 			ResourceBundle resourceBundle = (ResourceBundle) iterator.next();
+			LOG.info("> Searching " + key + " in " + resourceBundle.getBaseBundleName());
 			if (resourceBundle.containsKey(key)) {
 				return resourceBundle.getString(key);
 			}
 		}
+		LOG.info("> Failure Searching " + key);
 		return key;
 	}
 

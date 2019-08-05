@@ -1,6 +1,5 @@
-package org.voidsentinel.hexmap.view;
+package org.voidsentinel.hexmap.view.representation;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.voidsentinel.hexmap.model.Direction;
@@ -10,6 +9,9 @@ import org.voidsentinel.hexmap.model.TerrainData;
 import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
 import org.voidsentinel.hexmap.utils.Alea;
 import org.voidsentinel.hexmap.utils.FastNoise;
+import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
+import org.voidsentinel.hexmap.view.HexMetrics;
+import org.voidsentinel.hexmap.view.MeshUtil;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
 import com.jme3.material.Material;
@@ -57,7 +59,6 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 				colorizeCellCorner(hexCell, MeshUtility);
 			}
 		}
-//		perturbatePositions(MeshUtility);
 
 		Mesh mesh = MeshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);

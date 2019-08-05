@@ -24,6 +24,7 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 
 	protected String					iconName			= null;
    protected String              textName       = null;
+   protected String              tooltipName    = null;
 	protected boolean					defaultMapper	= false;
 
 	/**
@@ -100,6 +101,20 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	 */
 	public void setTextName(String textName) {
 		this.textName = textName;
+	}
+
+	/**
+	 * @return the tooltipName
+	 */
+	public String getTooltipName() {
+		return tooltipName;
+	}
+
+	/**
+	 * @param tooltipName the tooltipName to set
+	 */
+	public void setTooltipName(String tooltipName) {
+		this.tooltipName = tooltipName;
 	}
 
 }

@@ -9,7 +9,8 @@ import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.PerlinGen
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.SimplexGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.FastErosionOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.HexBlurOperation;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.IslandOperation;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.TorusOperation;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.TorusOperation.VTreatment;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.BiomeOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.CityMapOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.ElevationMapOperation;
@@ -36,6 +37,7 @@ public class CapitalismGenerator extends MapGenerator {
 
 		heightmap.addOperation(new HexBlurOperation(3, 1));
 		heightmap.addOperation(new FastErosionOperation(0.2f, 64));
+		heightmap.addOperation(new TorusOperation(TorusOperation.HTreatment.BOTH , TorusOperation.VTreatment.BOTH));
 		//heightmap.addOperation(new IslandOperation());
 		
 		heightmap.filter(map);

@@ -135,7 +135,7 @@ public class MigLayout extends AbstractGuiComponent implements GuiLayout, Clonea
 			component.setLocalTranslation(new Vector3f(x, y * -1, component.getLocalTranslation().z));
 			Vector3f size = component.getControl(GuiControl.class).getPreferredSize().clone();
 			size.set(width < 0 ? (width * -1) + size.getX() : width, height < 0 ? (height * -1) + size.getY() : height,
-			      size.z);
+					size.z);
 			component.getControl(GuiControl.class).setSize(size);
 
 		}
@@ -335,8 +335,9 @@ public class MigLayout extends AbstractGuiComponent implements GuiLayout, Clonea
 	/**
 	 * Constructor.
 	 * 
-	 * @param layoutConstraints The constraints that concern the whole layout.
-	 *                          <code>null</code> will be treated as "".
+	 * @param layoutConstraints
+	 *           The constraints that concern the whole layout. <code>null</code>
+	 *           will be treated as "".
 	 */
 	public MigLayout(String layoutConstraints) {
 		this(layoutConstraints, "", "");
@@ -345,10 +346,12 @@ public class MigLayout extends AbstractGuiComponent implements GuiLayout, Clonea
 	/**
 	 * Constructor.
 	 * 
-	 * @param layoutConstraints The constraints that concern the whole layout.
-	 *                          <code>null</code> will be treated as "".
-	 * @param colConstraints    The constraints for the columns in the grid.
-	 *                          <code>null</code> will be treated as "".
+	 * @param layoutConstraints
+	 *           The constraints that concern the whole layout. <code>null</code>
+	 *           will be treated as "".
+	 * @param colConstraints
+	 *           The constraints for the columns in the grid. <code>null</code> will
+	 *           be treated as "".
 	 */
 	public MigLayout(String layoutConstraints, String colConstraints) {
 		this(layoutConstraints, colConstraints, "");
@@ -357,12 +360,15 @@ public class MigLayout extends AbstractGuiComponent implements GuiLayout, Clonea
 	/**
 	 * Constructor.
 	 * 
-	 * @param layoutConstraints The constraints that concern the whole layout.
-	 *                          <code>null</code> will be treated as "".
-	 * @param colConstraints    The constraints for the columns in the grid.
-	 *                          <code>null</code> will be treated as "".
-	 * @param rowConstraints    The constraints for the rows in the grid.
-	 *                          <code>null</code> will be treated as "".
+	 * @param layoutConstraints
+	 *           The constraints that concern the whole layout. <code>null</code>
+	 *           will be treated as "".
+	 * @param colConstraints
+	 *           The constraints for the columns in the grid. <code>null</code> will
+	 *           be treated as "".
+	 * @param rowConstraints
+	 *           The constraints for the rows in the grid. <code>null</code> will be
+	 *           treated as "".
 	 */
 	public MigLayout(String layoutConstraints, String colConstraints, String rowConstraints) {
 		setLayoutConstraints(layoutConstraints);
@@ -375,10 +381,12 @@ public class MigLayout extends AbstractGuiComponent implements GuiLayout, Clonea
 	 * <p>
 	 * See the class JavaDocs for information on how this string is formatted.
 	 * 
-	 * @param constr The layout constraints as a String or
-	 *               {@link net.miginfocom.layout.LC} representation.
-	 *               <code>null</code> is converted to <code>""</code> for storage.
-	 * @throws RuntimeException if the constraint was not valid.
+	 * @param constr
+	 *           The layout constraints as a String or
+	 *           {@link net.miginfocom.layout.LC} representation. <code>null</code>
+	 *           is converted to <code>""</code> for storage.
+	 * @throws RuntimeException
+	 *            if the constraint was not valid.
 	 */
 	public void setLayoutConstraints(Object constr) {
 		if (constr == null || constr instanceof String) {
@@ -426,10 +434,12 @@ public class MigLayout extends AbstractGuiComponent implements GuiLayout, Clonea
 	 * <p>
 	 * See the class JavaDocs for information on how this string is formatted.
 	 * 
-	 * @param constr The column layout constraints as a String or
-	 *               {@link net.miginfocom.layout.AC} representation.
-	 *               <code>null</code> is converted to <code>""</code> for storage.
-	 * @throws RuntimeException if the constraint was not valid.
+	 * @param constr
+	 *           The column layout constraints as a String or
+	 *           {@link net.miginfocom.layout.AC} representation. <code>null</code>
+	 *           is converted to <code>""</code> for storage.
+	 * @throws RuntimeException
+	 *            if the constraint was not valid.
 	 */
 	public void setColumnConstraints(Object constr) {
 		if (constr == null || constr instanceof String) {
@@ -462,10 +472,12 @@ public class MigLayout extends AbstractGuiComponent implements GuiLayout, Clonea
 	 * <p>
 	 * See the class JavaDocs for information on how this string is formatted.
 	 * 
-	 * @param constr The row layout constraints as a String or
-	 *               {@link net.miginfocom.layout.AC} representation.
-	 *               <code>null</code> is converted to <code>""</code> for storage.
-	 * @throws RuntimeException if the constraint was not valid.
+	 * @param constr
+	 *           The row layout constraints as a String or
+	 *           {@link net.miginfocom.layout.AC} representation. <code>null</code>
+	 *           is converted to <code>""</code> for storage.
+	 * @throws RuntimeException
+	 *            if the constraint was not valid.
 	 */
 	public void setRowConstraints(Object constr) {
 		if (constr == null || constr instanceof String) {
@@ -518,7 +530,7 @@ public class MigLayout extends AbstractGuiComponent implements GuiLayout, Clonea
 		// n.getControl(GuiControl.class).getPreferredSize();
 
 		int[] b = new int[] { (int) Math.floor(pos.x), (int) Math.floor(pos.y * -1), (int) Math.ceil(size.x),
-		      (int) Math.ceil(size.y) };
+				(int) Math.ceil(size.y) };
 		Grid grid = new Grid(containerWrapper, lc, rowSpecs, colSpecs, ccMap, null);
 		if (grid.layout(b, lc.getAlignX(), lc.getAlignY(), false)) {
 			grid = new Grid(containerWrapper, lc, rowSpecs, colSpecs, ccMap, null);
@@ -542,7 +554,7 @@ public class MigLayout extends AbstractGuiComponent implements GuiLayout, Clonea
 			throw new IllegalArgumentException("Child is not GUI element.");
 		LemurComponentWrapper componentWrapper = new LemurComponentWrapper((Panel) n);
 		String constraintString = constraints.length > 0 && constraints[0] instanceof String ? (String) constraints[0]
-		      : null;
+				: null;
 		String cStr = ConstraintParser.prepare(constraintString);
 
 		scrConstrMap.put((Panel) n, constraintString);
@@ -645,4 +657,5 @@ public class MigLayout extends AbstractGuiComponent implements GuiLayout, Clonea
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }
