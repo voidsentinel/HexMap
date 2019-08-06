@@ -24,9 +24,11 @@ import com.jme3.scene.VertexBuffer.Type;
  * @author guipatry
  *
  */
-public class HexGridChunkFlatSimple2 extends AbstractHexGridChunk {
+public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
-	public HexGridChunkFlatSimple2(HexMap map, int xstart, int zstart, int chunkSize,
+	private float[] coeff = new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
+
+	public HexGridChunkFlat25(HexMap map, int xstart, int zstart, int chunkSize,
 			AbstractCellColorExtractor colorExtractor) {
 		super(map, xstart, zstart, chunkSize, colorExtractor);
 	}
@@ -146,7 +148,7 @@ public class HexGridChunkFlatSimple2 extends AbstractHexGridChunk {
 	 * @param MeshUtility
 	 */
 	protected void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
-		ColorRGBA color = colorExtractor.getColor(cell, map);
+		ColorRGBA color = colorExtractor.getColor(cell, map).clone().mult(1.1f);
 		ColorRGBA color2 = color.mult(0.8f);
 		MeshUtility.addColor(color);
 		for (@SuppressWarnings("unused")
@@ -204,8 +206,9 @@ public class HexGridChunkFlatSimple2 extends AbstractHexGridChunk {
 	}
 
 	protected void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
-		ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(0.90f);
+//		ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(0.90f);
 		for (Direction direction : Direction.values()) {
+			ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(coeff[direction.ordinal()]);						
 			colorizeCellSideDirection(cell, direction, meshUtility, c1);
 		}
 	}
