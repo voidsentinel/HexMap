@@ -25,7 +25,7 @@ import com.jme3.scene.VertexBuffer.Type;
  * @author guipatry
  *
  */
-public class HexGridChunkFlatSimpleTron extends HexGridChunkFlatSimple2 {
+public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 
 	public HexGridChunkFlatSimpleTron(HexMap map, int xstart, int zstart, int chunkSize,
 			AbstractCellColorExtractor colorExtractor) {

@@ -26,7 +26,7 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
-	private float[] coeff = new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
+	private float[] coeff = new float[] { 0.75f, 0.5f, 0.75f, 1f, 1.15f, 1f };
 
 	public HexGridChunkFlat25(HexMap map, int xstart, int zstart, int chunkSize,
 			AbstractCellColorExtractor colorExtractor) {

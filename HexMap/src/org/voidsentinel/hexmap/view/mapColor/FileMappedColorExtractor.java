@@ -10,8 +10,6 @@ import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
-import org.voidsentinel.hexmap.model.HexCell;
-import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.repositories.RepositoryData;
 
 import com.jme3.math.ColorRGBA;
@@ -23,7 +21,7 @@ import com.jme3.math.ColorRGBA;
  * 
  * @author VoidSentinel
  */
-public abstract class FileMappedColorExtractor extends AbstractCellColorExtractor {
+public class FileMappedColorExtractor extends KeyColorExtractor {
 
 	protected BufferedImage colorMap = null;
 
@@ -45,6 +43,7 @@ public abstract class FileMappedColorExtractor extends AbstractCellColorExtracto
 	 */
 	@Override
 	public void addDataParameters(RepositoryData data) {
+		super.addDataParameters(data);
 		this.colorMap = ((FileMappedColorExtractor) (data)).colorMap;
 	}
 
@@ -60,7 +59,6 @@ public abstract class FileMappedColorExtractor extends AbstractCellColorExtracto
 		if ("colorMap".equalsIgnoreCase(name)) {
 			this.setColorMap(additional + value);
 		}
-
 	}
 
 	public void setColorMap(String filename) {
@@ -69,35 +67,27 @@ public abstract class FileMappedColorExtractor extends AbstractCellColorExtracto
 	}
 
 	/**
-	 * return the color based on float value. This value is converted into a int
-	 * value between 0 and the imagewidth. The returned color is the color of the
-	 * pixel at this point.
+	 * return the color based on float value and the instance colorMap. The value
+	 * is converted into a int value between 0 and the imagewidth. The returned
+	 * color is the color of the pixel at this point.
 	 * 
 	 * @param value the % of the image to get
 	 * @return the color at (value%, 0) in the image
 	 */
 	protected ColorRGBA getColor(float value) {
-		int index = Math.min(Math.max((int) ((colorMap.getWidth() - 1) * value), 0), colorMap.getWidth() - 1);
-
-		int clr = colorMap.getRGB(index, 0);
-		int red = (clr & 0x00ff0000) >> 16;
-		int green = (clr & 0x0000ff00) >> 8;
-		int blue = clr & 0x000000ff;
-
-		return new ColorRGBA(red / 255f, green / 255f, blue / 255f, 1f);
-
+		return getColor(colorMap, value);
 	}
 
 	/**
-	 * return the color based on float value. This value is converted into a int
-	 * value between 0 and the imagewidth. The returned color is the color of the
-	 * pixel at this point.
+	 * return the color based on float value and a given colorMap. The value is
+	 * converted into a int value between 0 and the imagewidth. The returned color
+	 * is the color of the pixel at this point.
 	 * 
-	 * @param value the % of the image to get
+	 * @param value    the % of the image to get
 	 * @param colorMap the colorMap to use
 	 * @return the color at (value%, 0) in the image
 	 */
-	protected ColorRGBA getColor(BufferedImage colorMap , float value) {
+	protected ColorRGBA getColor(BufferedImage colorMap, float value) {
 		int index = Math.min(Math.max((int) ((colorMap.getWidth() - 1) * value), 0), colorMap.getWidth() - 1);
 
 		int clr = colorMap.getRGB(index, 0);
@@ -107,34 +97,11 @@ public abstract class FileMappedColorExtractor extends AbstractCellColorExtracto
 
 		return new ColorRGBA(red / 255f, green / 255f, blue / 255f, 1f);
 
-	}
-	
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.voidsentinel.hexagons.view.AbstractCellColorExtractor#getColors(org.
-	 * voidsentinel.hexagons.model.BoardMap, org.voidsentinel.hexagons.model.Cell)
-	 */
-	@Override
-	public DirectionColorPair[] getTopColors(HexMap map, HexCell cell) {
-		DirectionColorPair[] colorArray = new DirectionColorPair[6];
-		for (int i = 0; i < 6; i++) {
-			colorArray[i] = new DirectionColorPair(ColorRGBA.Gray.clone(), ColorRGBA.Gray.clone());
-		}
-		return colorArray;
-	}
-
-	public DirectionColorPair[] getSideColors(HexMap map, HexCell cell) {
-		DirectionColorPair[] colorArray = new DirectionColorPair[6];
-		for (int i = 0; i < 6; i++) {
-			colorArray[i] = new DirectionColorPair(ColorRGBA.Gray.clone(), ColorRGBA.Gray.clone());
-		}
-		return colorArray;
 	}
 
 	/**
 	 * get the image from the filename
+	 * 
 	 * @param filename
 	 * @return
 	 */

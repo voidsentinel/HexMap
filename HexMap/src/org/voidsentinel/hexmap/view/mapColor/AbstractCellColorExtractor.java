@@ -40,27 +40,11 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	 * return the base color of the cell
 	 * 
 	 * @param cell the cell whose color is needed.
+	 * @param map the whole map
 	 * @return
 	 */
 	public abstract ColorRGBA getColor(HexCell cell, HexMap map);
 
-	/**
-	 * return the colors for the 7 vertex of the hex (centre + 6 periphericals)
-	 * 
-	 * @param map  the map
-	 * @param cell the cell for which colors are requested
-	 * @return a table of 7 RGBAColors : center, plus one for each Direction
-	 */
-	public abstract DirectionColorPair[] getTopColors(HexMap map, HexCell cell);
-
-	/**
-	 * return the colors for the - side of the hex
-	 * 
-	 * @param map  the map
-	 * @param cell the cell for which colors are requested
-	 * @return a table of 6 RGBAColors : one for each Direction
-	 */
-	public abstract DirectionColorPair[] getSideColors(HexMap map, HexCell cell);
 
 	/**
 	 * @return the iconName

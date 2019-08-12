@@ -3,6 +3,9 @@
  */
 package org.voidsentinel.hexmap.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.voidsentinel.hexmap.utils.Alea;
 
 /**
@@ -15,6 +18,16 @@ public class HexCell {
 
 	public final HexCoordinates	hexCoordinates;
 	public final int					random;
+
+	public static final String		HEIGHT_DATA			= "height";
+	public static final String		ELEVATION_DATA		= "elevation";
+	public static final String		TEMPERATURE_DATA	= "temperature";
+	public static final String		HUMIDITY_DATA		= "humidity";
+	public static final String		SOIL_DATA			= "fertility";
+	public static final String		CITY_DATA			= "city";
+	public static final String		PATH_DATA			= "path";
+
+	private Map<String, Object>	datas					= new HashMap<String, Object>();
 
 	// general data
 	private float						height				= 0.5f;
@@ -36,11 +49,23 @@ public class HexCell {
 	public HexCell(int x, int z) {
 		hexCoordinates = new HexCoordinates(x, z);
 		random = Alea.nextInt(256);
-		elevation = Alea.nextInt(3);
+	}
+
+	public void setData(String key, int value) {
+		datas.put(key, new Float(value));
+	}
+
+	public void setData(String key, float value) {
+		datas.put(key, new Float(value));
+	}
+
+	public float getData(String key) {
+		return ((Float) datas.get(key)).floatValue();
 	}
 
 	public void setElevation(int elevation) {
 		this.elevation = elevation;
+		setData(ELEVATION_DATA, elevation);
 	}
 
 	public int getElevation() {
@@ -63,8 +88,7 @@ public class HexCell {
 	}
 
 	/**
-	 * @param terrain
-	 *           the terrain to set
+	 * @param terrain the terrain to set
 	 */
 	public void setTerrain(TerrainData terrain) {
 		this.terrain = terrain;
@@ -78,11 +102,11 @@ public class HexCell {
 	}
 
 	/**
-	 * @param temperature
-	 *           the temperature to set
+	 * @param temperature the temperature to set
 	 */
 	public void setTemperature(float temperature) {
 		this.temperature = temperature;
+		setData(TEMPERATURE_DATA, temperature);
 	}
 
 	/**
@@ -93,11 +117,11 @@ public class HexCell {
 	}
 
 	/**
-	 * @param height
-	 *           the height to set
+	 * @param height the height to set
 	 */
 	public void setHeight(float height) {
 		this.height = height;
+		setData(HEIGHT_DATA, height);
 	}
 
 	/**
@@ -108,11 +132,11 @@ public class HexCell {
 	}
 
 	/**
-	 * @param humidity
-	 *           the humidity to set
+	 * @param humidity the humidity to set
 	 */
 	public void setHumidity(float humidity) {
 		this.humidity = humidity;
+		setData(HUMIDITY_DATA, humidity);
 	}
 
 	/**
@@ -130,11 +154,11 @@ public class HexCell {
 	}
 
 	/**
-	 * @param fertility
-	 *           the fertility to set
+	 * @param fertility the fertility to set
 	 */
 	public void setFertility(float fertility) {
 		this.fertility = fertility;
+		setData(SOIL_DATA, fertility);
 	}
 
 	/**
@@ -145,8 +169,7 @@ public class HexCell {
 	}
 
 	/**
-	 * @param distanceToWater
-	 *           the distanceToWater to set
+	 * @param distanceToWater the distanceToWater to set
 	 */
 	public void setDistanceToWater(int distanceToWater) {
 		this.distanceToWater = distanceToWater;
@@ -160,11 +183,11 @@ public class HexCell {
 	}
 
 	/**
-	 * @param pathPrevalence
-	 *           the pathPrevalence to set
+	 * @param pathPrevalence the pathPrevalence to set
 	 */
 	public void setPathPrevalence(float pathPrevalence) {
 		this.pathPrevalence = pathPrevalence;
+		setData(PATH_DATA, pathPrevalence);
 	}
 
 	/*
@@ -215,11 +238,11 @@ public class HexCell {
 	}
 
 	/**
-	 * @param cityValue
-	 *           the cityValue to set
+	 * @param cityValue the cityValue to set
 	 */
 	public void setCityValue(float cityValue) {
 		this.cityValue = cityValue;
+		setData(CITY_DATA, cityValue);
 	}
 
 	/**
