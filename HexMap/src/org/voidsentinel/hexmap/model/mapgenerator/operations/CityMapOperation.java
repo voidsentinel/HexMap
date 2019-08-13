@@ -39,11 +39,11 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 				HexCell cell = map.getCell(x, y);
 				if (cell != null) {
 					value = 0f;
-					value = value + cell.getFertility() * 0.25f;
-					value = value + (1f - 2 * Math.abs(0.5f - cell.getTemperature())) * 0.2f;
-					value = value + (cell.getHumidity()) * 0.15f;
-					value = value + (1f - cell.getHeight()) * 0.15f;
-					value = value + cell.getPathPrevalence() * 0.25f;
+					value = value + cell.getFloatData(HexCell.SOIL_DATA) * 0.25f;
+					value = value + (1f - 2 * Math.abs(0.5f - cell.getFloatData(HexCell.TEMPERATURE_DATA))) * 0.2f;
+					value = value + (cell.getFloatData(HexCell.HUMIDITY_DATA)) * 0.15f;
+					value = value + (1f - cell.getFloatData(HexCell.HEIGHT_DATA)) * 0.15f;
+					value = value + cell.getFloatData(HexCell.PATH_DATA) * 0.25f;
 					// add a little bit if on shore
 					if (cell.getDistanceToWater() == 1) {
 						value = value + 0.05f;
@@ -59,8 +59,8 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(x, y);
-				cell.setCityValue(cities[y][x]);
-				cell.setHasCity(true);
+				cell.setData(HexCell.CITY_DATA, cities[y][x]);
+				cell.setHasCity(false);
 			}
 		}
 
@@ -118,11 +118,11 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 				HexCell cell2 = map.getCell(coord);
 				if (cell2 != null) {
 					cities[cell2.hexCoordinates.row][cell2.hexCoordinates.column] = 0f;
-					cell2.setCityValue(0f);
+					cell2.setData(HexCell.CITY_DATA, 0f);
 				}
 			}
 			cities[cell.hexCoordinates.row][cell.hexCoordinates.column] = 0f;
-			cell.setCityValue(1f);
+			cell.setData(HexCell.CITY_DATA, 1f);
 		}
 	}
 }

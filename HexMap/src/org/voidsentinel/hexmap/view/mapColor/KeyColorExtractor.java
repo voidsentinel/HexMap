@@ -77,7 +77,7 @@ public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
 	 * @return the color at attribute %
 	 */
 	public ColorRGBA getColor(HexCell cell, HexMap map) {
-		return getColor(cell.getData(key));
+		return getColor(cell.getFloatData(key));
 	}
 
 	abstract protected ColorRGBA getColor(float value);

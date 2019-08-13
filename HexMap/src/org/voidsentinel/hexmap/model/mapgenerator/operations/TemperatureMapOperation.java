@@ -43,7 +43,7 @@ public class TemperatureMapOperation extends AbstractTerrainAction implements IM
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(new HexCoordinates(x, y));
 				// less heat in altitude
-				float heightattenuation = HEIGHTATTENUATION * cell.getElevation(); // 1.2° / elevation
+				float heightattenuation = HEIGHTATTENUATION * cell.getIntData(HexCell.ELEVATION_DATA); // 1.2° / elevation
 				// local variation
 				float variation = (float) (osn.eval(x / 10f, y / 10f)) * 10f -5f ;
 
@@ -67,7 +67,7 @@ public class TemperatureMapOperation extends AbstractTerrainAction implements IM
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(new HexCoordinates(x, y));
-				cell.setTemperature(temperature[y][x]);
+				cell.setData(HexCell.TEMPERATURE_DATA, temperature[y][x]);
 			}
 		}
 	}

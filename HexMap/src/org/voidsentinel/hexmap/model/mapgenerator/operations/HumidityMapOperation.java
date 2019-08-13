@@ -37,24 +37,23 @@ public class HumidityMapOperation extends AbstractTerrainAction implements IMapO
 
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
 		int distance = 0;
-		float toWater = 0f;
-		float local = 0f;
+		float value = 0f;
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(new HexCoordinates(x, y));
 				distance = cell.getDistanceToWater();
 				float water = (float) (Math.pow(0.98d, cell.getDistanceToWater()));
-				float variation = (noise.GetPerlin((float)x*2f, (float)y*2f)+1f)/2f;
-				
+				float variation = (noise.GetPerlin((float) x * 2f, (float) y * 2f) + 1f) / 2f;
+
 				if (distance < 0) { // unknow
-					cell.setHumidity(0f);
+					value = 0f;
 				} else if (distance == 0) {
-					cell.setHumidity(1f);
+					value = 1f;
 				} else {
-					//cell.setHumidity(Math.min(variation, 1f));
-					cell.setHumidity(Math.min(variation*0.25f+water*0.80f, 1f));
+					value = Math.min(variation * 0.25f + water * 0.80f, 1f);
 				}
-				values[y][x] = cell.getHumidity();
+				cell.setData(HexCell.HUMIDITY_DATA, value);
+				values[y][x] = value;
 
 			}
 		}

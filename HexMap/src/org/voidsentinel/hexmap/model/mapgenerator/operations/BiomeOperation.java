@@ -60,16 +60,17 @@ public class BiomeOperation implements IMapOperation {
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(x, y);
-				if (cell.getHeight() <= map.getWaterHeight()) {
-					elevation = (int) Math.floor(cell.getHeight() * nblevel);
+				float cellHeight = cell.getFloatData(HexCell.HEIGHT_DATA);
+				if (cellHeight <= map.getWaterHeight()) {
+					elevation = (int) Math.floor(cellHeight * nblevel);
 				} else {
-					elevation = (int) Math.floor(cell.getHeight() * nblevel + 1f);
+					elevation = (int) Math.floor(cellHeight * nblevel + 1f);
 				}
 				elevation = Math.max(0, elevation);
 				elevation = Math.min(nblevel, elevation);
 
-				cell.setElevation(elevation);
-				cell.setTerrain(TerrainRepository.datas.getData(terrains[elevation]));
+				cell.setData(HexCell.ELEVATION_DATA, elevation);
+				cell.setData(HexCell.TERRAIN_DATA, TerrainRepository.datas.getData(terrains[elevation]));
 			}
 		}
 		map.reCalculateProperties();

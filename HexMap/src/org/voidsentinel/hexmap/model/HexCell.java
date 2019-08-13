@@ -26,50 +26,117 @@ public class HexCell {
 	public static final String		SOIL_DATA			= "fertility";
 	public static final String		CITY_DATA			= "city";
 	public static final String		PATH_DATA			= "path";
+	public static final String		TERRAIN_DATA		= "biome";
 
+	// neighbor cells
+	private HexCell[]					neighbor				= new HexCell[Direction.NBDIRECTIONS];	// neighbors
+	
+	// generic Datas associated with the cell
 	private Map<String, Object>	datas					= new HashMap<String, Object>();
 
-	// general data
-	private float						height				= 0.5f;
-	private int							elevation			= 0;												// the elevation of the Hex
-	private float						temperature			= 0.5f;
-	private float						humidity				= 0f;
-	private float						fertility			= 0.5f;
+	// to be removed later
 	private boolean					hasCity				= false;
-
-	// technical data
 	private int							distanceToWater	= -1;												// unknown
-	private float						pathPrevalence		= 0f;												// path going by this point
-	private float						cityValue			= 0f;
-	private HexCell[]					neighbor				= new HexCell[Direction.NBDIRECTIONS];	// neighbors
 
-	// biome
-	private TerrainData				terrain				= null;
 
 	public HexCell(int x, int z) {
 		hexCoordinates = new HexCoordinates(x, z);
 		random = Alea.nextInt(256);
 	}
 
+	/**
+	 * Associate a value to the cell
+	 * 
+	 * @param key   key foir the value
+	 * @param value the value
+	 */
 	public void setData(String key, int value) {
-		datas.put(key, new Float(value));
+		datas.put(key, new Integer(value));
 	}
 
+	/**
+	 * Associate a value to the cell
+	 * 
+	 * @param key   key for the value
+	 * @param value the value
+	 */
 	public void setData(String key, float value) {
 		datas.put(key, new Float(value));
 	}
 
-	public float getData(String key) {
+	/**
+	 * Associate an object to the cell
+	 * 
+	 * @param key   key for the value
+	 * @param value the object
+	 */
+	public void setData(String key, Object value) {
+		datas.put(key, value);
+	}
+
+	/**
+	 * return the object associated with the key in this cell
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public Object getData(String key) {
+		return datas.get(key);
+	}
+
+	/**
+	 * return the value associated with the key in this cell. Equivalent to
+	 * ((Float)getData(key)).toFloatValue
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public float getFloatData(String key) {
 		return ((Float) datas.get(key)).floatValue();
 	}
 
-	public void setElevation(int elevation) {
-		this.elevation = elevation;
-		setData(ELEVATION_DATA, elevation);
+	/**
+	 * return the value associated with the key in this cell. Equivalent to
+	 * ((Boolean)getData(key)).BooleanValue
+	 * 
+	 * @param key
+	 * @return the boolean value associated to the key
+	 */
+	public boolean getBooleanData(String key) {
+		return ((Boolean) datas.get(key)).booleanValue();
 	}
 
+	/**
+	 * return the value associated with the key in this cell. Equivalent to
+	 * ((Boolean)getData(key)).BooleanValue
+	 * 
+	 * @param key
+	 * @return the boolean value associated to the key
+	 */
+	public int getIntData(String key) {
+		return ((Integer) datas.get(key)).intValue();
+	}
+
+	/**
+	 * a shortcut to get height data as a float
+	 * 
+	 * @return
+	 */
+	public float getHeight() {
+		return getFloatData(HEIGHT_DATA);
+	}
+
+	/**
+	 * a shortcut to get Elevation data as an int
+	 * 
+	 * @return
+	 */
 	public int getElevation() {
-		return elevation;
+		return getIntData(ELEVATION_DATA);
+	}
+
+	public TerrainData getTerrain() {
+		return (TerrainData) getData(TERRAIN_DATA);
 	}
 
 	public HexCell getNeighbor(Direction direction) {
@@ -81,84 +148,10 @@ public class HexCell {
 	}
 
 	/**
-	 * @return the terrain
-	 */
-	public TerrainData getTerrain() {
-		return terrain;
-	}
-
-	/**
-	 * @param terrain the terrain to set
-	 */
-	public void setTerrain(TerrainData terrain) {
-		this.terrain = terrain;
-	}
-
-	/**
-	 * @return the temperature
-	 */
-	public float getTemperature() {
-		return temperature;
-	}
-
-	/**
-	 * @param temperature the temperature to set
-	 */
-	public void setTemperature(float temperature) {
-		this.temperature = temperature;
-		setData(TEMPERATURE_DATA, temperature);
-	}
-
-	/**
-	 * @return the height
-	 */
-	public float getHeight() {
-		return height;
-	}
-
-	/**
-	 * @param height the height to set
-	 */
-	public void setHeight(float height) {
-		this.height = height;
-		setData(HEIGHT_DATA, height);
-	}
-
-	/**
-	 * @return the humidity
-	 */
-	public float getHumidity() {
-		return humidity;
-	}
-
-	/**
-	 * @param humidity the humidity to set
-	 */
-	public void setHumidity(float humidity) {
-		this.humidity = humidity;
-		setData(HUMIDITY_DATA, humidity);
-	}
-
-	/**
 	 * @return the neighbor
 	 */
 	public HexCell[] getNeighbor() {
 		return neighbor;
-	}
-
-	/**
-	 * @return the fertility
-	 */
-	public float getFertility() {
-		return fertility;
-	}
-
-	/**
-	 * @param fertility the fertility to set
-	 */
-	public void setFertility(float fertility) {
-		this.fertility = fertility;
-		setData(SOIL_DATA, fertility);
 	}
 
 	/**
@@ -176,18 +169,17 @@ public class HexCell {
 	}
 
 	/**
-	 * @return the pathPrevalence
+	 * @return the hasCity
 	 */
-	public float getPathPrevalence() {
-		return pathPrevalence;
+	public boolean isHasCity() {
+		return hasCity;
 	}
 
 	/**
-	 * @param pathPrevalence the pathPrevalence to set
+	 * @param hasCity the hasCity to set
 	 */
-	public void setPathPrevalence(float pathPrevalence) {
-		this.pathPrevalence = pathPrevalence;
-		setData(PATH_DATA, pathPrevalence);
+	public void setHasCity(boolean hasCity) {
+		this.hasCity = hasCity;
 	}
 
 	/*
@@ -228,35 +220,6 @@ public class HexCell {
 			return false;
 		}
 		return true;
-	}
-
-	/**
-	 * @return the cityValue
-	 */
-	public float getCityValue() {
-		return cityValue;
-	}
-
-	/**
-	 * @param cityValue the cityValue to set
-	 */
-	public void setCityValue(float cityValue) {
-		this.cityValue = cityValue;
-		setData(CITY_DATA, cityValue);
-	}
-
-	/**
-	 * @return the hasCity
-	 */
-	public boolean isHasCity() {
-		return hasCity;
-	}
-
-	/**
-	 * @param hasCity the hasCity to set
-	 */
-	public void setHasCity(boolean hasCity) {
-		this.hasCity = hasCity;
 	}
 
 }

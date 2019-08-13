@@ -104,11 +104,12 @@ public class HexMap {
 			for (int x = 0; x < WIDTH; x++) {
 				int index = z * WIDTH + x;
 				if (cells[index] != null) {
-					if (cells[index].getElevation() < minimumHeight) {
-						minimumHeight = cells[index].getElevation();
+					int elevation = (cells[index].getIntData(HexCell.ELEVATION_DATA));
+					if (elevation < minimumHeight) {
+						minimumHeight = elevation;
 					}
-					if (cells[index].getElevation() > maximumHeight) {
-						maximumHeight = cells[index].getElevation();
+					if (elevation > maximumHeight) {
+						maximumHeight = elevation;
 					}
 				}
 			}

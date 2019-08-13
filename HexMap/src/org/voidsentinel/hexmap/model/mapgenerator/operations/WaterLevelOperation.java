@@ -38,7 +38,8 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(x, y);
-				height = (int) Math.max(0, Math.min(9999f, cell.getHeight() * 10000f));
+				
+				height = (int) Math.max(0, Math.min(9999f, cell.getFloatData(HexCell.HEIGHT_DATA) * 10000f));
 				number[height]++;
 			}
 		}
@@ -62,8 +63,9 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 			for (int y = 0; y < map.HEIGHT; y++) {
 				for (int x = 0; x < map.WIDTH; x++) {
 					HexCell cell = map.getCell(x, y);
+					float cellHeight = cell.getFloatData(HexCell.HEIGHT_DATA);
 					// if water : set the value to and the neighborg to 1
-					if (cell.getHeight() <= waterHeight && cell.getDistanceToWater() < 0) {
+					if (cellHeight <= waterHeight && cell.getDistanceToWater() < 0) {
 						cell.setDistanceToWater(0);
 						for (HexCell neighbor : cell.getNeighbor()) {
 							if (neighbor != null && neighbor.getHeight() > waterHeight) {
@@ -72,7 +74,7 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 						}
 					}
 
-					if (cell.getHeight() > waterHeight) {
+					if (cellHeight > waterHeight) {
 						// otherwise check any neighbor and modify the
 						for (HexCell neighbor : cell.getNeighbor()) {
 							if (neighbor != null) {

@@ -57,7 +57,7 @@ public class PathMapOperation extends AbstractTerrainAction implements IMapOpera
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(new HexCoordinates(x, y));
-				cell.setPathPrevalence(prevalence[y][x]);
+				cell.setData(HexCell.PATH_DATA, prevalence[y][x]);
 			}
 		}
 

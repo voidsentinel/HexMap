@@ -40,7 +40,7 @@ public class CityValueColorExtractor extends FileMappedColorExtractor {
 		if (cell.getDistanceToWater() == 0) {
 			value = 0f;
 		} else {
-			value = cell.getCityValue();			      ;			
+			value = cell.getFloatData(HexCell.CITY_DATA);			      ;			
 		}
 		return getColor(value);
 	}

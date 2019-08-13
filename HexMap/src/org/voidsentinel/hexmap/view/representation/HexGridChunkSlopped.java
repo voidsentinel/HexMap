@@ -1,14 +1,10 @@
 package org.voidsentinel.hexmap.view.representation;
 
-import java.util.List;
-
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.TerrainData;
 import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
-import org.voidsentinel.hexmap.utils.Alea;
-import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.MeshUtil;
@@ -81,15 +77,15 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 		((Geometry) (representation.getChild("ground"))).getMesh().setBuffer(Type.Color, 4, meshUtility.getColorArray());
 	}
 
-	private void perturbatePositions(MeshUtil meshUtil) {
-		List<Vector3f> vertices = meshUtil.getVertices();
-		FastNoise noise = new FastNoise(Alea.nextInt());
-		for (Vector3f vertex : vertices) {
-			Vector3f perturb = new Vector3f(noise.GetNoise(vertex.x, vertex.z), 0f, noise.GetNoise(vertex.x+100, vertex.z+100));
-			vertex.addLocal(perturb.multLocal(1f*HexMetrics.OUTERRADIUS*0.15f));
-		}
-
-	}
+//	private void perturbatePositions(MeshUtil meshUtil) {
+//		List<Vector3f> vertices = meshUtil.getVertices();
+//		FastNoise noise = new FastNoise(Alea.nextInt());
+//		for (Vector3f vertex : vertices) {
+//			Vector3f perturb = new Vector3f(noise.GetNoise(vertex.x, vertex.z), 0f, noise.GetNoise(vertex.x+100, vertex.z+100));
+//			vertex.addLocal(perturb.multLocal(1f*HexMetrics.OUTERRADIUS*0.15f));
+//		}
+//
+//	}
 
 	/**
 	 * generate the internal hexagon
@@ -148,7 +144,7 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 	private void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		ColorRGBA color = colorExtractor.getColor(cell, map);
 		MeshUtility.addColor(color);
-		for (Direction direction : Direction.values()) {
+		for (@SuppressWarnings("unused") Direction direction : Direction.values()) {
 			MeshUtility.addColor(color);
 			MeshUtility.addColor(color);
 		}

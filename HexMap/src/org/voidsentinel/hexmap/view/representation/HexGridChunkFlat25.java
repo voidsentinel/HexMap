@@ -158,7 +158,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
 			// internal point
 			MeshUtility.addColor(color);
-
+			
 			// corner
 			if (neighbor == null || neighborp == null) {
 				MeshUtility.addColor(color2);
@@ -173,6 +173,10 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 				MeshUtility.addColor(color2);
 				MeshUtility.addColor(color2);
 			} else {
+//				ColorRGBA col3 = colorExtractor.getColor(neighbor, map).clone().mult(1.1f);
+//				col3 = col3.add(color).mult(0.5f);
+//				MeshUtility.addColor(col3);
+//				MeshUtility.addColor(col3);
 				MeshUtility.addColor(color);
 				MeshUtility.addColor(color);
 			}

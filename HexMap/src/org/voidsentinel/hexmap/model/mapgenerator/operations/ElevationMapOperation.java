@@ -37,18 +37,19 @@ public class ElevationMapOperation extends AbstractTerrainAction implements IMap
 	public void filter(HexMap map) {
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
 		LOG.info("        from  0");
-		LOG.info("          to " + groundLevel+waterLevel);
+		LOG.info("          to " + groundLevel + waterLevel);
 
 		float percent = 0f;
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(new HexCoordinates(x, y));
-				if (cell.getHeight() <= map.getWaterHeight()) {
-					percent = cell.getHeight() / map.getWaterHeight();
-					cell.setElevation((int) Math.floor(waterLevel * percent));
+				float cellHeight = cell.getFloatData(HexCell.HEIGHT_DATA);
+				if (cellHeight <= map.getWaterHeight()) {
+					percent = cellHeight / map.getWaterHeight();
+					cell.setData(HexCell.ELEVATION_DATA, (int) Math.floor(waterLevel * percent));
 				} else {
-					percent = (cell.getHeight() - map.getWaterHeight()) / (1f - map.getWaterHeight());
-					cell.setElevation((int) Math.floor(waterLevel + groundLevel * percent));
+					percent = (cellHeight - map.getWaterHeight()) / (1f - map.getWaterHeight());
+					cell.setData(HexCell.ELEVATION_DATA, (int) Math.floor(waterLevel + groundLevel * percent));
 				}
 			}
 		}

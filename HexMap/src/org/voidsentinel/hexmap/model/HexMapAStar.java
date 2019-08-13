@@ -44,7 +44,7 @@ public class HexMapAStar extends AbstractAStar<HexCell> {
 			return 10000;
 		}
 		float value = 1f; // base movement
-		value = value + Math.abs(source.getElevation() - dest.getElevation()); // harder to change height
+		value = value + Math.abs(source.getIntData(HexCell.ELEVATION_DATA) - dest.getIntData(HexCell.ELEVATION_DATA)); // harder to change height
 		value = value + dest.getHeight() / 5f; // don't like the height;
 		return value;
 	}

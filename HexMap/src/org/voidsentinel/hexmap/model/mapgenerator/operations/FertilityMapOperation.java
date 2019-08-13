@@ -29,13 +29,15 @@ public class FertilityMapOperation extends AbstractTerrainAction implements IMap
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(new HexCoordinates(x, y));
-				if (cell.getHeight() <= map.getWaterHeight()) {
+				float cellHeight = cell.getFloatData(HexCell.HEIGHT_DATA);
+				
+				if (cellHeight <= map.getWaterHeight()) {
 					value = 0f;
 				} else {
 					value = (noise.GetSimplex(x * 3, y * 3) + 1f) / 2f;
 				}
 				values[y][x] = value;
-				cell.setFertility(value);
+				cell.setData(HexCell.SOIL_DATA, value);
 			}
 		}
 

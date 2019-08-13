@@ -41,12 +41,13 @@ public class TerrainImage {
 		for (int x = 0; x < map.WIDTH; x++) {
 			for (int y = 0; y < map.HEIGHT; y++) {
 				HexCell cell = map.getCell(x, y);
+				int elevation = cell.getIntData(HexCell.ELEVATION_DATA);
 				if (!colored) {
-					float height = (float) (cell.getElevation() - min) * coeff;
+					float height = (float) (elevation - min) * coeff;
 					float gray = Math.max(Math.min(height / 255f, 1f), 0f);
 					rgb = new Color(gray, gray, gray, 1f).getRGB();
 				} else {
-					TerrainData terrain = cell.getTerrain();
+					TerrainData terrain = (TerrainData)cell.getData(HexCell.TERRAIN_DATA);
 					if (terrain == null) {
 						LOG.warning(x + "/" + y + " possess no terrain");
 					}
@@ -148,8 +149,8 @@ public class TerrainImage {
 				for (int y = 0; y < map.HEIGHT; y++) {
 					HexCell cell = map.getCell(x, y);
 					if (cell != null) {
-						if (cell.getElevation() < minValue) {
-							minValue = cell.getElevation();
+						if (cell.getIntData(HexCell.ELEVATION_DATA) < minValue) {
+							minValue = cell.getIntData(HexCell.ELEVATION_DATA);
 						}
 					}
 				}
@@ -164,8 +165,8 @@ public class TerrainImage {
 				for (int y = 0; y < map.HEIGHT; y++) {
 					HexCell cell = map.getCell(x, y);
 					if (cell != null) {
-						if (cell.getElevation() > maxValue) {
-							maxValue = cell.getElevation();
+						if (cell.getIntData(HexCell.ELEVATION_DATA) > maxValue) {
+							maxValue = cell.getIntData(HexCell.ELEVATION_DATA);
 						}
 					}
 				}

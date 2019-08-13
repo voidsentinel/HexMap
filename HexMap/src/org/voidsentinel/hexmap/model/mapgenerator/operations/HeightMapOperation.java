@@ -55,7 +55,8 @@ public class HeightMapOperation extends AbstractTerrainAction implements IMapOpe
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(x, y);
-				cell.setHeight(values[y][x]);
+				cell.setData(HexCell.HEIGHT_DATA, values[y][x]);
+//				cell.setHeight(values[y][x]);
 			}
 		}
 

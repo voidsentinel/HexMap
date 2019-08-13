@@ -40,7 +40,7 @@ public class PathValueColorExtractor extends FileMappedColorExtractor {
 		if (cell.getDistanceToWater() == 0) {
 			value = 0f;
 		} else {
-			value = cell.getPathPrevalence() < 0.15f ? 0f : cell.getPathPrevalence();
+			value = cell.getFloatData(HexCell.PATH_DATA) < 0.15f ? 0f : cell.getFloatData(HexCell.PATH_DATA);
 		}
 		return getColor(value);
 	}

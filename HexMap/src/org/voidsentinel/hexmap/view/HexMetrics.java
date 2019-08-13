@@ -65,7 +65,7 @@ public class HexMetrics {
 	 */
 	public static Vector3f getCellCenter(HexCell cell) {
 		Vector3f response = getCellCenter(cell.hexCoordinates);
-		response.y = cell.getElevation() * HexMetrics.CELL_ELEVATION;
+		response.y = cell.getIntData(HexCell.ELEVATION_DATA) * HexMetrics.CELL_ELEVATION;
 		return response;
 	}
 
@@ -138,15 +138,15 @@ public class HexMetrics {
 		float height = 0.0f;
 		float count = 0.0f;
 		if (c1 != null) {
-			height += c1.getElevation() * CELL_ELEVATION;
+			height += c1.getIntData(HexCell.ELEVATION_DATA) * CELL_ELEVATION;
 			count += 1f;
 		}
 		if (c3 != null) {
-			height += c3.getElevation() * CELL_ELEVATION;
+			height += c3.getIntData(HexCell.ELEVATION_DATA) * CELL_ELEVATION;
 			count += 1f;
 		}
 		if (c2 != null) {
-			height += c2.getElevation() * CELL_ELEVATION;
+			height += c2.getIntData(HexCell.ELEVATION_DATA) * CELL_ELEVATION;
 			count += 1f;
 		}
 		if (count != 0)
