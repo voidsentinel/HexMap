@@ -14,10 +14,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import org.voidsentinel.hexmap.mod.ModLoader;
-
 /**
- * @author guipatry
+ * This class is a sequential ResourceBundle. The text/keys are searched into a
+ * sequence of ResourceBundle, stopping as soon as found.
+ * 
+ * @author VoidSentinel
  *
  */
 public class I18nMultiFile {

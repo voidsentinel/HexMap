@@ -1,14 +1,19 @@
 package org.voidsentinel.hexmap.view.representation;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
+import org.voidsentinel.hexmap.utils.Alea;
+import org.voidsentinel.hexmap.utils.FastNoise;
+import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.MeshUtil;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -23,11 +28,18 @@ import com.jme3.scene.VertexBuffer.Type;
  * @author guipatry
  *
  */
-public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
+public class HexGridChunkFlatSimplePerturbated extends AbstractHexGridChunk {
 
-	public HexGridChunkFlatSimpleTron(HexMap map, int xstart, int zstart, int chunkSize,
+	private float[]						coeff			= new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
+
+	private static final float			VARIATION	= HexMetrics.INNERRADIUS / 1.3f;
+
+	private static final FastNoise	fn				= new FastNoise(Alea.nextInt());
+
+	public HexGridChunkFlatSimplePerturbated(HexMap map, int xstart, int zstart, int chunkSize,
 	      AbstractCellColorExtractor colorExtractor) {
 		super(map, xstart, zstart, chunkSize, colorExtractor);
+
 	}
 
 	/**
@@ -37,7 +49,7 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 	 * @return the generated geometry.
 	 */
 	public void generateGeometry() {
-		Material mat = TerrainRepository.getTerrainMaterial();
+		LOG.info("generation mesh with variation");
 		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
@@ -50,9 +62,10 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 			}
 		}
 
+		perturbatePoints(meshUtility);
 		Mesh mesh = meshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
-		terrain.setMaterial(mat);
+		terrain.setMaterial(terrainMaterial);
 		representation.attachChild(terrain);
 	}
 
@@ -85,11 +98,7 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 	 */
 	private void triangulateCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		Vector3f center = HexMetrics.getCellCenter(cell);
-		Vector3f v0 = null;
-		Vector3f v1 = null;
 		Vector3f v2 = null;
-		Vector3f v3 = null;
-		Vector3f v4 = null;
 		int index = MeshUtility.getVerticeCount();
 		int offsetDir = 0;
 		int offsetDirNext = 0;
@@ -100,39 +109,23 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 
 		for (Direction direction : Direction.values()) {
 			offsetDir = direction.ordinal();
-
-			v1 = center.add(HexMetrics.getFirstCornerVector(offsetDir));
-			v0 = center.add(HexMetrics.getSecondCornerVector(offsetDir));
 			v2 = center.add(HexMetrics.getFirstCornerVector(offsetDir, 1f));
 
-			MeshUtility.addVertice(v1);
-			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
+			float o1 = fn.GetPerlin(v2.x * 30, v2.z * 70) * VARIATION - 0.5f * VARIATION;
+			float o2 = fn.GetPerlin(v2.z * 30, v2.x * 70) * VARIATION - 0.5f * VARIATION;
+			v2.addLocal(o1, 0f, o2);
+
 			MeshUtility.addVertice(v2);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
-
-			Vector3f bridge = HexMetrics.getBridgeVector(offsetDir);
-			v3 = v1.add(bridge);
-			v4 = v0.add(bridge);
-			MeshUtility.addVertice(v3);
-			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
-			MeshUtility.addVertice(v4);
-			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
-
-			points.put(v1, cell);
-			points.put(v4, cell);
-
+			if (direction.ordinal() % 2 == 0) {
+				points.put(v2, cell);
+			}
 		}
 
 		for (Direction direction : Direction.values()) {
 			offsetDir = direction.ordinal();
 			offsetDirNext = direction.next().ordinal();
-			MeshUtility.addTriangle(index, index + offsetDirNext * 4 + 1, index + offsetDir * 4 + 1);
-			MeshUtility.addTriangle(index + offsetDir * 4 + 1, index + offsetDir * 4 + 3, index + offsetDir * 4 + 2);
-			MeshUtility.addTriangle(index + offsetDirNext * 4 + 1, index + offsetDirNext * 4 + 2,
-			      index + offsetDir * 4 + 4);
-
-			MeshUtility.addTriangle(index + offsetDir * 4 + 1, index + offsetDirNext * 4 + 1, index + offsetDir * 4 + 4);
-			MeshUtility.addTriangle(index + offsetDir * 4 + 1, index + offsetDir * 4 + 4, index + offsetDir * 4 + 3);
+			MeshUtility.addTriangle(index, index + offsetDirNext + 1, index + offsetDir + 1);
 		}
 
 	}
@@ -144,33 +137,11 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 	 * @param MeshUtility
 	 */
 	protected void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
-		ColorRGBA color = colorExtractor.getColor(cell, map);
-		MeshUtility.addColor(ColorRGBA.Black);
+		ColorRGBA color = colorExtractor.getColor(cell, map).clone().mult(1.1f);
+		MeshUtility.addColor(color);
 		for (@SuppressWarnings("unused")
 		Direction direction : Direction.values()) {
-			HexCell neighbor = cell.getNeighbor(direction);
-			HexCell neighborp = cell.getNeighbor(direction.previous());
-
-			// internal point
-			MeshUtility.addColor(ColorRGBA.Black);
-
-			// corner
-			if (neighbor == null || neighborp == null) {
-				MeshUtility.addColor(color);
-			} else if (neighbor.getElevation() != cell.getElevation() || neighborp.getElevation() != cell.getElevation()) {
-				MeshUtility.addColor(color);
-			} else {
-				MeshUtility.addColor(ColorRGBA.Black);
-			}
-
-			// bridge
-			if (neighbor == null || neighbor.getElevation() != cell.getElevation()) {
-				MeshUtility.addColor(color);
-				MeshUtility.addColor(color);
-			} else {
-				MeshUtility.addColor(ColorRGBA.Black);
-				MeshUtility.addColor(ColorRGBA.Black);
-			}
+			MeshUtility.addColor(color);
 		}
 	}
 
@@ -188,6 +159,15 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 				Vector3f center = HexMetrics.getCellCenter(cell);
 				Vector3f v1 = center.add(HexMetrics.corners[direction.ordinal()]);
 				Vector3f v2 = center.add(HexMetrics.corners[direction.next().ordinal()]);
+
+				float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
+				float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
+				v1.addLocal(o1, 0f, o2);
+
+				o1 = fn.GetPerlin(v2.x * 30, v2.z * 70) * VARIATION - 0.5f * VARIATION;
+				o2 = fn.GetPerlin(v2.z * 30, v2.x * 70) * VARIATION - 0.5f * VARIATION;
+				v2.addLocal(o1, 0f, o2);
+
 				Vector3f v3 = v1.clone();
 				Vector3f v4 = v2.clone();
 				v1.y = cell.getElevation() * HexMetrics.CELL_ELEVATION;
@@ -201,8 +181,8 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 	}
 
 	protected void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
-		ColorRGBA c1 = colorExtractor.getColor(cell, map);
 		for (Direction direction : Direction.values()) {
+			ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(coeff[direction.ordinal()]);
 			colorizeCellSideDirection(cell, direction, meshUtility, c1);
 		}
 	}
@@ -217,9 +197,30 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 		}
 
 		if (height > 0) {
-//			meshUtility.addQuadColors(c1, c1, ColorRGBA.Black, ColorRGBA.Black);
 			meshUtility.addQuadColors(c1, c1, c1, c1);
 		}
+	}
+	
+	
+	protected void perturbatePoints(MeshUtil meshUtility) {
+		// does not work since only the 6 border + the side top should be changed. 
+		
+//		// change the points
+//      List<Vector3f> vertices = meshUtility.getVertices();		
+//      for (Iterator<Vector3f> iterator = vertices.iterator(); iterator.hasNext();) {
+//			Vector3f v1 = (Vector3f) iterator.next();
+//			float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
+//			float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
+//			v1.addLocal(o1, 0f, o2);
+//		}
+//      // change the memorized points
+//		Set<Vector3f> keys = points.keySet();
+//      for (Iterator<Vector3f> iterator = keys.iterator(); iterator.hasNext();) {
+//			Vector3f v1 = (Vector3f) iterator.next();
+//			float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
+//			float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
+//			v1.addLocal(o1, 0f, o2);
+//		}
 	}
 
 }

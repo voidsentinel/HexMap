@@ -1,16 +1,11 @@
 package org.voidsentinel.hexmap.model.mapgenerator;
 
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.CellularGeneration;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.DiamondSquareGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FaultLinesGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FlatGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.PerlinGeneration;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.SimplexGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.FastErosionOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.HexBlurOperation;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.TorusOperation;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.TorusOperation.VTreatment;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.BiomeOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.CityMapOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.ElevationMapOperation;

@@ -52,12 +52,12 @@
 		material="terrains_unshaded.j3m" text="map.Flat.label"
 		tooltip="map.Flat.toolTip" />
 
-	<mapRepresentation id="FlatLighted"
-		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimpleLighted"
-		material="terrains_shaded.j3m" text="map.FlatLighted.label"
-		tooltip="map.FlatLighted.toolTip" />
+	<mapRepresentation id="FlatPerturbated"
+		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimplePerturbated"
+		material="terrains_shaded.j3m" text="map.FlatPerturbated.label"
+		tooltip="map.FlatPerturbated.toolTip" />
 
-	<mapRepresentation id="gridChunkFlatSimple2"
+	<mapRepresentation id="Flat25"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlat25"
 		material="terrains_unshaded.j3m" default="true"
 		text="map.Flat25.label" tooltip="map.Flat25.toolTip" />
@@ -69,12 +69,12 @@
 
 	<mapRepresentation id="gridChunkSlopped"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkSlopped"
-		material="terrains_shaded.j3m" text="map.HexGridChunkSlopped.label"
+		material="terrains_unshaded.j3m" text="map.HexGridChunkSlopped.label"
 		tooltip="map.HexGridChunkSlopped.toolTip" />
 
 	<mapRepresentation id="gridChunkFlatSimpleTron"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimpleTron"
-		material="terrains_unshaded.j3m" default="false"
+		material="terrains_unshaded.j3m" 
 		text="map.HexGridChunkFlatSimpleTron.label"
 		tooltip="map.HexGridChunkFlatSimpleTron.toolTip" />
 

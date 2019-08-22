@@ -4,7 +4,8 @@ import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
-import org.voidsentinel.hexmap.utils.OpenSimplexNoise;
+import org.voidsentinel.hexmap.utils.Alea;
+import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.utils.TerrainImage;
 
 /**
@@ -27,7 +28,7 @@ public class TemperatureMapOperation extends AbstractTerrainAction implements IM
 		final float LATITATTENUATION = (maxTemperature - minTemperature) / (map.HEIGHT*1.1f); // expressed in °/ cell
 
 		float[][] temperature = new float[map.HEIGHT][map.WIDTH];
-		OpenSimplexNoise osn = new OpenSimplexNoise();
+		FastNoise osn = new FastNoise(Alea.nextInt());
 
 		// calculate lattitude heat value
 		int middle = map.HEIGHT / 2;
@@ -45,7 +46,7 @@ public class TemperatureMapOperation extends AbstractTerrainAction implements IM
 				// less heat in altitude
 				float heightattenuation = HEIGHTATTENUATION * cell.getIntData(HexCell.ELEVATION_DATA); // 1.2° / elevation
 				// local variation
-				float variation = (float) (osn.eval(x / 10f, y / 10f)) * 10f -5f ;
+				float variation = (float) (osn.GetNoise((float)x / 10f, (float)y / 10f)) * 10f -5f ;
 
 				float value = (baseTemperature - heightattenuation + variation);
 

@@ -4,7 +4,7 @@
 package org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation;
 
 import org.voidsentinel.hexmap.utils.Alea;
-import org.voidsentinel.hexmap.utils.ImprovedNoise;
+import org.voidsentinel.hexmap.utils.FastNoise;
 
 /**
  * This Generator create a map by placing 0.1 to a random point, moving one
@@ -36,6 +36,8 @@ public class FBMGeneration extends AbstractTerrainGenerator {
 	private double[]	frequency;	// scale of each layer
 
 	private int			scale	= 1;
+	
+	private FastNoise noise = new FastNoise(Alea.nextInt());
 
 	public FBMGeneration(int octaves) {
 		this(octaves, .5, 10);
@@ -69,7 +71,7 @@ public class FBMGeneration extends AbstractTerrainGenerator {
 		for (int i = 0; i < this.octaves; i++) { // for all layers
 			double xV = x * cos[i] + y * -sin[i]; // rotated value of x
 			double yV = x * sin[i] + y * cos[i]; // rotated value of y
-			double val = (ImprovedNoise.noise(xV * frequency[i] / delta, yV * frequency[i] / delta, offset[i]));
+			double val = (noise.GetNoise((float)(xV * frequency[i] / delta), (float)(yV * frequency[i] / delta), (float)offset[i]));
 			val = (val * amplitude[i]); // amplitude decreases with every octave
 			total += val;
 		}

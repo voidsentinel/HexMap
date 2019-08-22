@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
 import com.jme3.material.Material;
@@ -64,8 +63,8 @@ public abstract class AbstractHexGridChunk {
 		this.map = map;
 		this.xStart = xstart;
 		this.zStart = zstart;
-		this.xEnd = Math.min(xstart + chunkSize, map.WIDTH - 1);
-		this.zEnd = Math.min(zstart + chunkSize, map.HEIGHT - 1);
+		this.xEnd = Math.min(xstart + chunkSize-1, map.WIDTH - 1);
+		this.zEnd = Math.min(zstart + chunkSize-1, map.HEIGHT - 1);
 		this.colorExtractor = colorExtractor;
 		this.representation = new Node(CHUNK_PREFIX + xStart + "_" + zStart);
 	}

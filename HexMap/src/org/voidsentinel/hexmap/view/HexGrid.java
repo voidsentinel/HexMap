@@ -38,7 +38,7 @@ import com.jme3.scene.Node;
  */
 public class HexGrid {
 
-	public static final int							CHUNKSIZE			= 64;
+	public static final int							CHUNKSIZE			= 256;
 
 	private HexMap										map					= null;
 	private Node										terrainNode			= null;
