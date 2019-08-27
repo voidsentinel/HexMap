@@ -2,9 +2,7 @@ package org.voidsentinel.hexmap.model.mapgenerator;
 
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FaultCirclesGeneration;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FaultLinesGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FlatGeneration;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.FastErosionOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.HexBlurOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.BiomeOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.CityMapOperation;
@@ -25,16 +23,17 @@ public class CapitalismGenerator extends MapGenerator {
 		heightmap.addGenerator(new FlatGeneration(0f));
 //		heightmap.addGenerator(new PerlinGeneration(0.25f), 0.25f);
 //		heightmap.addGenerator(new SimplexGeneration(0.25f), 0.33f);
-		
-		heightmap.addGenerator(new FaultCirclesGeneration((map.WIDTH + map.HEIGHT)));
-//		heightmap.addGenerator(new FaultLinesGeneration((map.WIDTH + map.HEIGHT)/2));
+
+		heightmap.addGenerator(new FaultCirclesGeneration(2000));//(map.WIDTH + map.HEIGHT)
+//		heightmap.addGenerator(new FaultLinesGeneration((map.WIDTH + map.HEIGHT)));
 //		heightmap.addGenerator(new DiamondSquareGeneration());
 //		heightmap.addGenerator(new CellularGeneration(1f, 1f, 30f, 30f), 0.25f);
 
-		heightmap.addOperation(new HexBlurOperation(3, 1));
-		heightmap.addOperation(new HexBlurOperation(2, 1));
-		heightmap.addOperation(new FastErosionOperation(0.1f, 64));
-		
+		heightmap.addOperation(new HexBlurOperation(10, 3));
+//		heightmap.addOperation(new HexBlurOperation(2, 1));
+//		heightmap.addOperation(new FastErosionOperation(0.05f, 64));
+//		heightmap.addOperation(new TorusOperation(TorusOperation.HTreatment.BOTH, TorusOperation.VTreatment.BOTH));
+
 		heightmap.filter(map);
 
 		new BiomeOperation(new String[] { "FMP-sea", "FMP-reef", "FMP-swamp", "FMP-plain", "FMP-mountain" }, 5)

@@ -70,16 +70,16 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 		int stepx = map.WIDTH / 4;
 		for (int i = 0; i < 3; i++) {
 			selectedCell = findCityPosition(map, cities, 0, map.WIDTH, 0, map.HEIGHT);
-			createCity(selectedCell, map, cities, stepx / 2);
+			createCity(selectedCell, map, cities, 3);
 		}
 
 		for (int i = 0; i < 4; i++) {
 			selectedCell = findCityPosition(map, cities, stepx * i, stepx * (i + 1), 0, map.HEIGHT);
 			if (selectedCell != null)
-				createCity(selectedCell, map, cities, stepx / 4);
+				createCity(selectedCell, map, cities, 4);
 			selectedCell = findCityPosition(map, cities, stepx * i, stepx * (i + 1), 0, map.HEIGHT);
 			if (selectedCell != null)
-				createCity(selectedCell, map, cities, stepx / 4);
+				createCity(selectedCell, map, cities, 6);
 		}
 
 	}
