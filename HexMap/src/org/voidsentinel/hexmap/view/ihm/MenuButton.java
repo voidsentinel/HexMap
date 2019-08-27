@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.HexTuto;
 import org.voidsentinel.hexmap.utils.ColorParser;
-import org.voidsentinel.hexmap.utils.I18nMultiFile;
 import org.voidsentinel.hexmap.view.ihm.IHMEventController.IHMAction;
 
 import com.jme3.math.ColorRGBA;
@@ -29,7 +28,8 @@ import com.simsilica.lemur.component.TbtQuadBackgroundComponent;
 import com.simsilica.lemur.style.ElementId;
 
 /**
- * @author guipatry
+ * A Button that open a menu underIt
+ * @author VoidSentinel
  *
  */
 public class MenuButton extends Button implements IIHMEventListener {
@@ -67,7 +67,7 @@ public class MenuButton extends Button implements IIHMEventListener {
 		this.setTextVAlignment(VAlignment.Center);
 
 		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent.create(
-		      ImageRepository.datas.getData("buttonSelectedBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
+		      ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
 		this.setBackground(btTexture);
 
 		this.showSelected = showLastSelected;

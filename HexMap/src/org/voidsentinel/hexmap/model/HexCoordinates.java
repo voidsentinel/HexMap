@@ -133,9 +133,7 @@ public class HexCoordinates {
 	 * @return
 	 */
 	public List<HexCoordinates> inRange(int distance) {
-
 		List<HexCoordinates> response = new ArrayList<HexCoordinates>();
-
 		for (int x = -distance; x <= distance; x++) {
 			for (int y = -distance; y <= distance; y++) {
 				for (int z = -distance; z <= distance; z++) {

@@ -14,6 +14,7 @@ import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.mapgenerator.CapitalismGenerator;
 import org.voidsentinel.hexmap.model.mapgenerator.MapGenerator;
 import org.voidsentinel.hexmap.utils.Alea;
+import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
 import org.voidsentinel.hexmap.utils.TerrainImage;
 import org.voidsentinel.hexmap.view.HexGrid;
@@ -41,6 +42,7 @@ import com.simsilica.lemur.TextField;
 import com.simsilica.lemur.VAlignment;
 import com.simsilica.lemur.component.IconComponent;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
+import com.simsilica.lemur.component.TbtQuadBackgroundComponent;
 import com.simsilica.lemur.style.BaseStyles;
 import com.simsilica.lemur.style.ElementId;
 
@@ -100,7 +102,9 @@ public class HexTuto extends SimpleApplication {
 		
 		Container panel = new Container();
 		guiNode.attachChild(panel);
-		panel.setBackground(new QuadBackgroundComponent(new ColorRGBA(0.36f, 0.54f, 0.66f, 0.75f)));
+
+		panel.setBackground(new QuadBackgroundComponent(ColorParser.parse("rgb(211, 191, 143, 211)")));// new ColorRGBA(0.36f, 0.54f, 0.66f, 0.75f)
+		//panel.setBorder(new QuadBackgroundComponent(ColorParser.parse("rgb(0, 0, 0, 211)")));// new ColorRGBA(0.36f, 0.54f, 0.66f, 0.75f)
 		panel.setPreferredSize(new Vector3f(settings.getWidth(),  25f, 0f));
 		panel.setLocalTranslation(0, settings.getHeight(), 0);
 		
@@ -180,7 +184,7 @@ public class HexTuto extends SimpleApplication {
 		
 		MenuButton ddb = new MenuButton("", icon, menu.getElementId().child("settingMenu"), false, true);
       ddb.setHooverField(hooverField);
-		menu.addButton(ddb, true);
+		menu.addButton(ddb);
 		ddb.setToolTip("System Menu");
 			   
 		image = ImageRepository.datas.getData("mapRepresentationIcon");

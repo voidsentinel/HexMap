@@ -77,16 +77,6 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 		((Geometry) (representation.getChild("ground"))).getMesh().setBuffer(Type.Color, 4, meshUtility.getColorArray());
 	}
 
-//	private void perturbatePositions(MeshUtil meshUtil) {
-//		List<Vector3f> vertices = meshUtil.getVertices();
-//		FastNoise noise = new FastNoise(Alea.nextInt());
-//		for (Vector3f vertex : vertices) {
-//			Vector3f perturb = new Vector3f(noise.GetNoise(vertex.x, vertex.z), 0f, noise.GetNoise(vertex.x+100, vertex.z+100));
-//			vertex.addLocal(perturb.multLocal(1f*HexMetrics.OUTERRADIUS*0.15f));
-//		}
-//
-//	}
-
 	/**
 	 * generate the internal hexagon
 	 * 
