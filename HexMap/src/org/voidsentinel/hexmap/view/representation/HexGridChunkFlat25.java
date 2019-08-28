@@ -26,7 +26,7 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
-	private float[] coeff = new float[] { 0.75f, 0.5f, 0.75f, 1f, 1.15f, 1f };
+	private float[] coeff = new float[] { 0.5f, 0.25f, 0.5f, 0.9f, 1.05f, 0.9f };
 
 	public HexGridChunkFlat25(HexMap map, int xstart, int zstart, int chunkSize,
 			AbstractCellColorExtractor colorExtractor) {
@@ -148,7 +148,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	 * @param MeshUtility
 	 */
 	protected void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
-		ColorRGBA color = colorExtractor.getColor(cell, map).clone().mult(1.1f);
+		ColorRGBA color = colorExtractor.getColor(cell, map).clone().mult(1.0f);
 		ColorRGBA color2 = color.mult(0.8f);
 		MeshUtility.addColor(color);
 		for (@SuppressWarnings("unused")
