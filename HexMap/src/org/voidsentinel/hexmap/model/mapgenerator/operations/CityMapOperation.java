@@ -39,11 +39,11 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 				HexCell cell = map.getCell(x, y);
 				if (cell != null) {
 					value = 0f;
-					value = value + cell.getFloatData(HexCell.SOIL_DATA) * 0.25f;
+					value = value + cell.getFloatData(HexCell.SOIL_DATA) * 0.35f;
 					value = value + (1f - 2 * Math.abs(0.5f - cell.getFloatData(HexCell.TEMPERATURE_DATA))) * 0.2f;
 					value = value + (cell.getFloatData(HexCell.HUMIDITY_DATA)) * 0.15f;
 					value = value + (1f - cell.getFloatData(HexCell.HEIGHT_DATA)) * 0.15f;
-					value = value + cell.getFloatData(HexCell.PATH_DATA) * 0.25f;
+//					value = value + cell.getFloatData(HexCell.PATH_DATA) * 0.25f;
 					// add a little bit if on shore
 					if (cell.getDistanceToWater() == 1) {
 						value = value + 0.05f;
