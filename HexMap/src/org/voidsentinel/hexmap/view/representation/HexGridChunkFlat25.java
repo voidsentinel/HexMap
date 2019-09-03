@@ -28,9 +28,9 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
 	private float[] coeff = new float[] { 0.75f, 0.5f, 0.75f, 1f, 1.15f, 1f };
 
-	public HexGridChunkFlat25(HexMap map, int xstart, int zstart, int chunkSize,
+	public HexGridChunkFlat25(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 			AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
 	}
 
 	/**

@@ -26,7 +26,7 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 
 	public HexGridChunkFlat(HexMap map, int xstart, int zstart, int chunkSize,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, colorExtractor);
+		super(map, xstart, zstart, chunkSize, false, colorExtractor);
 	}
 
 	/**

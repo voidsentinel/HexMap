@@ -33,7 +33,7 @@ public class HexGridChunkTriangle extends AbstractHexGridChunk {
 
 	public HexGridChunkTriangle(HexMap map, int xstart, int zstart, int chunkSize,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, colorExtractor);
+		super(map, xstart, zstart, chunkSize, false,colorExtractor);
 	}
 
 	/**

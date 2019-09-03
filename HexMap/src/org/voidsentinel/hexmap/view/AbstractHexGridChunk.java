@@ -26,10 +26,10 @@ import com.jme3.scene.Node;
 public abstract class AbstractHexGridChunk {
 	protected static final Logger				LOG					= Logger.getLogger(AbstractHexGridChunk.class.toString());
 
-	//
+	// prefix for the Chunk Node
 	static final public String					CHUNK_PREFIX		= "CHUNK_";
 
-	// perturbation
+	// perturbation source
 	protected static final FastNoise			fn						= new FastNoise(Alea.nextInt());
 
 	// the (part of) map to display
@@ -38,6 +38,9 @@ public abstract class AbstractHexGridChunk {
 	final protected int							zStart;
 	final protected int							xEnd;
 	final protected int							zEnd;
+   // representation informations
+	protected boolean								perturbated			= false;
+
 	// the geometryNode corresponding to the (part of) map
 	protected Node									representation		= null;
 	// points associated with each cell. Should be the minimal number of points (ie
@@ -58,7 +61,7 @@ public abstract class AbstractHexGridChunk {
 	 *                       xtsart+size and zstart+size)
 	 * @param colorExtractor the color Extractor to use
 	 */
-	public AbstractHexGridChunk(HexMap map, int xstart, int zstart, int chunkSize,
+	public AbstractHexGridChunk(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
 		this.map = map;
 		this.xStart = xstart;
@@ -66,6 +69,7 @@ public abstract class AbstractHexGridChunk {
 		this.xEnd = Math.min(xstart + chunkSize - 1, map.WIDTH - 1);
 		this.zEnd = Math.min(zstart + chunkSize - 1, map.HEIGHT - 1);
 		this.colorExtractor = colorExtractor;
+		this.perturbated = perturbated;
 		this.representation = new Node(CHUNK_PREFIX + xStart + "_" + zStart);
 	}
 

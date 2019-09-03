@@ -26,15 +26,11 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 
-	private float[]						coeff			= new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
+	private float[] coeff = new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
 
-	private static final float			VARIATION	= HexMetrics.INNERRADIUS / 1.3f;
-
-	private static final FastNoise	fn				= new FastNoise(Alea.nextInt());
-
-	public HexGridChunkFlatSimple(HexMap map, int xstart, int zstart, int chunkSize,
+	public HexGridChunkFlatSimple(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
 
 	}
 
@@ -108,14 +104,14 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 			offsetDir = direction.ordinal();
 			v2 = center.add(HexMetrics.getFirstCornerVector(offsetDir, 1f));
 
-			float o1 = fn.GetPerlin(v2.x * 30, v2.z * 70) * VARIATION - 0.5f * VARIATION;
-			float o2 = fn.GetPerlin(v2.z * 30, v2.x * 70) * VARIATION - 0.5f * VARIATION;
-			point = v2.add(o1, 0f, o2);
+			if (perturbated) {
+				perturbate(v2);
+			}
 
-			MeshUtility.addVertice(point);
+			MeshUtility.addVertice(v2);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
-		   points.put(point, cell);
-						
+			points.put(v2, cell);
+
 		}
 
 		for (Direction direction : Direction.values()) {
@@ -155,14 +151,10 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 				Vector3f center = HexMetrics.getCellCenter(cell);
 				Vector3f v1 = center.add(HexMetrics.corners[direction.ordinal()]);
 				Vector3f v2 = center.add(HexMetrics.corners[direction.next().ordinal()]);
-
-				float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
-				float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
-				v1.addLocal(o1, 0f, o2);
-
-				o1 = fn.GetPerlin(v2.x * 30, v2.z * 70) * VARIATION - 0.5f * VARIATION;
-				o2 = fn.GetPerlin(v2.z * 30, v2.x * 70) * VARIATION - 0.5f * VARIATION;
-				v2.addLocal(o1, 0f, o2);
+				if (perturbated) {
+					perturbate(v1);
+					perturbate(v2);
+				}
 
 				Vector3f v3 = v1.clone();
 				Vector3f v4 = v2.clone();

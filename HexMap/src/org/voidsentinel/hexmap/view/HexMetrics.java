@@ -88,29 +88,6 @@ public class HexMetrics {
 		return corners[direction].add(corners[direction + 1]).mult(0.5f).mult(BLURFACTOR);
 	}
 
-	/**
-	 * 
-	 * @param a
-	 * @param b
-	 * @param step
-	 * @return
-	 */
-	public static Vector3f interpolateTerraceLerp(Vector3f a, Vector3f b, int step) {
-		Vector3f response = new Vector3f();
-		float h = step * HORIZONTALSTEPSIZE;
-		response.x = a.x + (b.x - a.x) * h;
-		response.z = a.z + (b.z - a.z) * h;
-		float v = ((step + 1) / 2) * VERTICALSTEPSIZE;
-		response.y = a.y + (b.y - a.y) * v;
-		return response;
-	}
-
-	public static ColorRGBA interpolateTerraceColor(ColorRGBA a, ColorRGBA b, int step) {
-		ColorRGBA response = new ColorRGBA();
-		float h = step * HORIZONTALSTEPSIZE;
-		response.interpolateLocal(a, b, h);
-		return response;
-	}
 
 	public static HexEdgeType getEdgeType(int elevation1, int elevation2) {
 		int diff = elevation2 - elevation1;

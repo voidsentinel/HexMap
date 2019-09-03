@@ -409,6 +409,10 @@ public class ModLoader {
 			if (material != null) {
 				representation.setMaterialName(material.trim());
 			}
+			String perturbation = node.getAttributeValue("perturbated");
+			if (perturbation != null) {
+				representation.setPerturbated(Boolean.parseBoolean(perturbation));;
+			}
 
 			MapRepresentationRepository.repository.addData(representation);
 			

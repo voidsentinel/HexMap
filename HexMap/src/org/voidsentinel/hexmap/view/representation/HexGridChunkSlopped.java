@@ -26,16 +26,9 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkSlopped extends AbstractHexGridChunk {
 
-	// number of terrace per slope
-	public final int				TERRACEPERSLOPE		= 2;
-	// number of steps per slope
-	public final int				TERRACESTEPS			= TERRACEPERSLOPE * 2 + 1;
-	public final float			HORIZONTALSTEPSIZE	= 1f / TERRACESTEPS;
-	public final float			VERTICALSTEPSIZE		= 1f / (TERRACEPERSLOPE + 1);
-
-	public HexGridChunkSlopped(HexMap map, int xstart, int zstart, int chunkSize,
+	public HexGridChunkSlopped(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
 	}
 
 	/**
@@ -302,5 +295,7 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			meshUtility.addColor(c2);
 		}
 	}
+
+	
 
 }

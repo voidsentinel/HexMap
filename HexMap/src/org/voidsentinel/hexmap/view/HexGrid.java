@@ -118,12 +118,12 @@ public class HexGrid {
 		terrainMaterial = (Material) assets.loadMaterial(generatorInfo.getMaterialName());
 
 		Class<?> clazz = Class.forName(generatorInfo.getClassName());
-		Constructor<?> ctor = clazz.getConstructor(HexMap.class, Integer.TYPE, Integer.TYPE, Integer.TYPE,
+		Constructor<?> ctor = clazz.getConstructor(HexMap.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE,
 				AbstractCellColorExtractor.class);
 
 		for (int z = 0; z < map.HEIGHT; z = z + CHUNKSIZE) {
 			for (int x = 0; x < map.WIDTH; x = x + CHUNKSIZE) {
-				Object object = ctor.newInstance(new Object[] { map, x, z, CHUNKSIZE, colorExtractor });
+				Object object = ctor.newInstance(new Object[] { map, x, z, CHUNKSIZE, generatorInfo.isPerturbated(), colorExtractor });
 				AbstractHexGridChunk generator = ((AbstractHexGridChunk) (object));
 				generator.setTerrainMaterial(terrainMaterial);
 				generator.generateGeometry();
