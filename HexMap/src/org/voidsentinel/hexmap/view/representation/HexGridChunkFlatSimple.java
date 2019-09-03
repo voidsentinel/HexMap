@@ -3,8 +3,6 @@ package org.voidsentinel.hexmap.view.representation;
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.utils.Alea;
-import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.MeshUtil;
@@ -26,7 +24,7 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 
-	private float[] coeff = new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
+	private float[] coeff = new float[] { 0.75f, 0.5f, 0.75f, 1f, 1.15f, 1f };
 
 	public HexGridChunkFlatSimple(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {

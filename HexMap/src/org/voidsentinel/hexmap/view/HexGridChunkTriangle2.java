@@ -41,7 +41,6 @@ public class HexGridChunkTriangle2 extends AbstractHexGridChunk {
 	 * @return the generated geometry.
 	 */
 	public void generateGeometry() {
-		Material mat = TerrainRepository.getTerrainMaterial();
 		MeshUtil MeshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
@@ -75,7 +74,7 @@ public class HexGridChunkTriangle2 extends AbstractHexGridChunk {
 
 		Mesh mesh = MeshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
-		terrain.setMaterial(mat);
+		terrain.setMaterial(this.getTerrainMaterial());
 		representation.attachChild(terrain);
 	}
 

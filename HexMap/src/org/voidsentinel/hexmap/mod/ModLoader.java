@@ -313,13 +313,13 @@ public class ModLoader {
 	}
 
 	private static void loadTerrainMaterial(Element node, String directory) {
-		String filename = node.getValue().trim();
-		try {
-			TerrainRepository.setTerrainMaterial(filename);
-		} catch (final Exception e) {
-			LOG.log(Level.SEVERE, "Problem with Material file " + filename, e);
-		}
-		;
+//		String filename = node.getValue().trim();
+//		try {
+//			TerrainRepository.setTerrainMaterial(filename);
+//		} catch (final Exception e) {
+//			LOG.log(Level.SEVERE, "Problem with Material file " + filename, e);
+//		}
+//		;
 	};
 
 	private static void loadMapColorMapper(Element node, String directory) {

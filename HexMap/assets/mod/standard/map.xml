@@ -54,7 +54,7 @@
 
 	<mapRepresentation id="FlatPerturbated"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimple"
-		material="terrains_shaded.j3m" text="map.FlatPerturbated.label" perturbated="true"
+		material="terrains_unshaded.j3m" text="map.FlatPerturbated.label" perturbated="true"
 		tooltip="map.FlatPerturbated.toolTip" />
 
 	<mapRepresentation id="Flat25"

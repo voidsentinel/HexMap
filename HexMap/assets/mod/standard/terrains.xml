@@ -1,5 +1,5 @@
 <terrains>
-	<terrainMaterial>terrains_shaded.j3m</terrainMaterial>
+	<terrainMaterial>terrains_unshaded.j3m</terrainMaterial>
 	<terrain id="standard">
 		<uvcenter>0.5, 0.5</uvcenter>
 		<uvsize>1.0</uvsize>

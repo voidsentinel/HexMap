@@ -6,11 +6,7 @@
  */
 package org.voidsentinel.hexmap.model.repositories;
 
-import org.voidsentinel.hexmap.HexTuto;
 import org.voidsentinel.hexmap.model.TerrainData;
-
-import com.jme3.asset.AssetManager;
-import com.jme3.material.Material;
 
 /**
  * @author guipatry
@@ -18,18 +14,18 @@ import com.jme3.material.Material;
  */
 public class TerrainRepository extends BaseRepository<TerrainData> {
 
-	private static Material terrainMaterial = null;
+//	private static Material terrainMaterial = null;
    private static float    uvSize  = 0.5f;
 	static public TerrainRepository datas = new TerrainRepository();
 
-	public static void setTerrainMaterial(String file) {
-		AssetManager assets = HexTuto.getInstance().getAssetManager();
-		terrainMaterial = (Material) assets.loadMaterial(file);
-	}
-
-	public static Material getTerrainMaterial() {
-		return terrainMaterial;
-	}
+//	public static void setTerrainMaterial(String file) {
+//		AssetManager assets = HexTuto.getInstance().getAssetManager();
+//		terrainMaterial = (Material) assets.loadMaterial(file);
+//	}
+//
+//	public static Material getTerrainMaterial() {
+//		return terrainMaterial;
+//	}
 
 	public static void setUVSize(float value) {
 		uvSize = value;
