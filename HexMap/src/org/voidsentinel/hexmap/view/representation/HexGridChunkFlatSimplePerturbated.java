@@ -1,14 +1,8 @@
 package org.voidsentinel.hexmap.view.representation;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.utils.Alea;
-import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.MeshUtil;
@@ -30,11 +24,7 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkFlatSimplePerturbated extends AbstractHexGridChunk {
 
-	private float[]						coeff			= new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
-
-	private static final float			VARIATION	= HexMetrics.INNERRADIUS / 1.3f;
-
-	private static final FastNoise	fn				= new FastNoise(Alea.nextInt());
+	private float[] coeff = new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
 
 	public HexGridChunkFlatSimplePerturbated(HexMap map, int xstart, int zstart, int chunkSize,
 	      AbstractCellColorExtractor colorExtractor) {
@@ -62,7 +52,6 @@ public class HexGridChunkFlatSimplePerturbated extends AbstractHexGridChunk {
 			}
 		}
 
-		perturbatePoints(meshUtility);
 		Mesh mesh = meshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
 		terrain.setMaterial(terrainMaterial);
@@ -110,10 +99,7 @@ public class HexGridChunkFlatSimplePerturbated extends AbstractHexGridChunk {
 		for (Direction direction : Direction.values()) {
 			offsetDir = direction.ordinal();
 			v2 = center.add(HexMetrics.getFirstCornerVector(offsetDir, 1f));
-
-			float o1 = fn.GetPerlin(v2.x * 30, v2.z * 70) * VARIATION - 0.5f * VARIATION;
-			float o2 = fn.GetPerlin(v2.z * 30, v2.x * 70) * VARIATION - 0.5f * VARIATION;
-			v2.addLocal(o1, 0f, o2);
+			perturbate(v2);
 
 			MeshUtility.addVertice(v2);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
@@ -160,13 +146,8 @@ public class HexGridChunkFlatSimplePerturbated extends AbstractHexGridChunk {
 				Vector3f v1 = center.add(HexMetrics.corners[direction.ordinal()]);
 				Vector3f v2 = center.add(HexMetrics.corners[direction.next().ordinal()]);
 
-				float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
-				float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
-				v1.addLocal(o1, 0f, o2);
-
-				o1 = fn.GetPerlin(v2.x * 30, v2.z * 70) * VARIATION - 0.5f * VARIATION;
-				o2 = fn.GetPerlin(v2.z * 30, v2.x * 70) * VARIATION - 0.5f * VARIATION;
-				v2.addLocal(o1, 0f, o2);
+				perturbate(v1);
+				perturbate(v2);
 
 				Vector3f v3 = v1.clone();
 				Vector3f v4 = v2.clone();
@@ -199,28 +180,6 @@ public class HexGridChunkFlatSimplePerturbated extends AbstractHexGridChunk {
 		if (height > 0) {
 			meshUtility.addQuadColors(c1, c1, c1, c1);
 		}
-	}
-	
-	
-	protected void perturbatePoints(MeshUtil meshUtility) {
-		// does not work since only the 6 border + the side top should be changed. 
-		
-//		// change the points
-//      List<Vector3f> vertices = meshUtility.getVertices();		
-//      for (Iterator<Vector3f> iterator = vertices.iterator(); iterator.hasNext();) {
-//			Vector3f v1 = (Vector3f) iterator.next();
-//			float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
-//			float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
-//			v1.addLocal(o1, 0f, o2);
-//		}
-//      // change the memorized points
-//		Set<Vector3f> keys = points.keySet();
-//      for (Iterator<Vector3f> iterator = keys.iterator(); iterator.hasNext();) {
-//			Vector3f v1 = (Vector3f) iterator.next();
-//			float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
-//			float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
-//			v1.addLocal(o1, 0f, o2);
-//		}
 	}
 
 }

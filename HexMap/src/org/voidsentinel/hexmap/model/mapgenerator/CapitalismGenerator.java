@@ -3,7 +3,7 @@ package org.voidsentinel.hexmap.model.mapgenerator;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FaultCirclesGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FlatGeneration;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.PNGGeneration;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.PerlinGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.HexBlurOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.BiomeOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.CityMapOperation;
@@ -22,12 +22,12 @@ public class CapitalismGenerator extends MapGenerator {
 
 		HeightMapOperation heightmap = new HeightMapOperation();
 		heightmap.addGenerator(new FlatGeneration(0f));
-   	heightmap.addGenerator(new PNGGeneration("assets/mod/standard/uk.png"));
+//   	heightmap.addGenerator(new ImageGeneration("assets/mod/standard/world.jpg"));
 
-//		heightmap.addGenerator(new PerlinGeneration(0.25f), 0.25f);
+		heightmap.addGenerator(new PerlinGeneration(0.25f), 0.5f);
 //		heightmap.addGenerator(new SimplexGeneration(0.25f), 0.33f);
 
-//		heightmap.addGenerator(new FaultCirclesGeneration(2000));//(map.WIDTH + map.HEIGHT)
+		heightmap.addGenerator(new FaultCirclesGeneration(2000));
 //		heightmap.addGenerator(new FaultLinesGeneration((map.WIDTH + map.HEIGHT)));
 //		heightmap.addGenerator(new DiamondSquareGeneration());
 //		heightmap.addGenerator(new CellularGeneration(1f, 1f, 30f, 30f), 0.25f);

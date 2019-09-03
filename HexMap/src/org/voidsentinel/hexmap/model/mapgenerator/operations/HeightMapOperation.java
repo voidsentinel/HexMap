@@ -29,6 +29,13 @@ public class HeightMapOperation extends AbstractTerrainAction implements IMapOpe
 	public void filter(HexMap map) {
 		float[][] values = new float[map.HEIGHT][map.WIDTH];
 
+		// initialisation
+		for (int y = 0; y < map.HEIGHT; y++) {
+			for (int x = 0; x < map.WIDTH; x++) {
+				values[y][x] = 0f;
+			}
+		}
+
 		// Generation
 		Iterator<AbstractTerrainGenerator> it = generators.iterator();
 		Iterator<Float> itc = generatorsCoef.iterator();

@@ -20,14 +20,18 @@ import com.jme3.scene.Mesh;
 import com.jme3.scene.VertexBuffer.Type;
 
 /**
- * generate and store the representation of a chunk of the map. also store
- * vertices that allow for selection of an hex. The colors and texture of the
- * representation can be modified
- * 
- * @author guipatry
+ * a variation on the hexChunk where Hex border are slopped and terraced.
+ * @author Void Sentinel
  *
  */
 public class HexGridChunkSlopped extends AbstractHexGridChunk {
+
+	// number of terrace per slope
+	public final int				TERRACEPERSLOPE		= 2;
+	// number of steps per slope
+	public final int				TERRACESTEPS			= TERRACEPERSLOPE * 2 + 1;
+	public final float			HORIZONTALSTEPSIZE	= 1f / TERRACESTEPS;
+	public final float			VERTICALSTEPSIZE		= 1f / (TERRACEPERSLOPE + 1);
 
 	public HexGridChunkSlopped(HexMap map, int xstart, int zstart, int chunkSize,
 	      AbstractCellColorExtractor colorExtractor) {
@@ -112,6 +116,8 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			uv3 = new Vector2f(HexMetrics.getSecondCornerVector(offsetDir).x,
 			      HexMetrics.getSecondCornerVector(offsetDir).z).mult(terrain.getUVSize());
 
+//			perturbate(v2);
+//			perturbate(v3);
 			MeshUtility.addVertice(v2);
 			MeshUtility.addVertice(v3);
 			MeshUtility.addNormal(normal);
@@ -173,9 +179,15 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			Vector3f center = HexMetrics.getCellCenter(cell);
 			Vector3f bridge = HexMetrics.getBridgeVector(direction.ordinal()).multLocal(2);
 			Vector3f v1 = center.add(HexMetrics.getFirstCornerVector(direction.ordinal()));
-			Vector3f v2 = center.add(HexMetrics.getSecondCornerVector(direction.ordinal()));
+			Vector3f v2 = center.add(HexMetrics.getSecondCornerVector(direction.ordinal()));	
 			Vector3f v3 = v1.add(bridge);
 			Vector3f v4 = v2.add(bridge);
+
+//			perturbate(v1);
+//			perturbate(v2);			
+//			perturbate(v3);
+//			perturbate(v4);
+			
 			v3.y = neighbor.getElevation() * HexMetrics.CELL_ELEVATION;
 			v4.y = v3.y;
 
@@ -249,6 +261,10 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			Vector3f v2 = v0.add(o2);
 			v1.y = h1.getElevation() * HexMetrics.CELL_ELEVATION;
 			v2.y = h2.getElevation() * HexMetrics.CELL_ELEVATION;
+			
+//			perturbate(v0);
+//			perturbate(v1);
+//			perturbate(v2);
 
 			Vector2f uv0 = UVCenter.add(new Vector2f(HexMetrics.getFirstCornerVector(direction.ordinal()).x,
 			      HexMetrics.getFirstCornerVector(direction.ordinal()).z).mult(terrain.getUVSize()));
