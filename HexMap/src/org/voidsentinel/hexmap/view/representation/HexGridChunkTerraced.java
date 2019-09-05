@@ -1,12 +1,14 @@
-package org.voidsentinel.hexmap.view;
+package org.voidsentinel.hexmap.view.representation;
 
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
+import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
+import org.voidsentinel.hexmap.view.HexEdgeType;
+import org.voidsentinel.hexmap.view.HexMetrics;
+import org.voidsentinel.hexmap.view.MeshUtil;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;

@@ -69,8 +69,13 @@
 
 	<mapRepresentation id="gridChunkSlopped"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkSlopped"
-		material="terrains_unshaded.j3m" text="map.HexGridChunkSlopped.label"
+		material="terrains_shaded.j3m" text="map.HexGridChunkSlopped.label"
 		tooltip="map.HexGridChunkSlopped.toolTip" />
+
+	<mapRepresentation id="gridChunkTerrace"
+		class="org.voidsentinel.hexmap.view.representation.HexGridChunkTerraced"
+		material="terrains_shaded.j3m" text="map.HexGridChunkTerraced.label"
+		tooltip="map.HexGridChunkTerraced.toolTip" />
 
 	<mapRepresentation id="gridChunkFlatSimpleTron"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimpleTron"

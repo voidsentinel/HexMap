@@ -90,10 +90,7 @@ public class HexMetrics {
 
 
 	public static HexEdgeType getEdgeType(int elevation1, int elevation2) {
-		int diff = elevation2 - elevation1;
-		if (diff < 0) {
-			diff = diff * -1;
-		}
+		int diff = Math.abs(elevation2 - elevation1);
 		switch (diff) {
 		case 0:
 			return HexEdgeType.Flat;
