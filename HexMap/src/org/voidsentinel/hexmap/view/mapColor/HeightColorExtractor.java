@@ -40,7 +40,7 @@ public class HeightColorExtractor extends FileMappedColorExtractor {
 	 * java.lang.String, java.lang.String)
 	 */
 	public void addDataParameters(String name, String value, String additional) {
-		super.addDataParameters(name, value, additional);      
+		super.addDataParameters(name, value, additional);
 		if ("groundColorMap".equalsIgnoreCase(name)) {
 			LOG.log(Level.INFO, "Loading color map " + additional + value);
 			colorMap = this.getImage(additional + value);

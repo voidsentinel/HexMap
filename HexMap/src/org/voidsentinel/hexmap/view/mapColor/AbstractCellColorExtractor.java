@@ -8,14 +8,16 @@ import java.util.logging.Logger;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.repositories.RepositoryData;
+import org.voidsentinel.hexmap.utils.I18nMultiFile;
+import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 
 import com.jme3.math.ColorRGBA;
 
 /**
- * This class is the base class for a cell color extractor. Depending on a cell
- * on a map, it return the 7 colors (center, and each point)
+ * This class is the base class for a cell color extractor. Depending on the
+ * implementation it return the base color of the cell
  * 
- * @author Xerces
+ * @author Void Sentinel
  *
  */
 public abstract class AbstractCellColorExtractor extends RepositoryData {
@@ -42,7 +44,8 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	 * 
 	 * @param cell the cell whose color is needed.
 	 * @param map  the whole map
-	 * @return
+	 * @return the color of the cell, or black if the cell is underwater and
+	 *         ignoreWater is set
 	 */
 	public final ColorRGBA getColor(HexCell cell, HexMap map) {
 		if (!ignoreWater || !cell.getBooleanData(HexCell.UNDERWATER)) {
@@ -53,22 +56,44 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	}
 
 	/**
+	 * Specific implementation of the extractor by a child
+	 * 
+	 * @param cell the cell whose color is needed. If ignoreWtare is set, it will
+	 *             not be called for underwater cells
+	 * @param map  the whole map
+	 * @return the color of the cell
+	 */
+	abstract protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map);
+
+	/**
+	 * The icon name for the color extractor (to be used in IHM)
+	 * 
+	 * @see ImageRepository
 	 * @return the iconName
 	 */
-	public String getIconName() {
+	final public String getIconName() {
 		return iconName;
 	}
 
 	/**
-	 * @param iconName the iconName to set
+	 * set the icon name for the color extractor (to be used in IHM)
+	 * 
+	 * @see ImageRepository
+	 * @param iconName the iconName associate with the extractor
 	 */
-	public void setIconName(String iconName) {
+	final public void setIconName(String iconName) {
 		this.iconName = iconName;
 	}
 
 	/**
 	 * add an information to the object. Since this is mostly used for object
 	 * generated from config file, additionnal data can be added.
+	 * <ul>
+	 * <li>default : is the extractor the default one ?</li>
+	 * <li>ignorewater : is the extractor supposed to be used for water (false) or
+	 * not (true)</li>
+	 * </ul>
+	 * This method should be called first by child implementation
 	 * 
 	 * @param name       the name if the information
 	 * @param value      the value of the information
@@ -84,6 +109,9 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	}
 
 	/**
+	 * return the textId of the extractor name
+	 * 
+	 * @see I18nMultiFile
 	 * @return the textName
 	 */
 	public String getTextName() {
@@ -91,13 +119,18 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	}
 
 	/**
-	 * @param textName the textName to set
+	 * set the textid of the extractor's name.
+	 * 
+	 * @param textName the tetx id to associate with the extractor
 	 */
 	public void setTextName(String textName) {
 		this.textName = textName;
 	}
 
 	/**
+	 * return the textId of the extractor's tooltip
+	 * 
+	 * @see I18nMultiFile
 	 * @return the tooltipName
 	 */
 	public String getTooltipName() {
@@ -105,6 +138,8 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	}
 
 	/**
+	 * set the textid of the extractor's tooltip.
+	 * 
 	 * @param tooltipName the tooltipName to set
 	 */
 	public void setTooltipName(String tooltipName) {
@@ -112,6 +147,8 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	}
 
 	/**
+	 * indicate if water should have a default (black) color (true) or not
+	 * 
 	 * @return the ignoreWater status
 	 */
 	public boolean isIgnoreWater() {
@@ -126,13 +163,5 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	public void setIgnoreWater(boolean ignoreWater) {
 		this.ignoreWater = ignoreWater;
 	}
-
-	/**
-	 * 
-	 * @param cell
-	 * @param map
-	 * @return
-	 */
-	abstract protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map);
 
 }

@@ -25,7 +25,7 @@ import org.voidsentinel.hexmap.view.ihm.MenuBar;
 import org.voidsentinel.hexmap.view.ihm.MenuButton;
 import org.voidsentinel.hexmap.view.ihm.StepCameraControl;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
-import org.voidsentinel.hexmap.view.mapColor.colorMapperRepository;
+import org.voidsentinel.hexmap.view.mapColor.ColorMapperRepository;
 import org.voidsentinel.hexmap.view.representation.MapRepresentation;
 import org.voidsentinel.hexmap.view.representation.MapRepresentationRepository;
 
@@ -141,7 +141,7 @@ public class HexTuto extends SimpleApplication {
 
 	private void addMapRepresentationRoll(MenuBar menu, TextField hooverField) {
 		// defaul value
-		AbstractCellColorExtractor extract = colorMapperRepository.repository.getDefaultMapper();
+		AbstractCellColorExtractor extract = ColorMapperRepository.repository.getDefaultMapper();
 		// Create a simple container for view elements
 		MenuButton ddb = new MenuButton("", (IconComponent)null, new ElementId("visual"), true, true);
 		menu.addButton(ddb);
@@ -149,7 +149,7 @@ public class HexTuto extends SimpleApplication {
 		ddb.setToolTip("Visualisation");
 
 		int count = -1;
-		Iterator<Map.Entry<String, AbstractCellColorExtractor>> it = colorMapperRepository.repository.datas.entrySet()
+		Iterator<Map.Entry<String, AbstractCellColorExtractor>> it = ColorMapperRepository.repository.datas.entrySet()
 		      .iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, AbstractCellColorExtractor> colorizer = it.next();
@@ -169,7 +169,7 @@ public class HexTuto extends SimpleApplication {
 			String text = I18nMultiFile.getText(colorizer.getValue().getTextName());
 			String tooltip = I18nMultiFile.getText(colorizer.getValue().getTooltipName());
 			ddb.addButton(text, icon, tooltip,
-			      new VisualCommand(colorMapperRepository.repository.getData(colorizer.getKey())));
+			      new VisualCommand(ColorMapperRepository.repository.getData(colorizer.getKey())));
 			if (extract == colorizer.getValue()) {
 				ddb.setSelected(count);
 			}

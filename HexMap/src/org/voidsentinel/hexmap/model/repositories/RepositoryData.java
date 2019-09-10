@@ -43,15 +43,16 @@ public abstract class RepositoryData {
 	 * @exception IllegalArgumentException is the data are not of the same type or
 	 *                                     if data is null
 	 */
-	public abstract void addDataParameters(RepositoryData data);
+	protected abstract void addDataParameters(RepositoryData data);
 
 	/**
-	 * add an information to the object. Since this is mostly used for object generated from
-	 * config file, additionnal data can be added. 
-	 * @param name  the name if the information
-	 * @param value the value of the information
-	 * @param additional additional data. 
+	 * add an information to the object. Since this is mostly used for object
+	 * generated from config file, additionnal data can be added.
+	 * 
+	 * @param name       the name if the information
+	 * @param value      the value of the information
+	 * @param additional additional data.
 	 */
-	public abstract void addDataParameters(String name, String value, String additional);
+	protected abstract void addDataParameters(String name, String value, String additional);
 
 }

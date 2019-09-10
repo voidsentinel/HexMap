@@ -13,7 +13,7 @@ import org.voidsentinel.hexmap.HexTuto;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
-import org.voidsentinel.hexmap.view.mapColor.colorMapperRepository;
+import org.voidsentinel.hexmap.view.mapColor.ColorMapperRepository;
 import org.voidsentinel.hexmap.view.representation.MapRepresentation;
 import org.voidsentinel.hexmap.view.representation.MapRepresentationRepository;
 
@@ -63,7 +63,7 @@ public class HexGrid {
 		rootNode.attachChild(terrainNode);
 
 		// Color for each cell
-		colorExtractor = colorMapperRepository.repository.getDefaultMapper();
+		colorExtractor = ColorMapperRepository.repository.getDefaultMapper();
 		// mesh generator information
 		meshGenerator = MapRepresentationRepository.repository.getDefault();
 

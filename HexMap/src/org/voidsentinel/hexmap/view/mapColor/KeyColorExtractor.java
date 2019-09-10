@@ -12,7 +12,9 @@ import com.jme3.math.ColorRGBA;
 /**
  * The KeyColorExtractor use a string id to know which value to get from the
  * cell. It then call an abtsract function to get the color from this value
+ * Subclasses should implement this function
  * 
+ * @see HexCell
  * @author VoidSentinel
  */
 public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
@@ -30,15 +32,25 @@ public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
 	}
 
 	/**
-	 * get the parameters from another extractor of the same type.
+	 * return the global color for a cell
 	 * 
-	 * @param data another FileMappedColorExtractor whose data (image) will be used
-	 * @see RepositoryData
+	 * @param cell the cell to get the color from, based on the attribute of the
+	 *             extractor
+	 * @param map  the map of cell
+	 * @return the color at attribute
 	 */
-	@Override
-	public void addDataParameters(RepositoryData data) {
-		this.key = ((KeyColorExtractor) (data)).key;
+	protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map) {
+		return getColorSpecialized(cell.getFloatData(key));
 	}
+
+	/**
+	 * return the global color for a cell
+	 * 
+	 * @param value a float indicating the value of the key. Most of the time
+	 *              normalized to [0..1] at the map level
+	 * @return the color for this value
+	 */
+	abstract protected ColorRGBA getColorSpecialized(float value);
 
 	/*
 	 * (non-Javadoc)
@@ -52,7 +64,17 @@ public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
 		if ("key".equalsIgnoreCase(name)) {
 			this.setKey(value);
 		}
+	}
 
+	/**
+	 * get the parameters from another extractor of the same type.
+	 * 
+	 * @param data another FileMappedColorExtractor whose data (image) will be used
+	 * @see RepositoryData
+	 */
+	@Override
+	public void addDataParameters(RepositoryData data) {
+		this.key = ((KeyColorExtractor) (data)).key;
 	}
 
 	/**
@@ -68,19 +90,5 @@ public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
 	public String getKey() {
 		return key;
 	}
-
-	/**
-	 * return the global color for a cell
-	 * 
-	 * @param cell the cell to get the color from, based on the attribute of the
-	 *             extractor
-	 * @param map  the map of cell
-	 * @return the color at attribute %
-	 */
-	protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map) {
-			return getColorSpecialized(cell.getFloatData(key));
-	}
-
-	abstract protected ColorRGBA getColorSpecialized(float value);
 
 }

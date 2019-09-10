@@ -28,7 +28,7 @@ import org.voidsentinel.hexmap.utils.VectorUtils;
 import org.voidsentinel.hexmap.view.ihm.ImageData;
 import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
-import org.voidsentinel.hexmap.view.mapColor.colorMapperRepository;
+import org.voidsentinel.hexmap.view.mapColor.ColorMapperRepository;
 import org.voidsentinel.hexmap.view.representation.MapRepresentation;
 import org.voidsentinel.hexmap.view.representation.MapRepresentationRepository;
 
@@ -325,7 +325,7 @@ public class ModLoader {
 	private static void loadMapColorMapper(Element node, String directory) {
 		String className = null;
 		String id = node.getAttributeValue("id").trim().toLowerCase();
-		if (colorMapperRepository.repository.getData(id) == null) {
+		if (ColorMapperRepository.repository.getData(id) == null) {
 
 			if (node.getAttributeValue("class") != null) {
 				className = node.getAttributeValue("class").trim();
@@ -334,7 +334,7 @@ public class ModLoader {
 					clazz = Class.forName(className);
 					Constructor<?> constructor = clazz.getConstructor(String.class);
 					Object instance = constructor.newInstance(id);
-					colorMapperRepository.repository.addData((AbstractCellColorExtractor) (instance));
+					ColorMapperRepository.repository.addData((AbstractCellColorExtractor) (instance));
 				} catch (ClassNotFoundException e) {
 					LOG.log(Level.SEVERE, "Impossible to find class " + className);
 				} catch (NoSuchMethodException e) {
@@ -352,7 +352,7 @@ public class ModLoader {
 				}
 			}
 
-			AbstractCellColorExtractor colorExt = colorMapperRepository.repository.getData(id);
+			AbstractCellColorExtractor colorExt = ColorMapperRepository.repository.getData(id);
 			String icon = node.getAttributeValue("icon");
 			if (icon != null) {
 				colorExt.setIconName(icon.trim());
