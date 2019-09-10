@@ -42,7 +42,6 @@ import com.simsilica.lemur.TextField;
 import com.simsilica.lemur.VAlignment;
 import com.simsilica.lemur.component.IconComponent;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
-import com.simsilica.lemur.component.TbtQuadBackgroundComponent;
 import com.simsilica.lemur.style.BaseStyles;
 import com.simsilica.lemur.style.ElementId;
 
@@ -79,9 +78,9 @@ public class HexTuto extends SimpleApplication {
 
 		// generate the map
 		MapGenerator generator = new CapitalismGenerator();
-		HexMap map = new HexMap(256, 128);
+		HexMap map = new HexMap(128, 64);
 		generator.generate(map);
-		TerrainImage.generateImage(map, true);
+		TerrainImage.generateImage(map, false);
 
 		// generate the representation
 		mapNode = new HexGrid(map, this.getRootNode());

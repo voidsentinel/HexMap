@@ -27,12 +27,11 @@ import com.jme3.scene.VertexBuffer.Type;
 public class HexGridChunkTerraced extends AbstractHexGridChunk {
 
 	// number of terrace per slope
-	public final int				TERRACEPERSLOPE		= 2;
+	public final int		TERRACEPERSLOPE		= 2;
 	// number of steps per slope
-	public final int				TERRACESTEPS			= TERRACEPERSLOPE * 2 + 1;
-	public final float			HORIZONTALSTEPSIZE	= 1f / TERRACESTEPS;
-	public final float			VERTICALSTEPSIZE		= 1f / (TERRACEPERSLOPE + 1);
-
+	public final int		TERRACESTEPS			= TERRACEPERSLOPE * 2 + 1;
+	public final float	HORIZONTALSTEPSIZE	= 1f / TERRACESTEPS;
+	public final float	VERTICALSTEPSIZE		= 1f / (TERRACEPERSLOPE + 1);
 
 	public HexGridChunkTerraced(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
@@ -63,7 +62,7 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 		representation.attachChild(terrain);
 	}
 
-	public void regenerateColor(AbstractCellColorExtractor colorExtractor){
+	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
 		this.colorExtractor = colorExtractor;
 		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;
@@ -75,7 +74,7 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 //				colorizeCellCorner(hexCell, meshUtility);
 			}
 		}
-		((Geometry)(representation.getChild("ground"))).getMesh().setBuffer(Type.Color, 4, meshUtility.getColorArray());
+		((Geometry) (representation.getChild("ground"))).getMesh().setBuffer(Type.Color, 4, meshUtility.getColorArray());
 	}
 
 	/**
@@ -190,12 +189,12 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 		triangulateCornerDirection(cell, Direction.NE, meshUtility);
 		triangulateCornerDirection(cell, Direction.EAST, meshUtility);
 		// since a corner is shared by 3 hex, and we go up from z and x, others corner
-		// either don't exist (border) or
-		// will have been created by the previous row (SW & SE) or column (WEST)
+		// either don't exist (border) or will have been created by the previous row (SW
+		// & SE) or column (WEST)
 	}
 
 	/**
-	 * Triangulate a given corner
+	 * Triangulate a given corner (by direction)
 	 * 
 	 * @param cell        the source cell
 	 * @param direction   the direction
@@ -255,7 +254,7 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 		return response;
 	}
 
-	protected  ColorRGBA interpolateTerraceColor(ColorRGBA a, ColorRGBA b, int step) {
+	protected ColorRGBA interpolateTerraceColor(ColorRGBA a, ColorRGBA b, int step) {
 		ColorRGBA response = new ColorRGBA();
 		float h = step * HORIZONTALSTEPSIZE;
 		response.interpolateLocal(a, b, h);

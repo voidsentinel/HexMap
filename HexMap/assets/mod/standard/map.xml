@@ -14,7 +14,7 @@
 	<mapColorMapper id="heatColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
 		text="map.heatColorMapper.label" tooltip="map.heatColorMapper.tooltip"
-		icon="heatColorMapperIcon" key="temperature"
+		icon="heatColorMapperIcon" key="temperature" ignorewater="true"
 		colorMap="colorMap/tempColorMap.png" />
 
 	<image id="fertilityColorMapperIcon">icons/map-fertility.png</image>
@@ -22,7 +22,7 @@
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
 		text="map.fertilityColorMapper.label"
 		tooltip="map.fertilityColorMapper.tooltip"
-		icon="fertilityColorMapperIcon" key="fertility"
+		icon="fertilityColorMapperIcon" key="fertility" ignorewater="true"
 		colorMap="colorMap/soilFertility2.png" />
 
 	<image id="humidityColorMapperIcon">icons/map-humidity.png</image>
@@ -37,14 +37,14 @@
 	<mapColorMapper id="cityColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
 		text="map.cityColorMapper.label" tooltip="map.cityColorMapper.tooltip"
-		icon="cityColorMapperIcon" key="city"
+		icon="cityColorMapperIcon" key="city" ignorewater="true"
 		colorMap="colorMap/cityColorMap.png" />
 
 	<image id="pathColorMapperIcon">icons/map-path.png</image>
 	<mapColorMapper id="pathColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
 		text="map.pathColorMapper.label" tooltip="map.pathColorMapper.tooltip"
-		icon="pathColorMapperIcon" key="path"
+		icon="pathColorMapperIcon" key="path" ignorewater="true"
 		colorMap="colorMap/cityColorMap.png" />
 
 	<mapRepresentation id="Flat"

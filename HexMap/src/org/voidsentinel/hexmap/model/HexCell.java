@@ -27,7 +27,9 @@ public class HexCell {
 	public static final String		CITY_DATA			= "city";
 	public static final String		PATH_DATA			= "path";
 	public static final String		TERRAIN_DATA		= "biome";
-
+	
+	public static final String		UNDERWATER        = "underwater";
+	
 	// neighbor cells
 	private HexCell[]					neighbor				= new HexCell[Direction.NBDIRECTIONS];	// neighbors
 	

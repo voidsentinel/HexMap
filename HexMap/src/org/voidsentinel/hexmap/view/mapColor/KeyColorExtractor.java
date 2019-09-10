@@ -10,8 +10,9 @@ import org.voidsentinel.hexmap.model.repositories.RepositoryData;
 import com.jme3.math.ColorRGBA;
 
 /**
- * The KeyColorExtractor use a string id to know which value to get from the cell.
- * It then call an abtsract function to get the color from this value
+ * The KeyColorExtractor use a string id to know which value to get from the
+ * cell. It then call an abtsract function to get the color from this value
+ * 
  * @author VoidSentinel
  */
 public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
@@ -76,10 +77,10 @@ public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
 	 * @param map  the map of cell
 	 * @return the color at attribute %
 	 */
-	public ColorRGBA getColor(HexCell cell, HexMap map) {
-		return getColor(cell.getFloatData(key));
+	protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map) {
+			return getColorSpecialized(cell.getFloatData(key));
 	}
 
-	abstract protected ColorRGBA getColor(float value);
+	abstract protected ColorRGBA getColorSpecialized(float value);
 
 }

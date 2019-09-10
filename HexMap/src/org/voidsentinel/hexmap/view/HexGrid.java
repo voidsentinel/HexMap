@@ -176,9 +176,9 @@ public class HexGrid {
 
 				selectedCell = chunks.get(result.getName()).getCell(collisionTriangle);
 				if (selectedCell != null) {
-					System.out.println("SelectedCell position " + selectedCell.hexCoordinates);
-					System.out.println("SelectedCell to Water " + selectedCell.getDistanceToWater());
-					System.out.println("SelectedCell Height   " + selectedCell.getHeight());
+					System.out.println("position " + selectedCell.hexCoordinates);
+					System.out.println("Humidity" + selectedCell.getFloatData(HexCell.HUMIDITY_DATA));
+					System.out.println("Height   " + selectedCell.getHeight());
 				}
 			}
 		}

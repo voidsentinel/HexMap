@@ -38,7 +38,7 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(x, y);
-				
+
 				height = (int) Math.max(0, Math.min(9999f, cell.getFloatData(HexCell.HEIGHT_DATA) * 10000f));
 				number[height]++;
 			}
@@ -63,27 +63,31 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 			for (int y = 0; y < map.HEIGHT; y++) {
 				for (int x = 0; x < map.WIDTH; x++) {
 					HexCell cell = map.getCell(x, y);
-					float cellHeight = cell.getFloatData(HexCell.HEIGHT_DATA);
-					// if water : set the value to and the neighborg to 1
-					if (cellHeight <= waterHeight && cell.getDistanceToWater() < 0) {
-						cell.setDistanceToWater(0);
-						for (HexCell neighbor : cell.getNeighbor()) {
-							if (neighbor != null && neighbor.getHeight() > waterHeight) {
-								neighbor.setDistanceToWater(1);
+					if (cell != null) {
+						float cellHeight = cell.getFloatData(HexCell.HEIGHT_DATA);
+						// if water : set the value to and the neighborg to 1
+						if (cellHeight <= waterHeight && cell.getDistanceToWater() < 0) {
+							cell.setDistanceToWater(0);
+							cell.setData(HexCell.UNDERWATER, true);
+							for (HexCell neighbor : cell.getNeighbor()) {
+								if (neighbor != null && neighbor.getHeight() > waterHeight) {
+									neighbor.setDistanceToWater(1);
+								}
 							}
 						}
-					}
 
-					if (cellHeight > waterHeight) {
-						// otherwise check any neighbor and modify the
-						for (HexCell neighbor : cell.getNeighbor()) {
-							if (neighbor != null) {
-								int distance = neighbor.getDistanceToWater();
-								if (distance >= 0) {
-									if (cell.getDistanceToWater() < 0) {
-										cell.setDistanceToWater(distance + 1);
-									} else if (distance < cell.getDistanceToWater()) {
-										cell.setDistanceToWater(distance + 1);
+						if (cellHeight > waterHeight) {
+							cell.setData(HexCell.UNDERWATER, false);
+							// otherwise check any neighbor and modify the
+							for (HexCell neighbor : cell.getNeighbor()) {
+								if (neighbor != null) {
+									int distance = neighbor.getDistanceToWater();
+									if (distance >= 0) {
+										if (cell.getDistanceToWater() < 0) {
+											cell.setDistanceToWater(distance + 1);
+										} else if (distance < cell.getDistanceToWater()) {
+											cell.setDistanceToWater(distance + 1);
+										}
 									}
 								}
 							}

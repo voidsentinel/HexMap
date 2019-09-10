@@ -68,8 +68,8 @@ public class FaultCirclesGeneration extends AbstractTerrainGenerator {
 		HexCoordinates center = new HexCoordinates(x1, y1);
 		List<HexCoordinates> list = center.inRange(radius);
 		for (HexCoordinates hexCoordinates : list) {
-			if (hexCoordinates.X >= 0 && hexCoordinates.X < xSize && hexCoordinates.Z >= 0 && hexCoordinates.Z < ySize) {
-				heights[hexCoordinates.Z][hexCoordinates.X] = heights[hexCoordinates.Z][hexCoordinates.X] + variation;
+			if (hexCoordinates.column >= 0 && hexCoordinates.column < xSize && hexCoordinates.row >= 0 && hexCoordinates.row < ySize) {
+				heights[hexCoordinates.row][hexCoordinates.column] = heights[hexCoordinates.row][hexCoordinates.column] + variation;
 			}
 		}
 

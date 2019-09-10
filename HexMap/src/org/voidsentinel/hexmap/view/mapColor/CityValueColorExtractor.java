@@ -34,7 +34,7 @@ public class CityValueColorExtractor extends FileMappedColorExtractor {
 	 * @param map  the map of cell
 	 * @return the color at attribute %
 	 */
-	public ColorRGBA getColor(HexCell cell, HexMap map) {
+	protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map) {
 		float value;
 		
 		if (cell.getDistanceToWater() == 0) {
@@ -42,7 +42,7 @@ public class CityValueColorExtractor extends FileMappedColorExtractor {
 		} else {
 			value = cell.getFloatData(HexCell.CITY_DATA);			      ;			
 		}
-		return getColor(value);
+		return getColorSpecialized(value);
 	}
 
 }

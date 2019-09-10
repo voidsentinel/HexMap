@@ -23,9 +23,10 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	protected static final Logger	LOG				= Logger.getLogger(AbstractCellColorExtractor.class.toString());
 
 	protected String					iconName			= null;
-   protected String              textName       = null;
-   protected String              tooltipName    = null;
+	protected String					textName			= null;
+	protected String					tooltipName		= null;
 	protected boolean					defaultMapper	= false;
+	protected boolean					ignoreWater		= false;
 
 	/**
 	 * Contructor with an Id
@@ -40,11 +41,16 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	 * return the base color of the cell
 	 * 
 	 * @param cell the cell whose color is needed.
-	 * @param map the whole map
+	 * @param map  the whole map
 	 * @return
 	 */
-	public abstract ColorRGBA getColor(HexCell cell, HexMap map);
-
+	public final ColorRGBA getColor(HexCell cell, HexMap map) {
+		if (!ignoreWater || !cell.getBooleanData(HexCell.UNDERWATER)) {
+			return this.getColorSpecialized(cell, map);
+		} else {
+			return ColorRGBA.Black;
+		}
+	}
 
 	/**
 	 * @return the iconName
@@ -61,15 +67,19 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	}
 
 	/**
-	 * add an information to the object. Since this is mostly used for object generated from
-	 * config file, additionnal data can be added. 
-	 * @param name  the name if the information
-	 * @param value the value of the information
-	 * @param additional additional data. 
+	 * add an information to the object. Since this is mostly used for object
+	 * generated from config file, additionnal data can be added.
+	 * 
+	 * @param name       the name if the information
+	 * @param value      the value of the information
+	 * @param additional additional data.
 	 */
 	public void addDataParameters(String name, String value, String additional) {
 		if ("default".equalsIgnoreCase(name)) {
 			this.defaultMapper = "true".equalsIgnoreCase(value);
+		}
+		if ("ignorewater".equalsIgnoreCase(name)) {
+			this.ignoreWater = "true".equalsIgnoreCase(value);
 		}
 	}
 
@@ -100,5 +110,29 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	public void setTooltipName(String tooltipName) {
 		this.tooltipName = tooltipName;
 	}
+
+	/**
+	 * @return the ignoreWater status
+	 */
+	public boolean isIgnoreWater() {
+		return ignoreWater;
+	}
+
+	/**
+	 * set the Ignorewater status.
+	 * 
+	 * @param ignoreWater the status to set. If True, then
+	 */
+	public void setIgnoreWater(boolean ignoreWater) {
+		this.ignoreWater = ignoreWater;
+	}
+
+	/**
+	 * 
+	 * @param cell
+	 * @param map
+	 * @return
+	 */
+	abstract protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map);
 
 }

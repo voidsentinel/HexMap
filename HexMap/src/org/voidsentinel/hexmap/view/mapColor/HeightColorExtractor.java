@@ -60,11 +60,11 @@ public class HeightColorExtractor extends FileMappedColorExtractor {
 	 * @param map  the map of cell
 	 * @return the color at attribute %
 	 */
-	public ColorRGBA getColor(HexCell cell, HexMap map) {
+	protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map) {
 		if (cell.getHeight() <= map.getWaterHeight()) {
-			return getColor(waterColorMap, cell.getHeight() / map.getWaterHeight());
+			return getImageColor(waterColorMap, cell.getHeight() / map.getWaterHeight());
 		} else {
-			return getColor(colorMap, (cell.getHeight() - map.getWaterHeight()) / (1f - map.getWaterHeight()));
+			return getImageColor(colorMap, (cell.getHeight() - map.getWaterHeight()) / (1f - map.getWaterHeight()));
 		}
 	}
 

@@ -74,8 +74,8 @@ public class FileMappedColorExtractor extends KeyColorExtractor {
 	 * @param value the % of the image to get
 	 * @return the color at (value%, 0) in the image
 	 */
-	protected ColorRGBA getColor(float value) {
-		return getColor(colorMap, value);
+	protected ColorRGBA getColorSpecialized(float value) {
+		return getImageColor(colorMap, value);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class FileMappedColorExtractor extends KeyColorExtractor {
 	 * @param colorMap the colorMap to use
 	 * @return the color at (value%, 0) in the image
 	 */
-	protected ColorRGBA getColor(BufferedImage colorMap, float value) {
+	protected ColorRGBA getImageColor(BufferedImage colorMap, float value) {
 		int index = Math.min(Math.max((int) ((colorMap.getWidth() - 1) * value), 0), colorMap.getWidth() - 1);
 
 		int clr = colorMap.getRGB(index, 0);
@@ -96,7 +96,6 @@ public class FileMappedColorExtractor extends KeyColorExtractor {
 		int blue = clr & 0x000000ff;
 
 		return new ColorRGBA(red / 255f, green / 255f, blue / 255f, 1f);
-
 	}
 
 	/**

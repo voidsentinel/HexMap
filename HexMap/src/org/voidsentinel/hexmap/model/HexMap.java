@@ -72,6 +72,14 @@ public class HexMap {
 
 	}
 
+	public HexCell getCell(int x, int z) {
+		if (x >= 0 && x < WIDTH && z >= 0 && z < HEIGHT) {
+			return cells[z * WIDTH + x];
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * return the cell at the center of the map
 	 * 
@@ -81,13 +89,6 @@ public class HexMap {
 		return centerCell;
 	}
 
-	public HexCell getCell(int x, int z) {
-		if (x >= 0 && x < WIDTH && z >= 0 && z < HEIGHT) {
-			return cells[z * WIDTH + x];
-		} else {
-			return null;
-		}
-	}
 
 	public int getMinHeight() {
 		return minimumHeight;
