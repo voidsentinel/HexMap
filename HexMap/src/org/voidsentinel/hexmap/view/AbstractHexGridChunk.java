@@ -14,6 +14,7 @@ import com.jme3.material.Material;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 /**
  * generate and store the representation of a chunk of the map. also store
@@ -38,7 +39,7 @@ public abstract class AbstractHexGridChunk {
 	final protected int							zStart;
 	final protected int							xEnd;
 	final protected int							zEnd;
-   // representation informations
+	// representation informations
 	protected boolean								perturbated			= false;
 
 	// the geometryNode corresponding to the (part of) map
@@ -74,12 +75,15 @@ public abstract class AbstractHexGridChunk {
 	}
 
 	/**
-	 * generate the geometry for a given map portion this will fill the
-	 * representation member value
+	 * generate the geometry for a given map portion.
 	 * 
 	 * @see representation
 	 */
-	public abstract void generateGeometry();
+	public void generateGeometry() {
+		representation.attachChild(generateSpecializedGeometries());
+	}
+
+	protected abstract Spatial generateSpecializedGeometries();
 
 	/**
 	 * Should be called only if representation is non empty. Will extract the colors

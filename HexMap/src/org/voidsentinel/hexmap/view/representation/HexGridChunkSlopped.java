@@ -17,10 +17,12 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 
 /**
  * a variation on the hexChunk where Hex border are slopped and terraced.
+ * 
  * @author Void Sentinel
  *
  */
@@ -34,10 +36,11 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 	/**
 	 * generate and store the geometry for a given map
 	 * 
-	 * @param map
+	 * @param mapterrain;
+	 * 
 	 * @return the generated geometry.
 	 */
-	public void generateGeometry() {
+	protected Spatial generateSpecializedGeometries() {
 		MeshUtil MeshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
@@ -55,7 +58,7 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 		Mesh mesh = MeshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
 		terrain.setMaterial(this.getTerrainMaterial());
-		representation.attachChild(terrain);
+		return terrain;
 	}
 
 	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
@@ -132,7 +135,8 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 	private void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		ColorRGBA color = colorExtractor.getColor(cell, map);
 		MeshUtility.addColor(color);
-		for (@SuppressWarnings("unused") Direction direction : Direction.values()) {
+		for (@SuppressWarnings("unused")
+		Direction direction : Direction.values()) {
 			MeshUtility.addColor(color);
 			MeshUtility.addColor(color);
 		}
@@ -171,7 +175,7 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			Vector3f center = HexMetrics.getCellCenter(cell);
 			Vector3f bridge = HexMetrics.getBridgeVector(direction.ordinal()).multLocal(2);
 			Vector3f v1 = center.add(HexMetrics.getFirstCornerVector(direction.ordinal()));
-			Vector3f v2 = center.add(HexMetrics.getSecondCornerVector(direction.ordinal()));	
+			Vector3f v2 = center.add(HexMetrics.getSecondCornerVector(direction.ordinal()));
 			Vector3f v3 = v1.add(bridge);
 			Vector3f v4 = v2.add(bridge);
 
@@ -179,7 +183,7 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 //			perturbate(v2);			
 //			perturbate(v3);
 //			perturbate(v4);
-			
+
 			v3.y = neighbor.getElevation() * HexMetrics.CELL_ELEVATION;
 			v4.y = v3.y;
 
@@ -253,7 +257,7 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			Vector3f v2 = v0.add(o2);
 			v1.y = h1.getElevation() * HexMetrics.CELL_ELEVATION;
 			v2.y = h2.getElevation() * HexMetrics.CELL_ELEVATION;
-			
+
 //			perturbate(v0);
 //			perturbate(v1);
 //			perturbate(v2);
@@ -294,7 +298,5 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			meshUtility.addColor(c2);
 		}
 	}
-
-	
 
 }

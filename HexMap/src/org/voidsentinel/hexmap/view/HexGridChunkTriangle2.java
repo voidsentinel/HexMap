@@ -6,17 +6,14 @@ import java.util.Map;
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.TerrainData;
-import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Triangle;
-import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 
 /**
@@ -40,7 +37,7 @@ public class HexGridChunkTriangle2 extends AbstractHexGridChunk {
 	 * @param map
 	 * @return the generated geometry.
 	 */
-	public void generateGeometry() {
+	protected Spatial generateSpecializedGeometries() {
 		MeshUtil MeshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
@@ -65,7 +62,6 @@ public class HexGridChunkTriangle2 extends AbstractHexGridChunk {
 						      || done.containsKey(c2.hexCoordinates.toString()))) {
 							int index1 = (z - zStart) * (xEnd - xStart) + (x - xStart);
 
-							
 						}
 					}
 				}
@@ -75,7 +71,7 @@ public class HexGridChunkTriangle2 extends AbstractHexGridChunk {
 		Mesh mesh = MeshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
 		terrain.setMaterial(this.getTerrainMaterial());
-		representation.attachChild(terrain);
+		return terrain;
 	}
 
 	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {

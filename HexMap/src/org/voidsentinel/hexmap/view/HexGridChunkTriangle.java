@@ -19,6 +19,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 
 /**
@@ -33,7 +34,7 @@ public class HexGridChunkTriangle extends AbstractHexGridChunk {
 
 	public HexGridChunkTriangle(HexMap map, int xstart, int zstart, int chunkSize,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, false,colorExtractor);
+		super(map, xstart, zstart, chunkSize, false, colorExtractor);
 	}
 
 	/**
@@ -42,7 +43,7 @@ public class HexGridChunkTriangle extends AbstractHexGridChunk {
 	 * @param map
 	 * @return the generated geometry.
 	 */
-	public void generateGeometry() {
+	protected Spatial generateSpecializedGeometries() {
 		MeshUtil MeshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
@@ -57,7 +58,7 @@ public class HexGridChunkTriangle extends AbstractHexGridChunk {
 		Mesh mesh = MeshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
 		terrain.setMaterial(this.getTerrainMaterial());
-		representation.attachChild(terrain);
+		return terrain;
 	}
 
 	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
@@ -79,8 +80,7 @@ public class HexGridChunkTriangle extends AbstractHexGridChunk {
 		Iterator<Vector3f> it = vertices.iterator();
 		while (it.hasNext()) {
 			Vector3f vertex = it.next();
-			Vector3f perturb = new Vector3f(noise.GetNoise(vertex.x, vertex.z), 0f, noise.GetNoise(vertex.z, vertex.y))
-			      ;
+			Vector3f perturb = new Vector3f(noise.GetNoise(vertex.x, vertex.z), 0f, noise.GetNoise(vertex.z, vertex.y));
 			vertex.addLocal(perturb);
 		}
 

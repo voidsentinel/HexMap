@@ -47,7 +47,7 @@ public class TerrainImage {
 					float gray = Math.max(Math.min(height / 255f, 1f), 0f);
 					rgb = new Color(gray, gray, gray, 1f).getRGB();
 				} else {
-					TerrainData terrain = (TerrainData)cell.getData(HexCell.TERRAIN_DATA);
+					TerrainData terrain = (TerrainData) cell.getData(HexCell.TERRAIN_DATA);
 					if (terrain == null) {
 						LOG.warning(x + "/" + y + " possess no terrain");
 					}
@@ -79,6 +79,47 @@ public class TerrainImage {
 			e.printStackTrace();
 		}
 
+	}
+
+	static public void generateImage(HexMap map, String key) {
+		LOG.info("Generating Image : " + TerrainImage.class.getSimpleName());
+
+		BufferedImage image = new BufferedImage(map.WIDTH * 2 + 1, map.HEIGHT * 2, BufferedImage.TYPE_INT_ARGB);
+
+		int rgb = 0;
+
+		for (int x = 0; x < map.WIDTH; x++) {
+			for (int y = 0; y < map.HEIGHT; y++) {
+				HexCell cell = map.getCell(x, y);
+				if (cell != null) {
+					float gray = cell.getFloatData(key);
+					rgb = new Color(gray, gray, gray, 1f).getRGB();
+
+				}
+				if (y % 2 == 0) {
+					int px = x * 2;
+					int py = (map.HEIGHT * 2) - (y * 2) - 1;
+					image.setRGB(px + 0, py - 0, rgb);
+					image.setRGB(px + 1, py - 0, rgb);
+					image.setRGB(px + 0, py - 1, rgb);
+					image.setRGB(px + 1, py - 1, rgb);
+				} else {
+					int px = x * 2 + 1;
+					int py = (map.HEIGHT * 2) - (y * 2) - 1;
+					image.setRGB(px + 0, py - 0, rgb);
+					image.setRGB(px + 1, py - 0, rgb);
+					image.setRGB(px + 0, py - 1, rgb);
+					image.setRGB(px + 1, py - 1, rgb);
+				}
+			}
+		}
+
+		File outputfile = new File(key+".png");
+		try {
+			ImageIO.write(image, "png", outputfile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	static public void generateImage(float[][] values, String filename) {
