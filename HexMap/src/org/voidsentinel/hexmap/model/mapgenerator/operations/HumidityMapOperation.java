@@ -37,10 +37,10 @@ public class HumidityMapOperation extends AbstractTerrainAction implements IMapO
 					cell.setData(HexCell.HUMIDITY_DATA, 1f);
 				} else {
 					double waterdist = Math.pow(0.98d, (double) cell.getDistanceToWater());
-					double perlin = noise.GetPerlin((float) (x), (float) (y));
-//					cell.setData(HexCell.HUMIDITY_DATA, (float) waterdist * 0.75f + Math.abs((float) perlin) * 0.25f);
-//					cell.setData(HexCell.HUMIDITY_DATA, Math.max(0f, 1f - cell.getDistanceToWater() * 0.1f));
-					cell.setData(HexCell.HUMIDITY_DATA, (float) waterdist );
+					double perlin = Math.min(noise.GetPerlin((float) (x)*3, (float) (y)*3), 0f)*0.2f;
+					
+					float humidity = (float)Math.min(waterdist+perlin, 1d);
+					cell.setData(HexCell.HUMIDITY_DATA, humidity );
 				}
 			}
 		}
