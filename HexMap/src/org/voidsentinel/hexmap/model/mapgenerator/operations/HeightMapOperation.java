@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.AbstractTerrainGenerator;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.AbstractTerrainOperation;
 import org.voidsentinel.hexmap.utils.TerrainImage;
@@ -18,7 +17,7 @@ import org.voidsentinel.hexmap.utils.TerrainImage;
  * @author Xerces
  *
  */
-public class HeightMapOperation extends AbstractTerrainAction implements IMapOperation {
+public class HeightMapOperation extends AbstractMapOperation {
 
 	private List<AbstractTerrainGenerator>	generators		= new ArrayList<AbstractTerrainGenerator>();
 	private List<Float>							generatorsCoef	= new ArrayList<Float>();
@@ -26,7 +25,7 @@ public class HeightMapOperation extends AbstractTerrainAction implements IMapOpe
 	private List<AbstractTerrainOperation>	operations		= new ArrayList<AbstractTerrainOperation>();
 
 	@Override
-	public void filter(HexMap map) {
+	public void specificFilter(HexMap map) {
 		float[][] values = new float[map.HEIGHT][map.WIDTH];
 
 		// initialisation

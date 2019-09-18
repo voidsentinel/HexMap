@@ -5,7 +5,6 @@ package org.voidsentinel.hexmap.model.mapgenerator.operations;
 
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 
 /**
  * get the height at wich the water start (based on the % of cells under), and
@@ -17,7 +16,7 @@ import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainActio
  * @author voidSentinel
  *
  */
-public class WaterLevelOperation extends AbstractTerrainAction implements IMapOperation {
+public class WaterLevelOperation extends AbstractMapOperation {
 	private float percent = 0.2f;
 
 	public WaterLevelOperation(float percent) {
@@ -32,9 +31,7 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 	 * org.voidsentinel.hexmap.model.HexMap)
 	 */
 	@Override
-	public void filter(HexMap map) {
-		LOG.info("   Operation : " + this.getClass().getSimpleName());
-
+	public void specificFilter(HexMap map) {
 		int[] number = new int[10000];
 		int height = 0;
 		// check how many hex at a given altitude (by increment of 1/10000)
@@ -46,6 +43,7 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 				number[height]++;
 			}
 		}
+
 		// find what is the last height that contains < percent cells (cumulated)
 		int current = 0;
 		int total = map.HEIGHT * map.WIDTH;
@@ -61,7 +59,11 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 		float waterHeight = ((float) (waterlevel * 1f)) / 10000f;
 		map.setWaterHeight(waterHeight);
 
-		for (int count = -1; count < map.WIDTH; count++) {
+		int count = -1;
+		int max = 0;
+		// while there  is cell in a higher distance
+		while (count <= max) {
+			// for each cell
 			for (int y = 0; y < map.HEIGHT; y++) {
 				for (int x = 0; x < map.WIDTH; x++) {
 					HexCell cell = map.getCell(x, y);
@@ -73,6 +75,7 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 								cell.setDistanceToWater(0);
 								cell.setData(HexCell.UNDERWATER, true);
 							}
+							// if it contains the current checked distance...
 						} else if (cell.getDistanceToWater() == count) {
 							for (HexCell neighbor : cell.getNeighbor()) {
 								if (neighbor != null) {
@@ -81,6 +84,9 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 									if (neighbor.getDistanceToWater() < 0 || neighbor.getDistanceToWater() > distance) {
 										neighbor.setDistanceToWater(distance);
 										neighbor.setData(HexCell.UNDERWATER, false);
+										if (distance > max) {
+											max = distance;
+										}
 									}
 								}
 							}
@@ -88,46 +94,9 @@ public class WaterLevelOperation extends AbstractTerrainAction implements IMapOp
 					}
 				}
 			}
-
-//		// now set the distance to water for each cell
-//		for (int i = 0; i < 200; i++) {
-//			for (int y = 0; y < map.HEIGHT; y++) {
-//				for (int x = 0; x < map.WIDTH; x++) {
-//					HexCell cell = map.getCell(x, y);
-//					if (cell != null) {
-//						float cellHeight = cell.getFloatData(HexCell.HEIGHT_DATA);
-//						// if water : set the value to and the neighborg to 1
-//						if (cellHeight <= waterHeight && cell.getDistanceToWater() < 0) {
-//							cell.setDistanceToWater(0);
-//							cell.setData(HexCell.UNDERWATER, true);
-//							for (HexCell neighbor : cell.getNeighbor()) {
-//								if (neighbor != null && neighbor.getHeight() > waterHeight) {
-//									neighbor.setDistanceToWater(1);
-//								}
-//							}
-//						}
-//
-//						if (cellHeight > waterHeight) {
-//							cell.setData(HexCell.UNDERWATER, false);
-//							// otherwise check any neighbor and modify the
-//							for (HexCell neighbor : cell.getNeighbor()) {
-//								if (neighbor != null) {
-//									int diff = Math.min(neighbor.getElevation() - cell.getElevation(), 0);
-//									int distance = neighbor.getDistanceToWater() + diff;
-//									if (distance >= 0) {
-//										if (cell.getDistanceToWater() < 0) {
-//											cell.setDistanceToWater(distance + 1);
-//										} else if (distance < cell.getDistanceToWater()) {
-//											cell.setDistanceToWater(distance + 1);
-//										}
-//									}
-//								}
-//							}
-//						}
-//					}
-//				}
-//			}
+			count++;
 		}
+		LOG.info("               " + count + " max distance to water");
 
 	}
 

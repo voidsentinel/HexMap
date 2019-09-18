@@ -27,6 +27,11 @@ import com.jme3.math.ColorRGBA;
 public class TerrainImage {
 	private static final Logger LOG = Logger.getLogger(TerrainImage.class.toString());
 
+	/**
+	 * Generate an image from the map based on the TerrainData for eachCell
+	 * @param map
+	 * @param colored
+	 */
 	static public void generateImage(HexMap map, boolean colored) {
 		LOG.info("Generating Image : " + TerrainImage.class.getSimpleName());
 
@@ -81,9 +86,13 @@ public class TerrainImage {
 
 	}
 
+	/**
+	 * Generate an image from the map based on the value for each cell of the key given 
+	 * @param map
+	 * @param key The key to the data. This data should be a normalized float [0..1]
+	 */
 	static public void generateImage(HexMap map, String key) {
 		LOG.info("Generating Image : " + TerrainImage.class.getSimpleName());
-
 		BufferedImage image = new BufferedImage(map.WIDTH * 2 + 1, map.HEIGHT * 2, BufferedImage.TYPE_INT_ARGB);
 
 		int rgb = 0;
@@ -122,13 +131,18 @@ public class TerrainImage {
 		}
 	}
 
+	/**
+	 * Generate a greyscale image from the 2D array given. values should be a normalized float
+	 * @param values
+	 * @param filename
+	 */
 	static public void generateImage(float[][] values, String filename) {
 		LOG.info("Generating Image : " + TerrainImage.class.getSimpleName());
 		final int WIDTH = values[0].length;
 		final int HEIGHT = values.length;
 		BufferedImage image = new BufferedImage(WIDTH * 2 + 1, HEIGHT * 2, BufferedImage.TYPE_INT_ARGB);
-		float min = findMinHeight(values);
-		float max = findMaxHeight(values);
+		float min = 0f;
+		float max = 1f;
 		float coeff = 1f / (max - min);
 		int rgb = 0;
 		int px = 0;

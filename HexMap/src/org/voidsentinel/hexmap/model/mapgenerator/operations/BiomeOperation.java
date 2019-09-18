@@ -19,10 +19,9 @@ import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
  * @author Xerces
  *
  */
-public class BiomeOperation implements IMapOperation {
+public class BiomeOperation extends AbstractMapOperation {
 	private static final Logger	LOG	= Logger.getLogger(BiomeOperation.class.toString());
 
-	private HexMap						map;
 	private String[]					terrains;
 
 	public BiomeOperation(String[] terrainstypes, int levels) {
@@ -45,7 +44,7 @@ public class BiomeOperation implements IMapOperation {
 	 * <li>4 = moutains
 	 * </ul>
 	 */
-	public void filter(HexMap map) {
+	public void specificFilter(HexMap map) {
 		LOG.info("   Operation : " + BiomeOperation.class.getSimpleName());
 		LOG.info("       " + terrains.length + " terrains");
 

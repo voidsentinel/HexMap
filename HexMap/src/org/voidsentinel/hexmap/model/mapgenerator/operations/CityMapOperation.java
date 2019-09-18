@@ -5,7 +5,6 @@ import java.util.List;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 import org.voidsentinel.hexmap.utils.TerrainImage;
 
 /**
@@ -23,10 +22,10 @@ import org.voidsentinel.hexmap.utils.TerrainImage;
  * @author voidSentinel
  *
  */
-public class CityMapOperation extends AbstractTerrainAction implements IMapOperation {
+public class CityMapOperation extends AbstractMapOperation {
 
 	@Override
-	public void filter(HexMap map) {
+	public void specificFilter(HexMap map) {
 		float[][] cities = new float[map.HEIGHT][map.WIDTH];
 
 		float value = 0f;

@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.repositories.RepositoryData;
+import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
 import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 
@@ -29,6 +30,7 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	protected String					tooltipName		= null;
 	protected boolean					defaultMapper	= false;
 	protected boolean					ignoreWater		= false;
+	protected ColorRGBA           ignoredColor   = ColorRGBA.Black;
 
 	/**
 	 * Contructor with an Id
@@ -51,7 +53,7 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 		if (!ignoreWater || !cell.getBooleanData(HexCell.UNDERWATER)) {
 			return this.getColorSpecialized(cell, map);
 		} else {
-			return ColorRGBA.Black;
+			return ignoredColor;
 		}
 	}
 
@@ -105,6 +107,9 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 		}
 		if ("ignorewater".equalsIgnoreCase(name)) {
 			this.ignoreWater = "true".equalsIgnoreCase(value);
+		}
+		if ("ignoredColor".equalsIgnoreCase(name)) {
+			this.ignoredColor = ColorParser.parse(value);
 		}
 	}
 

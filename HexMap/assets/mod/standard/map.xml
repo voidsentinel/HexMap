@@ -30,7 +30,7 @@
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
 		text="map.humidityColorMapper.label"
 		tooltip="map.humidityColorMapper.tooltip"
-		icon="humidityColorMapperIcon" key="humidity"
+		icon="humidityColorMapperIcon" key="humidity" ignorewater = "false" ignoredColor="#00ffff"
 		colorMap="colorMap/humidity2.png" />
 
 	<image id="cityColorMapperIcon">icons/map-cities.png</image>

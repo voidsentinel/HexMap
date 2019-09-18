@@ -5,7 +5,6 @@ package org.voidsentinel.hexmap.model.mapgenerator.operations;
 
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.utils.TerrainImage;
 
@@ -15,7 +14,7 @@ import org.voidsentinel.hexmap.utils.TerrainImage;
  * @author voidSentinel
  *
  */
-public class HumidityMapOperation extends AbstractTerrainAction implements IMapOperation {
+public class HumidityMapOperation extends AbstractMapOperation {
 
 	/*
 	 * (non-Javadoc)
@@ -25,11 +24,8 @@ public class HumidityMapOperation extends AbstractTerrainAction implements IMapO
 	 * org.voidsentinel.hexmap.model.HexMap)
 	 */
 	@Override
-	public void filter(HexMap map) {
-		LOG.info("   Operation : " + this.getClass().getSimpleName());
-
+	public void specificFilter(HexMap map) {
 		FastNoise noise = new FastNoise();
-
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(x, y);
