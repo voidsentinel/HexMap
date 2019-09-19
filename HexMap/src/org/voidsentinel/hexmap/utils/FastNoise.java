@@ -646,18 +646,18 @@ public class FastNoise {
 		return hash;
 	}
 
-	private static int Hash4D(int seed, int x, int y, int z, int w) {
-		int hash = seed;
-		hash ^= X_PRIME * x;
-		hash ^= Y_PRIME * y;
-		hash ^= Z_PRIME * z;
-		hash ^= W_PRIME * w;
-
-		hash = hash * hash * hash * 60493;
-		hash = (hash >> 13) ^ hash;
-
-		return hash;
-	}
+//	private static int Hash4D(int seed, int x, int y, int z, int w) {
+//		int hash = seed;
+//		hash ^= X_PRIME * x;
+//		hash ^= Y_PRIME * y;
+//		hash ^= Z_PRIME * z;
+//		hash ^= W_PRIME * w;
+//
+//		hash = hash * hash * hash * 60493;
+//		hash = (hash >> 13) ^ hash;
+//
+//		return hash;
+//	}
 
 	private static float ValCoord2D(int seed, int x, int y) {
 		int n = seed;

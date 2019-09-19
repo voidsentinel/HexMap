@@ -89,8 +89,6 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 	private void triangulateCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		Vector3f center = HexMetrics.getCellCenter(cell);
 		Vector3f v2 = null;
-		Vector3f v3 = null;
-		Vector3f point = null;
 		int index = MeshUtility.getVerticeCount();
 		int offsetDir = 0;
 		int offsetDirNext = 0;

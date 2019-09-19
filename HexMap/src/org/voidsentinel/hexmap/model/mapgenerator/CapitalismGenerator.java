@@ -5,7 +5,6 @@ import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.CellularG
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FaultCirclesGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FlatGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.HexBlurOperation;
-import org.voidsentinel.hexmap.model.mapgenerator.operations.BiomeOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.BiomeOperation2;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.CityMapOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.ElevationMapOperation;
