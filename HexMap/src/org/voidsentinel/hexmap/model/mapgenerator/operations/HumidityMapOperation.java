@@ -41,7 +41,7 @@ public class HumidityMapOperation extends AbstractMapOperation {
 			}
 		}
 		map.normalizeData(HexCell.HUMIDITY_DATA);
-		TerrainImage.generateImage(map, HexCell.HUMIDITY_DATA);
+		TerrainImage.generateImage(map, HexCell.HUMIDITY_DATA, this.getClass().getSimpleName());
 	}
 
 }

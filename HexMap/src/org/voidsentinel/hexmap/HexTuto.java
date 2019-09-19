@@ -16,7 +16,6 @@ import org.voidsentinel.hexmap.model.mapgenerator.MapGenerator;
 import org.voidsentinel.hexmap.utils.Alea;
 import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
-import org.voidsentinel.hexmap.utils.TerrainImage;
 import org.voidsentinel.hexmap.view.HexGrid;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.ihm.ImageData;
@@ -80,7 +79,6 @@ public class HexTuto extends SimpleApplication {
 		MapGenerator generator = new CapitalismGenerator();
 		HexMap map = new HexMap(128, 64);
 		generator.generate(map);
-		TerrainImage.generateImage(map, false);
 
 		// generate the representation
 		mapNode = new HexGrid(map, this.getRootNode());

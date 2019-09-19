@@ -29,10 +29,11 @@ public class TerrainImage {
 
 	/**
 	 * Generate an image from the map based on the TerrainData for eachCell
+	 * 
 	 * @param map
 	 * @param colored
 	 */
-	static public void generateImage(HexMap map, boolean colored) {
+	static public void generateImage(HexMap map, boolean colored, String filename) {
 		LOG.info("Generating Image : " + TerrainImage.class.getSimpleName());
 
 		BufferedImage image = new BufferedImage(map.WIDTH * 2 + 1, map.HEIGHT * 2, BufferedImage.TYPE_INT_ARGB);
@@ -77,7 +78,7 @@ public class TerrainImage {
 			}
 		}
 
-		File outputfile = new File("terrain.png");
+		File outputfile = new File(filename + ".png");
 		try {
 			ImageIO.write(image, "png", outputfile);
 		} catch (IOException e) {
@@ -87,11 +88,13 @@ public class TerrainImage {
 	}
 
 	/**
-	 * Generate an image from the map based on the value for each cell of the key given 
+	 * Generate an image from the map based on the value for each cell of the key
+	 * given
+	 * 
 	 * @param map
 	 * @param key The key to the data. This data should be a normalized float [0..1]
 	 */
-	static public void generateImage(HexMap map, String key) {
+	static public void generateImage(HexMap map, String key, String filename) {
 		LOG.info("Generating Image : " + TerrainImage.class.getSimpleName());
 		BufferedImage image = new BufferedImage(map.WIDTH * 2 + 1, map.HEIGHT * 2, BufferedImage.TYPE_INT_ARGB);
 
@@ -123,7 +126,7 @@ public class TerrainImage {
 			}
 		}
 
-		File outputfile = new File(key+".png");
+		File outputfile = new File(filename + ".png");
 		try {
 			ImageIO.write(image, "png", outputfile);
 		} catch (IOException e) {
@@ -132,7 +135,9 @@ public class TerrainImage {
 	}
 
 	/**
-	 * Generate a greyscale image from the 2D array given. values should be a normalized float
+	 * Generate a greyscale image from the 2D array given. values should be a
+	 * normalized float
+	 * 
 	 * @param values
 	 * @param filename
 	 */

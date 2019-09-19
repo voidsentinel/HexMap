@@ -135,7 +135,7 @@ public class BiomeOperation2 extends AbstractMapOperation {
 				}
 			}
 		}
-		TerrainImage.generateImage(map, true);
+		TerrainImage.generateImage(map, true, this.getClass().getSimpleName());
 	}
 
 }
