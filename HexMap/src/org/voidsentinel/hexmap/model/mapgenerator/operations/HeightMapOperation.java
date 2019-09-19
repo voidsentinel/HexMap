@@ -62,7 +62,6 @@ public class HeightMapOperation extends AbstractMapOperation {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(x, y);
 				cell.setData(HexCell.HEIGHT_DATA, values[y][x]);
-//				cell.setHeight(values[y][x]);
 			}
 		}
 

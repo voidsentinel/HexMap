@@ -58,46 +58,6 @@ public class WaterLevelOperation extends AbstractMapOperation {
 
 		float waterHeight = ((float) (waterlevel * 1f)) / 10000f;
 		map.setWaterHeight(waterHeight);
-
-		int count = -1;
-		int max = 0;
-		// while there  is cell in a higher distance
-		while (count <= max) {
-			// for each cell
-			for (int y = 0; y < map.HEIGHT; y++) {
-				for (int x = 0; x < map.WIDTH; x++) {
-					HexCell cell = map.getCell(x, y);
-					if (cell != null) {
-						float cellHeight = cell.getFloatData(HexCell.HEIGHT_DATA);
-						if (count == -1) {
-							// initialize water cell to 0
-							if (cellHeight <= waterHeight) {
-								cell.setDistanceToWater(0);
-								cell.setData(HexCell.UNDERWATER, true);
-							}
-							// if it contains the current checked distance...
-						} else if (cell.getDistanceToWater() == count) {
-							for (HexCell neighbor : cell.getNeighbor()) {
-								if (neighbor != null) {
-									int diff = Math.max(neighbor.getElevation() - cell.getElevation(), 0);
-									int distance = count + 1 + diff;
-									if (neighbor.getDistanceToWater() < 0 || neighbor.getDistanceToWater() > distance) {
-										neighbor.setDistanceToWater(distance);
-										neighbor.setData(HexCell.UNDERWATER, false);
-										if (distance > max) {
-											max = distance;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			count++;
-		}
-		LOG.info("               " + count + " max distance to water");
-
 	}
 
 }

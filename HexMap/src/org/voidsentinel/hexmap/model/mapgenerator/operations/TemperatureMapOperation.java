@@ -22,8 +22,6 @@ public class TemperatureMapOperation extends AbstractMapOperation {
 
 	@Override
 	public void specificFilter(HexMap map) {
-		LOG.info("   Operation : " + this.getClass().getSimpleName());
-
 		final float LATITATTENUATION = (maxTemperature - minTemperature) / (map.HEIGHT*1.1f); // expressed in °/ cell
 
 		float[][] temperature = new float[map.HEIGHT][map.WIDTH];

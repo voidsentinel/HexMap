@@ -38,10 +38,43 @@ public class MapRepresentation extends RepositoryData {
 	 * @param additional additional data.
 	 */
 	@Override
-	public void addDataParameters(String name, String value, String additional) {
+	public boolean addDataParameters(String name, String value, String additional) {
+		boolean used = false;
+		if ("class".equalsIgnoreCase(name)) {
+			this.setClassName(value);
+			this.defaultMapper = "true".equalsIgnoreCase(value);
+			used = true;
+		}
+		
 		if ("default".equalsIgnoreCase(name)) {
 			this.defaultMapper = "true".equalsIgnoreCase(value);
+			used = true;
 		}
+		
+		if ("material".equalsIgnoreCase(name)) {
+			setMaterialName(value);
+			used = true;
+		}
+
+		if ("perturbation".equalsIgnoreCase(name)) {
+			this.setPerturbated(Boolean.parseBoolean(value));
+			used = true;
+		}
+
+		if ("icon".equalsIgnoreCase(name)) {
+			setIconName(value);
+			used = true;
+		}
+		if ("text".equalsIgnoreCase(name)) {
+			setLabelName(value);
+			used = true;
+		}
+		if ("tooltip".equalsIgnoreCase(name)) {
+			setTooltipName(value);
+			used = true;
+		}
+		
+		return used;
 	}
 
 	/**

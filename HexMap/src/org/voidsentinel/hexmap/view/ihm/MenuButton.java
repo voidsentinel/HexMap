@@ -275,19 +275,19 @@ public class MenuButton extends Button implements IIHMEventListener {
 	 */
 	@Override
 	public void signalAction(Panel source, IHMAction action) {
-		LOG.info("> Receiving IHM Event "+action.toString()+ " from "+source.getElementId().getId()
-				+" to "+this.getElementId().getId());
+//		LOG.info("> Receiving IHM Event "+action.toString()+ " from "+source.getElementId().getId()
+//				+" to "+this.getElementId().getId());
 
 		switch (action) {
 		case MENU_OPEN:
 			if (!source.getElementId().getId().startsWith(this.getElementId().getId())) {
-				LOG.info("> Closing the menu "+this.getElementId().getId());
+//				LOG.info("> Closing the menu "+this.getElementId().getId());
 				this.setOpen(false);
 			}
 			break;
 		case MENU_CLOSE:
 			if (source.getElementId().getId().startsWith(this.getElementId().getId())) {
-				LOG.info("> Closing the menu "+this.getElementId().getId());
+//				LOG.info("> Closing the menu "+this.getElementId().getId());
 				this.setOpen(false);
 			}
 			break;

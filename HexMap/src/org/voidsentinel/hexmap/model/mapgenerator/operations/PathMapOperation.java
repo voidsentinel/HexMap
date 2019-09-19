@@ -21,7 +21,6 @@ public class PathMapOperation extends AbstractMapOperation {
 
 	@Override
 	public void specificFilter(HexMap map) {
-		LOG.info("   Operation : " + this.getClass().getSimpleName());
 		int count = 0;
 
 		float[][] prevalence = new float[map.HEIGHT][map.WIDTH];

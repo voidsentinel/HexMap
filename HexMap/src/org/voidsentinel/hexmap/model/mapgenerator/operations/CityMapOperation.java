@@ -30,7 +30,6 @@ public class CityMapOperation extends AbstractMapOperation {
 
 		float value = 0f;
 		HexCell selectedCell = null;
-		LOG.info("   Operation : " + this.getClass().getSimpleName());
 
 		// set the city value
 		for (int y = 0; y < map.HEIGHT; y++) {

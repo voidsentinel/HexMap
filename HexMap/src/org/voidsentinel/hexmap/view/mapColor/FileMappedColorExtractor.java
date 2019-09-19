@@ -86,11 +86,16 @@ public class FileMappedColorExtractor extends KeyColorExtractor {
 	 * org.voidsentinel.hexmap.model.repositories.RepositoryData#addDataParameters(
 	 * java.lang.String, java.lang.String)
 	 */
-	public void addDataParameters(String name, String value, String additional) {
-		super.addDataParameters(name, value, additional);
-		if ("colorMap".equalsIgnoreCase(name)) {
-			this.setColorMap(additional + value);
+	public boolean addDataParameters(String name, String value, String additional) {
+		boolean used = false;
+		used = super.addDataParameters(name, value, additional);
+		if (!used) {
+			if ("colormap".equalsIgnoreCase(name)) {
+				this.setColorMap(additional + '/' + value);
+				used = true;
+			}
 		}
+		return used;
 	}
 
 	/**

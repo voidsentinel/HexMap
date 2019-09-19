@@ -32,7 +32,6 @@ public class IHMEventController {
 	}
 
 	public static void signalEvent(Panel source, IHMAction action) {
-		LOG.info("> Signaling IHM Event "+action.toString()+ " from "+source.getElementId().getId());
 		for (Iterator<IIHMEventListener> iterator = listener.iterator(); iterator.hasNext();) {
 			IIHMEventListener iihmEventListener = (IIHMEventListener) iterator.next();
 			iihmEventListener.signalAction(source, action);

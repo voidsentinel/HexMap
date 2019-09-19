@@ -27,13 +27,13 @@ public abstract class AbstractMapOperation implements IMapOperation {
 	 * org.voidsentinel.hexmap.model.HexMap)
 	 */
 	@Override
-	public void filter(HexMap map) {
+	public final void filter(HexMap map) {
 		long startTime = System.nanoTime();
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
 		specificFilter(map);
 		long endTime = System.nanoTime();
 		long duration = (endTime - startTime) / 1000000; // divide by 1000000 to get milliseconds.
-		LOG.info("               Execution in " + duration +" ms");
+		LOG.info("               Executed in " + duration +" ms");
 	}
 
 	/**

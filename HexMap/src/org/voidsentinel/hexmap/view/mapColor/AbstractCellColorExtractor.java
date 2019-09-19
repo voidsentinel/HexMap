@@ -101,16 +101,34 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	 * @param value      the value of the information
 	 * @param additional additional data.
 	 */
-	public void addDataParameters(String name, String value, String additional) {
+	public boolean addDataParameters(String name, String value, String additional) {
+		boolean used = false;
 		if ("default".equalsIgnoreCase(name)) {
 			this.defaultMapper = "true".equalsIgnoreCase(value);
+			used = true;
 		}
 		if ("ignorewater".equalsIgnoreCase(name)) {
 			this.ignoreWater = "true".equalsIgnoreCase(value);
+			used = true;
 		}
-		if ("ignoredColor".equalsIgnoreCase(name)) {
+		if ("ignoredcolor".equalsIgnoreCase(name)) {
 			this.ignoredColor = ColorParser.parse(value);
+			used = true;
 		}
+		if ("icon".equalsIgnoreCase(name)) {
+			setIconName(value);
+			used = true;
+		}
+		if ("text".equalsIgnoreCase(name)) {
+			setTextName(value);
+			used = true;
+		}
+		if ("tooltip".equalsIgnoreCase(name)) {
+			setTooltipName(value);
+			used = true;
+		}
+		
+		return used;
 	}
 
 	/**

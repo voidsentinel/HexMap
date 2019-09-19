@@ -49,10 +49,11 @@ public abstract class RepositoryData {
 	 * add an information to the object. Since this is mostly used for object
 	 * generated from config file, additionnal data can be added.
 	 * 
-	 * @param name       the name if the information
+	 * @param name       the name of the information
 	 * @param value      the value of the information
-	 * @param additional additional data.
+	 * @param additional additional data
+	 * @return true if the data was used
 	 */
-	protected abstract void addDataParameters(String name, String value, String additional);
+	public abstract boolean addDataParameters(String name, String value, String additional);
 
 }

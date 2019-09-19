@@ -5,6 +5,5 @@
 	
 	<image id="buttonBackground">ihm/buttonSquare_beige.png</image>
 	<image id="buttonSelectedBackground">ihm/buttonSquare_brown_pressed.png</image>
-	<image id="panelBackground">ihm/panelInset_brown.png</image>
-	
+	<image id="panelBackground">ihm/panelInset_brown.png</image>	
 </images>

@@ -9,6 +9,7 @@ package org.voidsentinel.hexmap.mod;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,10 +22,9 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
 import org.voidsentinel.hexmap.model.TerrainData;
+import org.voidsentinel.hexmap.model.repositories.RepositoryData;
 import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
-import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
-import org.voidsentinel.hexmap.utils.VectorUtils;
 import org.voidsentinel.hexmap.view.ihm.ImageData;
 import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
@@ -34,8 +34,6 @@ import org.voidsentinel.hexmap.view.representation.MapRepresentationRepository;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.plugins.FileLocator;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector2f;
 
 /**
  * This is a utility class to help load Mods. It provide functionnalities to
@@ -218,7 +216,7 @@ public class ModLoader {
 			break;
 		}
 		case "terrainMaterial": {
-			loadTerrainMaterial(node, directory);
+//			loadTerrainMaterial(node, directory);
 			break;
 		}
 		case "mapColorMapper": {
@@ -238,6 +236,12 @@ public class ModLoader {
 		}
 	}
 
+	/**
+	 * Load an image into the image repository
+	 * 
+	 * @param node      : the image node. id is the key, content is the filename
+	 * @param directory
+	 */
 	private static void loadImage(Element node, String directory) {
 		String id = node.getAttributeValue("id");
 		if (ImageRepository.datas.getData(id) == null) {
@@ -252,7 +256,6 @@ public class ModLoader {
 
 	/**
 	 * Load a property file
-	 * 
 	 * @param node      the XML node containing the information
 	 * @param directory the directory of the current XML file
 	 */
@@ -270,58 +273,28 @@ public class ModLoader {
 	private static void loadTerrain(Element node, String directory) {
 		String id = node.getAttributeValue("id");
 
-		if (TerrainRepository.datas.getData(id) == null) {
+		if (TerrainRepository.terrains.getData(id) == null) {
 			LOG.log(Level.INFO, "   loading terrain " + id);
 			TerrainData terrain = new TerrainData(id);
 
-			// get the Center UV coordinates
-			List<Element> uvt = node.getChildren("uvcenter");
-			Iterator<Element> ituvt = uvt.iterator();
-			while (ituvt.hasNext()) {
-				Element uvn = ituvt.next();
-				Vector2f uv = VectorUtils.vector2fFromString(uvn.getValue());
-				terrain.uvCenter.add(uv);
-			}
+			addElementData(terrain, node, directory);
+			addAttribuetData(terrain, node, directory);
 
-			Element uvSize = node.getChild("uvsize");
-			if (uvSize != null)
-				terrain.setUVSize(Float.parseFloat(uvSize.getValue().trim()));
+         Element graphic = node.getChild("graphic");
+         if (graphic != null) {
+   			addElementData(terrain, graphic, directory);         	
+         }
 
-			// get the colors
-			List<Element> uvc = node.getChildren("color");
-			Iterator<Element> ituvc = uvc.iterator();
-			while (ituvc.hasNext()) {
-				Element uvn = ituvc.next();
-				ColorRGBA color = ColorParser.parse(uvn.getValue().trim());
-				if (color != null) {
-					terrain.baseColors.add(color);
-				}
-			}
-			// get the border colors
-			List<Element> uvb = node.getChildren("borderColor");
-			Iterator<Element> ituvb = uvb.iterator();
-			while (ituvb.hasNext()) {
-				Element uvn = ituvb.next();
-				ColorRGBA color = ColorParser.parse(uvn.getValue().trim());
-				if (color != null) {
-					terrain.borderColor = color;
-				}
-			}
-
-			TerrainRepository.datas.addData(terrain);
+         
+			TerrainRepository.terrains.addData(terrain);
 		}
 	}
 
-	private static void loadTerrainMaterial(Element node, String directory) {
-//		String filename = node.getValue().trim();
-//		try {
-//			TerrainRepository.setTerrainMaterial(filename);
-//		} catch (final Exception e) {
-//			LOG.log(Level.SEVERE, "Problem with Material file " + filename, e);
-//		}
-//		;
-	};
-
+	/**
+	 * load a colorMapper a XML node. id and class attribute are mandatory. 
+	 * @param node XML Node to extract data from
+	 * @param directory
+	 */
 	private static void loadMapColorMapper(Element node, String directory) {
 		String className = null;
 		String id = node.getAttributeValue("id").trim().toLowerCase();
@@ -353,93 +326,76 @@ public class ModLoader {
 			}
 
 			AbstractCellColorExtractor colorExt = ColorMapperRepository.repository.getData(id);
-			String icon = node.getAttributeValue("icon");
-			if (icon != null) {
-				colorExt.setIconName(icon.trim());
-			}
-			String text = node.getAttributeValue("text");
-			if (text != null) {
-				colorExt.setTextName(text.trim());
-			}
-			
-			String tooltip = node.getAttributeValue("tooltip");
-			if (text != null) {
-				colorExt.setTooltipName(tooltip.trim());
-			}
-			List<Attribute> attributes = node.getAttributes();
-			removeAttribute("id", attributes);
-			removeAttribute("class", attributes);
-			removeAttribute("icon", attributes);
-			removeAttribute("text", attributes);
-			removeAttribute("tooltip", attributes);
-
-			Iterator<Attribute> it = attributes.iterator();
-			while (it.hasNext()) {
-				Attribute attribute = it.next();
-				colorExt.addDataParameters(attribute.getName().toLowerCase(), attribute.getValue(), directory + "/");
-			}
+			// adding data
+			addElementData(colorExt, node, directory);
+			addAttribuetData(colorExt, node, directory);
 		}
 	}
 
+	/**
+	 * load a MapRepresentation from a node. The "id" attribute is mandatory
+	 * @param node the node to use for the data
+	 * @param directory
+	 */
 	private static void loadMapRepresentation(Element node, String directory) {
-		String className = null;
 		String id = node.getAttributeValue("id").trim().toLowerCase();
 		// if not already present
 		if (MapRepresentationRepository.repository.getData(id) == null) {
 			MapRepresentation representation = new MapRepresentation(id);
-			
-			if (node.getAttributeValue("class") != null) {
-				className = node.getAttributeValue("class").trim();
-				representation.setClassName(className);
-			}
 
-			String icon = node.getAttributeValue("icon");
-			if (icon != null) {
-				representation.setIconName(icon.trim());
-			}
-			String text = node.getAttributeValue("text");
-			if (text != null) {
-				representation.setLabelName(text.trim());
-			}			
-			String tooltip = node.getAttributeValue("tooltip");
-			if (tooltip != null) {
-				representation.setTooltipName(tooltip.trim());
-			}
-			String material = node.getAttributeValue("material");
-			if (material != null) {
-				representation.setMaterialName(material.trim());
-			}
-			String perturbation = node.getAttributeValue("perturbated");
-			if (perturbation != null) {
-				representation.setPerturbated(Boolean.parseBoolean(perturbation));;
-			}
+			addElementData(representation, node, directory);
+			addAttribuetData(representation, node, directory);
 
 			MapRepresentationRepository.repository.addData(representation);
-			
-			List<Attribute> attributes = node.getAttributes();
-			removeAttribute("id", attributes);
-			removeAttribute("class", attributes);
-			removeAttribute("icon", attributes);
-			removeAttribute("text", attributes);
-			removeAttribute("tooltip", attributes);
-			removeAttribute("material", attributes);
-
-			Iterator<Attribute> it = attributes.iterator();
-			while (it.hasNext()) {
-				Attribute attribute = it.next();
-				representation.addDataParameters(attribute.getName().toLowerCase(), attribute.getValue(), directory + "/");
-			}
 		}
 	}
-	
-	
-	public static void removeAttribute(String id, List<Attribute> attributes) {
-		Iterator<Attribute> it = attributes.iterator();
-		while (it.hasNext()) {
-			if (id.equals(it.next().getName())) {
-				it.remove();
+
+	/**
+	 * repetively call the repositoryData object with the name/value of each
+	 * subelement of the given node
+	 * 
+	 * @param object    the object to send data to
+	 * @param node      the node to use for getting data
+	 * @param directory the current directory
+	 * @return the list of elment that was not ued.
+	 */
+	static private List<Element> addElementData(RepositoryData object, Element node, String directory) {
+		List<Element> response = new ArrayList<Element>();
+		List<Element> infos = node.getChildren();
+		Iterator<Element> infoit = infos.iterator();
+		while (infoit.hasNext()) {
+			Element element = infoit.next();
+			boolean result = object.addDataParameters(element.getName(), element.getValue().trim(), directory);
+			if (!result) {
+				response.add(element);
 			}
 		}
+		return response;
+	}
+
+	/**
+	 * repetively call the repositoryData object with the name/value of each
+	 * attribute of the given node
+	 * 
+	 * @param object    the object to send data to
+	 * @param node      the node to use for getting data
+	 * @param directory the current directory
+	 * @return the list of attribute that was not used.
+	 */
+	static private List<Attribute> addAttribuetData(RepositoryData object, Element node, String directory) {
+		List<Attribute> response = new ArrayList<Attribute>();
+		List<Attribute> infos = node.getAttributes();
+		Iterator<Attribute> infoit = infos.iterator();
+		while (infoit.hasNext()) {
+			Attribute attribute = infoit.next();
+			boolean result = object.addDataParameters(attribute.getName(), attribute.getValue().trim(), directory);
+			LOG.log(Level.INFO, "      added " + attribute.getName() + " : " + attribute.getValue().trim());
+			if (!result) {
+				response.add(attribute);
+			}
+		}
+		return response;
+
 	}
 
 }

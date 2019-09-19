@@ -78,6 +78,14 @@ public class ColorParser {
 		return null;
 	}
 
+	public static ColorRGBA parse(int color) {
+		int red = (color & 0x00ff0000) >> 16;
+		int green = (color & 0x0000ff00) >> 8;
+		int blue = color & 0x000000ff;
+
+		return new ColorRGBA(red / 255f, green / 255f, blue / 255f, 1f);
+	}
+
 	public static ColorRGBA mean(ColorRGBA a, ColorRGBA b, ColorRGBA c) {
 		ColorRGBA color = new ColorRGBA(0f, 0f, 0f, 0f);
 		int count = 0;

@@ -54,7 +54,7 @@ public class HexCoordinates {
 	}
 
 	public String toString() {
-		return "(" + X + "," + Y + ", " + Z + ")";
+		return "[" + row + ", " + column + "] (" + X + "," + Y + ", " + Z + ")";
 	}
 
 	/**

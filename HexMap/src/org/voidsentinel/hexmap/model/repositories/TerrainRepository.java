@@ -16,16 +16,7 @@ public class TerrainRepository extends BaseRepository<TerrainData> {
 
 //	private static Material terrainMaterial = null;
    private static float    uvSize  = 0.5f;
-	static public TerrainRepository datas = new TerrainRepository();
-
-//	public static void setTerrainMaterial(String file) {
-//		AssetManager assets = HexTuto.getInstance().getAssetManager();
-//		terrainMaterial = (Material) assets.loadMaterial(file);
-//	}
-//
-//	public static Material getTerrainMaterial() {
-//		return terrainMaterial;
-//	}
+	static public TerrainRepository terrains = new TerrainRepository();
 
 	public static void setUVSize(float value) {
 		uvSize = value;

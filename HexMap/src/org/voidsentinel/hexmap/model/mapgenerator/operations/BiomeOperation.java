@@ -45,12 +45,11 @@ public class BiomeOperation extends AbstractMapOperation {
 	 * </ul>
 	 */
 	public void specificFilter(HexMap map) {
-		LOG.info("   Operation : " + BiomeOperation.class.getSimpleName());
 		LOG.info("       " + terrains.length + " terrains");
 
 		int nblevel = terrains.length - 1;
 
-		TerrainData standard = TerrainRepository.datas.getData("standard");
+		TerrainData standard = TerrainRepository.terrains.getData("standard");
 		if (standard == null) {
 			LOG.severe("   Impossible de trouver le terrain standard");
 		}
@@ -69,7 +68,7 @@ public class BiomeOperation extends AbstractMapOperation {
 				elevation = Math.min(nblevel, elevation);
 
 				cell.setData(HexCell.ELEVATION_DATA, elevation);
-				cell.setData(HexCell.TERRAIN_DATA, TerrainRepository.datas.getData(terrains[elevation]));
+				cell.setData(HexCell.TERRAIN_DATA, TerrainRepository.terrains.getData(terrains[elevation]));
 			}
 		}
 		map.reCalculateProperties();
