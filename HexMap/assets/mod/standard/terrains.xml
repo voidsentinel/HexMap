@@ -9,29 +9,33 @@
 	</terrain>
 	<terrain id="IceDesert">
 		<colorKey>#F0E68B</colorKey>
-		<graphic>
+		<representation>
 			<color>#FFFFFF</color>
 			<color>#FAFAFA</color>
 			<borderColor>#AAAAAA</borderColor>
 			<uvcenter>0.5, 0.5</uvcenter>
 			<uvsize>1.0</uvsize>
-		</graphic>
+		</representation>
 		<fertility>0.25</fertility>
 	</terrain>
 	<terrain id="Tundra">
 		<colorKey>#E1D260</colorKey>
-		<color>#E0DED8</color>
-		<borderColor>#AAAAAA</borderColor>
-		<uvcenter>0.5, 0.5</uvcenter>
-		<uvsize>1.0</uvsize>
+		<representation>
+			<color>#E0DED8</color>
+			<borderColor>#AAAAAA</borderColor>
+			<uvcenter>0.5, 0.5</uvcenter>
+			<uvsize>1.0</uvsize>
+		</representation>
 	</terrain>
 
 	<terrain id="Plain">
 		<colorKey>#626599</colorKey>
-		<color>#ACD0A5</color>
-		<borderColor>#AAAAAA</borderColor>
-		<uvcenter>0.5, 0.5</uvcenter>
-		<uvsize>1.0</uvsize>
+		<representation>
+			<color>#ACD0A5</color>
+			<borderColor>#AAAAAA</borderColor>
+			<uvcenter>0.5, 0.5</uvcenter>
+			<uvsize>1.0</uvsize>
+		</representation>
 	</terrain>
 
 	<terrain id="Desert">
@@ -44,71 +48,89 @@
 
 	<terrain id="Taiga">
 		<colorKey>#C1885C</colorKey>
-		<color>#CAB982</color>
-		<borderColor>#AAAAAA</borderColor>
-		<uvcenter>0.5, 0.5</uvcenter>
-		<uvsize>1.0</uvsize>
+		<representation>
+			<color>#CAB982</color>
+			<borderColor>#AAAAAA</borderColor>
+			<uvcenter>0.5, 0.5</uvcenter>
+			<uvsize>1.0</uvsize>
+		</representation>
 	</terrain>
 
 	<terrain id="Shrubland">
 		<colorKey>#DDB48B</colorKey>
-		<color>#ACD0A5</color>
-		<borderColor>#AAAAAA</borderColor>
-		<uvcenter>0.5, 0.5</uvcenter>
-		<uvsize>1.0</uvsize>
+		<representation>
+			<color>#ACD0A5</color>
+			<borderColor>#AAAAAA</borderColor>
+			<uvcenter>0.5, 0.5</uvcenter>
+			<uvsize>1.0</uvsize>
+		</representation>
 	</terrain>
 
 	<terrain id="Savanna">
 		<colorKey>#BE6C86</colorKey>
-		<color>#E1E4B5</color>
-		<borderColor>#AAAAAA</borderColor>
-		<uvcenter>0.5, 0.5</uvcenter>
-		<uvsize>1.0</uvsize>
+		<representation>
+			<color>#E1E4B5</color>
+			<borderColor>#AAAAAA</borderColor>
+			<uvcenter>0.5, 0.5</uvcenter>
+			<uvsize>1.0</uvsize>
+		</representation>
 	</terrain>
 
 	<terrain id="Forest">
 		<colorKey>#5B914F</colorKey>
-		<color>#94BF8B</color>
-		<borderColor>#AAAAAA</borderColor>
-		<uvcenter>0.5, 0.5</uvcenter>
-		<uvsize>1.0</uvsize>
+		<representation>
+			<color>#94BF8B</color>
+			<borderColor>#AAAAAA</borderColor>
+			<uvcenter>0.5, 0.5</uvcenter>
+			<uvsize>1.0</uvsize>
+		</representation>
 	</terrain>
 
 	<terrain id="SaisonnalForest">
 		<colorKey>#9ABF7E</colorKey>
-		<color>#BDCC96</color>
-		<borderColor>#AAAAAA</borderColor>
-		<uvcenter>0.5, 0.5</uvcenter>
-		<uvsize>1.0</uvsize>
+		<representation>
+			<color>#BDCC96</color>
+			<borderColor>#AAAAAA</borderColor>
+			<uvcenter>0.5, 0.5</uvcenter>
+			<uvsize>1.0</uvsize>
+		</representation>
 	</terrain>
 
 	<terrain id="Swamp">
-		<colorKey>#65A6C6</colorKey>
-		<color>#BEEFB8</color>
-		<borderColor>#AAAAAA</borderColor>
-		<uvcenter>0.5, 0.5</uvcenter>
-		<uvsize>1.0</uvsize>
+		<representation>
+			<colorKey>#65A6C6</colorKey>
+			<color>#BEEFB8</color>
+			<borderColor>#AAAAAA</borderColor>
+			<uvcenter>0.5, 0.5</uvcenter>
+			<uvsize>1.0</uvsize>
+		</representation>
 	</terrain>
 
 	<terrain id="RainForest">
 		<colorKey>#AFE0F4</colorKey>
-		<color>#AFCE59</color>
-		<borderColor>#AAAAAA</borderColor>
-		<uvcenter>0.5, 0.5</uvcenter>
-		<uvsize>1.0</uvsize>
+		<representation>
+			<color>#AFCE59</color>
+			<borderColor>#AAAAAA</borderColor>
+			<uvcenter>0.5, 0.5</uvcenter>
+			<uvsize>1.0</uvsize>
+		</representation>
 	</terrain>
 
 	<terrain id="Ocean">
-		<uvcenter>0.5, 0.5</uvcenter>
-		<uvsize>1.0</uvsize>
-		<color>#AFE0F4</color>
-		<borderColor>rgb(263, 229, 170)</borderColor>
+		<representation>
+			<uvcenter>0.5, 0.5</uvcenter>
+			<uvsize>1.0</uvsize>
+			<color>#AFE0F4</color>
+			<borderColor>rgb(263, 229, 170)</borderColor>
+		</representation>
 	</terrain>
 
 	<terrain id="Rivers">
-		<uvcenter>0.5, 0.5</uvcenter>
-		<uvsize>1.0</uvsize>
-		<color> rgb(263, 229, 170)</color>
-		<borderColor>rgb(263, 229, 170)</borderColor>
+		<representation>
+			<uvcenter>0.5, 0.5</uvcenter>
+			<uvsize>1.0</uvsize>
+			<color> rgb(263, 229, 170)</color>
+			<borderColor>rgb(263, 229, 170)</borderColor>
+		</representation>
 	</terrain>
 </terrains>

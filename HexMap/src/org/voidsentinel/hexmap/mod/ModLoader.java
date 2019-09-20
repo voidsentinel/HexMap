@@ -256,6 +256,7 @@ public class ModLoader {
 
 	/**
 	 * Load a property file
+	 * 
 	 * @param node      the XML node containing the information
 	 * @param directory the directory of the current XML file
 	 */
@@ -280,19 +281,19 @@ public class ModLoader {
 			addElementData(terrain, node, directory);
 			addAttribuetData(terrain, node, directory);
 
-         Element graphic = node.getChild("graphic");
-         if (graphic != null) {
-   			addElementData(terrain, graphic, directory);         	
-         }
+			Element graphic = node.getChild("representation");
+			if (graphic != null) {
+				addElementData(terrain, graphic, directory);
+			}
 
-         
 			TerrainRepository.terrains.addData(terrain);
 		}
 	}
 
 	/**
-	 * load a colorMapper a XML node. id and class attribute are mandatory. 
-	 * @param node XML Node to extract data from
+	 * load a colorMapper a XML node. id and class attribute are mandatory.
+	 * 
+	 * @param node      XML Node to extract data from
 	 * @param directory
 	 */
 	private static void loadMapColorMapper(Element node, String directory) {
@@ -334,7 +335,8 @@ public class ModLoader {
 
 	/**
 	 * load a MapRepresentation from a node. The "id" attribute is mandatory
-	 * @param node the node to use for the data
+	 * 
+	 * @param node      the node to use for the data
 	 * @param directory
 	 */
 	private static void loadMapRepresentation(Element node, String directory) {
@@ -374,13 +376,14 @@ public class ModLoader {
 	}
 
 	/**
-	 * repetively call the repositoryData object with the name/value of each
-	 * attribute of the given node
+	 * repetively call the repositoryData (object) addParameters method with the
+	 * name/value of each attribute of the given node
 	 * 
 	 * @param object    the object to send data to
 	 * @param node      the node to use for getting data
 	 * @param directory the current directory
 	 * @return the list of attribute that was not used.
+	 * @see RepositoryData#addParameter
 	 */
 	static private List<Attribute> addAttribuetData(RepositoryData object, Element node, String directory) {
 		List<Attribute> response = new ArrayList<Attribute>();
@@ -396,6 +399,38 @@ public class ModLoader {
 		}
 		return response;
 
+	}
+
+	/**
+	 * repetively call the repositoryData addParameter object with the name/value of
+	 * each given attribute of the given node
+	 * 
+	 * @param object    the object to send data to
+	 * @param node      the node to use for getting data
+	 * @param names     the names of the used attributes
+	 * @param directory the current directory
+	 * @return the list of attribute that was not used.
+	 * @see RepositoryData#addParameter
+	 */
+	static private List<Attribute> addAttribuetData(RepositoryData object, Element node, String[] names,
+	      String directory) {
+		if (names.length == 0) {
+			return addAttribuetData(object, node, directory);
+		}
+
+		List<Attribute> response = new ArrayList<Attribute>();
+		for (String name : names) {
+			Attribute attribute = node.getAttribute(name);
+			if (attribute != null) {
+				boolean result = object.addDataParameters(attribute.getName(), attribute.getValue().trim(), directory);
+				LOG.log(Level.INFO, "      added " + attribute.getName() + " : " + attribute.getValue().trim());
+				if (!result) {
+					response.add(attribute);
+				}
+			}
+		}
+
+		return response;
 	}
 
 }
