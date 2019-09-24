@@ -19,10 +19,9 @@ import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
  * @author Xerces
  *
  */
-public class BiomeOperation implements IMapOperation {
+public class BiomeOperation extends AbstractMapOperation {
 	private static final Logger	LOG	= Logger.getLogger(BiomeOperation.class.toString());
 
-	private HexMap						map;
 	private String[]					terrains;
 
 	public BiomeOperation(String[] terrainstypes, int levels) {
@@ -45,13 +44,12 @@ public class BiomeOperation implements IMapOperation {
 	 * <li>4 = moutains
 	 * </ul>
 	 */
-	public void filter(HexMap map) {
-		LOG.info("   Operation : " + BiomeOperation.class.getSimpleName());
+	public void specificFilter(HexMap map) {
 		LOG.info("       " + terrains.length + " terrains");
 
 		int nblevel = terrains.length - 1;
 
-		TerrainData standard = TerrainRepository.datas.getData("standard");
+		TerrainData standard = TerrainRepository.terrains.getData("standard");
 		if (standard == null) {
 			LOG.severe("   Impossible de trouver le terrain standard");
 		}
@@ -70,7 +68,7 @@ public class BiomeOperation implements IMapOperation {
 				elevation = Math.min(nblevel, elevation);
 
 				cell.setData(HexCell.ELEVATION_DATA, elevation);
-				cell.setData(HexCell.TERRAIN_DATA, TerrainRepository.datas.getData(terrains[elevation]));
+				cell.setData(HexCell.TERRAIN_DATA, TerrainRepository.terrains.getData(terrains[elevation]));
 			}
 		}
 		map.reCalculateProperties();

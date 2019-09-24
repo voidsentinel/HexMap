@@ -72,6 +72,14 @@ public class HexMap {
 
 	}
 
+	public HexCell getCell(int x, int z) {
+		if (x >= 0 && x < WIDTH && z >= 0 && z < HEIGHT) {
+			return cells[z * WIDTH + x];
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * return the cell at the center of the map
 	 * 
@@ -79,14 +87,6 @@ public class HexMap {
 	 */
 	public HexCell getCenterCell() {
 		return centerCell;
-	}
-
-	public HexCell getCell(int x, int z) {
-		if (x >= 0 && x < WIDTH && z >= 0 && z < HEIGHT) {
-			return cells[z * WIDTH + x];
-		} else {
-			return null;
-		}
 	}
 
 	public int getMinHeight() {
@@ -128,6 +128,40 @@ public class HexMap {
 	 */
 	public void setWaterHeight(float waterHeight) {
 		this.waterHeight = waterHeight;
+	}
+
+	/**
+	 * 
+	 * @param key
+	 */
+	public void normalizeData(String key) {
+		float mindata = Float.MAX_VALUE;
+		float maxdata = Float.MIN_VALUE;
+		for (int z = 0; z < HEIGHT; z++) {
+			for (int x = 0; x < WIDTH; x++) {
+				int index = z * WIDTH + x;
+				if (cells[index] != null) {
+					float data = cells[index].getFloatData(key);
+					if (data < mindata) {
+						mindata = data;
+					}
+					if (data > maxdata) {
+						maxdata = data;
+					}
+				}
+			}
+		}
+		float coeff = (maxdata - mindata) / maxdata;
+		for (int z = 0; z < HEIGHT; z++) {
+			for (int x = 0; x < WIDTH; x++) {
+				int index = z * WIDTH + x;
+				if (cells[index] != null) {
+					float data = cells[index].getFloatData(key);
+					cells[index].setData(key, (data-mindata)/coeff);
+				}
+			}
+		}
+
 	}
 
 }

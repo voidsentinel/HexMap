@@ -50,10 +50,13 @@ public class ImageData extends RepositoryData {
 	 * org.voidsentinel.hexmap.model.repositories.RepositoryData#addDataParameters(
 	 * java.lang.String, java.lang.String)
 	 */
-	public void addDataParameters(String name, String value, String additional) {
+	public boolean addDataParameters(String name, String value, String additional) {
+		boolean used = false;
 		if ("file".equalsIgnoreCase(name)) {
 			this.filename = additional +value;
+			used = true;
 		}
+		return used;
 	}
 
 	public BufferedImage getBufferedImage() {

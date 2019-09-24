@@ -3,12 +3,10 @@ package org.voidsentinel.hexmap.view.representation;
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.MeshUtil;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -25,9 +23,9 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 
-	public HexGridChunkFlatSimpleTron(HexMap map, int xstart, int zstart, int chunkSize,
+	public HexGridChunkFlatSimpleTron(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
 	}
 
 	/**
@@ -37,7 +35,6 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 	 * @return the generated geometry.
 	 */
 	public void generateGeometry() {
-		Material mat = TerrainRepository.getTerrainMaterial();
 		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
@@ -52,7 +49,7 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 
 		Mesh mesh = meshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
-		terrain.setMaterial(mat);
+		terrain.setMaterial(this.getTerrainMaterial());
 		representation.attachChild(terrain);
 	}
 
@@ -105,14 +102,21 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 			v0 = center.add(HexMetrics.getSecondCornerVector(offsetDir));
 			v2 = center.add(HexMetrics.getFirstCornerVector(offsetDir, 1f));
 
+			Vector3f bridge = HexMetrics.getBridgeVector(offsetDir);
+			v3 = v1.add(bridge);
+			v4 = v0.add(bridge);
+
+			if (perturbated) {
+				perturbate(v1);
+				perturbate(v2);
+				perturbate(v3);
+				perturbate(v4);
+			}
 			MeshUtility.addVertice(v1);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
 			MeshUtility.addVertice(v2);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
 
-			Vector3f bridge = HexMetrics.getBridgeVector(offsetDir);
-			v3 = v1.add(bridge);
-			v4 = v0.add(bridge);
 			MeshUtility.addVertice(v3);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
 			MeshUtility.addVertice(v4);
@@ -188,6 +192,10 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 				Vector3f center = HexMetrics.getCellCenter(cell);
 				Vector3f v1 = center.add(HexMetrics.corners[direction.ordinal()]);
 				Vector3f v2 = center.add(HexMetrics.corners[direction.next().ordinal()]);
+				if (perturbated) {
+					perturbate(v1);
+					perturbate(v2);
+				}
 				Vector3f v3 = v1.clone();
 				Vector3f v4 = v2.clone();
 				v1.y = cell.getElevation() * HexMetrics.CELL_ELEVATION;
@@ -203,7 +211,7 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 	protected void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
 		ColorRGBA c1 = colorExtractor.getColor(cell, map);
 		for (Direction direction : Direction.values()) {
-			colorizeCellSideDirection(cell, direction, meshUtility, c1);
+			this.colorizeCellSideDirection(cell, direction, meshUtility, c1);
 		}
 	}
 
@@ -217,7 +225,6 @@ public class HexGridChunkFlatSimpleTron extends HexGridChunkFlat25 {
 		}
 
 		if (height > 0) {
-//			meshUtility.addQuadColors(c1, c1, ColorRGBA.Black, ColorRGBA.Black);
 			meshUtility.addQuadColors(c1, c1, c1, c1);
 		}
 	}

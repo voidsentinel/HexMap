@@ -5,6 +5,7 @@ package org.voidsentinel.hexmap.view.mapColor;
 
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
+import org.voidsentinel.hexmap.model.TerrainData;
 import org.voidsentinel.hexmap.model.repositories.RepositoryData;
 
 import com.jme3.math.ColorRGBA;
@@ -17,9 +18,7 @@ import com.jme3.math.ColorRGBA;
  * @see HexCell
  * @author VoidSentinel
  */
-public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
-
-	protected String key = "null";
+public class BiomeColorExtractor extends AbstractCellColorExtractor {
 
 	/**
 	 * Public constructor
@@ -27,7 +26,7 @@ public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
 	 * @param id the id of th extractor
 	 * @see RepositoryData
 	 */
-	public KeyColorExtractor(String id) {
+	public BiomeColorExtractor(String id) {
 		super(id);
 	}
 
@@ -40,17 +39,15 @@ public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
 	 * @return the color at attribute
 	 */
 	protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map) {
-		return getColorSpecialized(cell.getFloatData(key));
+		try {
+			int random = cell.random;
+			TerrainData terrain = cell.getTerrain();
+			return terrain.getBaseColor(random);
+		} catch (Exception e) {
+			LOG.severe(cell.hexCoordinates.toString() + " " + e.getMessage());
+			throw e;
+		}
 	}
-
-	/**
-	 * return the global color for a cell
-	 * 
-	 * @param value a float indicating the value of the key. Most of the time
-	 *              normalized to [0..1] at the map level
-	 * @return the color for this value
-	 */
-	abstract protected ColorRGBA getColorSpecialized(float value);
 
 	/*
 	 * (non-Javadoc)
@@ -62,12 +59,6 @@ public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
 	public boolean addDataParameters(String name, String value, String additional) {
 		boolean used = false;
 		used = super.addDataParameters(name, value, additional);
-		if (!used) {
-			if ("key".equalsIgnoreCase(name)) {
-				this.setKey(value);
-				used = true;
-			}
-		}
 		return used;
 	}
 
@@ -79,21 +70,6 @@ public abstract class KeyColorExtractor extends AbstractCellColorExtractor {
 	 */
 	@Override
 	public void addDataParameters(RepositoryData data) {
-		this.key = ((KeyColorExtractor) (data)).key;
-	}
-
-	/**
-	 * @param key the key to set
-	 */
-	public void setKey(String key) {
-		this.key = key.trim();
-	}
-
-	/**
-	 * @return the key
-	 */
-	public String getKey() {
-		return key;
 	}
 
 }

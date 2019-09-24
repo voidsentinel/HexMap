@@ -4,44 +4,41 @@ import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.TerrainData;
-import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
 import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.MeshUtil;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 
 /**
- * generate and store the representation of a chunk of the map. also store
- * vertices that allow for selection of an hex. The colors and texture of the
- * representation can be modified
+ * a variation on the hexChunk where Hex border are slopped and terraced.
  * 
- * @author guipatry
+ * @author Void Sentinel
  *
  */
 public class HexGridChunkSlopped extends AbstractHexGridChunk {
 
-	public HexGridChunkSlopped(HexMap map, int xstart, int zstart, int chunkSize,
+	public HexGridChunkSlopped(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
 	}
 
 	/**
 	 * generate and store the geometry for a given map
 	 * 
-	 * @param map
+	 * @param mapterrain;
+	 * 
 	 * @return the generated geometry.
 	 */
-	public void generateGeometry() {
-		Material mat = TerrainRepository.getTerrainMaterial();
+	protected Spatial generateSpecializedGeometries() {
 		MeshUtil MeshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
@@ -58,8 +55,8 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 
 		Mesh mesh = MeshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
-		terrain.setMaterial(mat);
-		representation.attachChild(terrain);
+		terrain.setMaterial(this.getTerrainMaterial());
+		return terrain;
 	}
 
 	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
@@ -112,6 +109,8 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			uv3 = new Vector2f(HexMetrics.getSecondCornerVector(offsetDir).x,
 			      HexMetrics.getSecondCornerVector(offsetDir).z).mult(terrain.getUVSize());
 
+//			perturbate(v2);
+//			perturbate(v3);
 			MeshUtility.addVertice(v2);
 			MeshUtility.addVertice(v3);
 			MeshUtility.addNormal(normal);
@@ -134,7 +133,8 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 	private void colorizeCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		ColorRGBA color = colorExtractor.getColor(cell, map);
 		MeshUtility.addColor(color);
-		for (@SuppressWarnings("unused") Direction direction : Direction.values()) {
+		for (@SuppressWarnings("unused")
+		Direction direction : Direction.values()) {
 			MeshUtility.addColor(color);
 			MeshUtility.addColor(color);
 		}
@@ -176,6 +176,12 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			Vector3f v2 = center.add(HexMetrics.getSecondCornerVector(direction.ordinal()));
 			Vector3f v3 = v1.add(bridge);
 			Vector3f v4 = v2.add(bridge);
+
+//			perturbate(v1);
+//			perturbate(v2);			
+//			perturbate(v3);
+//			perturbate(v4);
+
 			v3.y = neighbor.getElevation() * HexMetrics.CELL_ELEVATION;
 			v4.y = v3.y;
 
@@ -249,6 +255,10 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			Vector3f v2 = v0.add(o2);
 			v1.y = h1.getElevation() * HexMetrics.CELL_ELEVATION;
 			v2.y = h2.getElevation() * HexMetrics.CELL_ELEVATION;
+
+//			perturbate(v0);
+//			perturbate(v1);
+//			perturbate(v2);
 
 			Vector2f uv0 = UVCenter.add(new Vector2f(HexMetrics.getFirstCornerVector(direction.ordinal()).x,
 			      HexMetrics.getFirstCornerVector(direction.ordinal()).z).mult(terrain.getUVSize()));

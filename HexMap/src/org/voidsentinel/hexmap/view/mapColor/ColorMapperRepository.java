@@ -9,12 +9,14 @@ package org.voidsentinel.hexmap.view.mapColor;
 import org.voidsentinel.hexmap.model.repositories.BaseRepository;
 
 /**
- * @author guipatry
+ * a repository for ColorMapper
+ * 
+ * @author void Sentinel
  *
  */
-public class colorMapperRepository extends BaseRepository<AbstractCellColorExtractor> {
+public class ColorMapperRepository extends BaseRepository<AbstractCellColorExtractor> {
 
-	static public colorMapperRepository repository = new colorMapperRepository();
+	static public ColorMapperRepository repository = new ColorMapperRepository();
 
 	public AbstractCellColorExtractor getDefaultMapper() {
 		for (AbstractCellColorExtractor mapper : this.datas.values()) {
@@ -22,6 +24,6 @@ public class colorMapperRepository extends BaseRepository<AbstractCellColorExtra
 				return mapper;
 			}
 		}
-		return (AbstractCellColorExtractor)this.datas.values().toArray()[0];
+		return (AbstractCellColorExtractor) this.datas.values().toArray()[0];
 	}
 }

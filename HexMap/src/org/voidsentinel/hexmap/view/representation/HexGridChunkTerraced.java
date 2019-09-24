@@ -1,17 +1,20 @@
-package org.voidsentinel.hexmap.view;
+package org.voidsentinel.hexmap.view.representation;
 
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
+import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
+import org.voidsentinel.hexmap.view.HexEdgeType;
+import org.voidsentinel.hexmap.view.HexMetrics;
+import org.voidsentinel.hexmap.view.MeshUtil;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 
 /**
@@ -24,9 +27,16 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkTerraced extends AbstractHexGridChunk {
 
-	public HexGridChunkTerraced(HexMap map, int xstart, int zstart, int chunkSize,
+	// number of terrace per slope
+	public final int		TERRACEPERSLOPE		= 2;
+	// number of steps per slope
+	public final int		TERRACESTEPS			= TERRACEPERSLOPE * 2 + 1;
+	public final float	HORIZONTALSTEPSIZE	= 1f / TERRACESTEPS;
+	public final float	VERTICALSTEPSIZE		= 1f / (TERRACEPERSLOPE + 1);
+
+	public HexGridChunkTerraced(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
 	}
 
 	/**
@@ -35,8 +45,7 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 	 * @param map
 	 * @return the generated geometry.
 	 */
-	public void generateGeometry() {
-		Material mat = TerrainRepository.getTerrainMaterial();
+	protected Spatial generateSpecializedGeometries() {
 		MeshUtil MeshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
@@ -50,11 +59,11 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 
 		Mesh mesh = MeshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
-		terrain.setMaterial(mat);
-		representation.attachChild(terrain);
+		terrain.setMaterial(this.getTerrainMaterial());
+		return terrain;
 	}
 
-	public void regenerateColor(AbstractCellColorExtractor colorExtractor){
+	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
 		this.colorExtractor = colorExtractor;
 		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;
@@ -66,7 +75,7 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 //				colorizeCellCorner(hexCell, meshUtility);
 			}
 		}
-		((Geometry)(representation.getChild("ground"))).getMesh().setBuffer(Type.Color, 4, meshUtility.getColorArray());
+		((Geometry) (representation.getChild("ground"))).getMesh().setBuffer(Type.Color, 4, meshUtility.getColorArray());
 	}
 
 	/**
@@ -158,10 +167,10 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 		Vector3f v1 = beginLeft;
 		Vector3f v2 = beginRight;
 
-		for (int i = 1; i <= HexMetrics.TERRACESTEPS; i++) {
-			Vector3f v3 = HexMetrics.interpolateTerraceLerp(beginLeft, endLeft, i);
-			Vector3f v4 = HexMetrics.interpolateTerraceLerp(beginRight, endRight, i);
-			ColorRGBA c3 = HexMetrics.interpolateTerraceColor(c1, c2, i);
+		for (int i = 1; i <= TERRACESTEPS; i++) {
+			Vector3f v3 = interpolateTerraceLerp(beginLeft, endLeft, i);
+			Vector3f v4 = interpolateTerraceLerp(beginRight, endRight, i);
+			ColorRGBA c3 = interpolateTerraceColor(c1, c2, i);
 			meshUtility.addQuad(v1, v2, v3, v4);
 			meshUtility.addQuadColors(c1, c1, c3, c3);
 			v1 = v3;
@@ -181,12 +190,12 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 		triangulateCornerDirection(cell, Direction.NE, meshUtility);
 		triangulateCornerDirection(cell, Direction.EAST, meshUtility);
 		// since a corner is shared by 3 hex, and we go up from z and x, others corner
-		// either don't exist (border) or
-		// will have been created by the previous row (SW & SE) or column (WEST)
+		// either don't exist (border) or will have been created by the previous row (SW
+		// & SE) or column (WEST)
 	}
 
 	/**
-	 * Triangulate a given corner
+	 * Triangulate a given corner (by direction)
 	 * 
 	 * @param cell        the source cell
 	 * @param direction   the direction
@@ -227,6 +236,30 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 			// cell as
 			// destination
 		}
+	}
+
+	/**
+	 * 
+	 * @param a
+	 * @param b
+	 * @param step
+	 * @return
+	 */
+	protected Vector3f interpolateTerraceLerp(Vector3f a, Vector3f b, int step) {
+		Vector3f response = new Vector3f();
+		float h = step * HORIZONTALSTEPSIZE;
+		response.x = a.x + (b.x - a.x) * h;
+		response.z = a.z + (b.z - a.z) * h;
+		float v = ((step + 1) / 2) * VERTICALSTEPSIZE;
+		response.y = a.y + (b.y - a.y) * v;
+		return response;
+	}
+
+	protected ColorRGBA interpolateTerraceColor(ColorRGBA a, ColorRGBA b, int step) {
+		ColorRGBA response = new ColorRGBA();
+		float h = step * HORIZONTALSTEPSIZE;
+		response.interpolateLocal(a, b, h);
+		return response;
 	}
 
 }

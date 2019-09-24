@@ -6,14 +6,13 @@ package org.voidsentinel.hexmap.model.mapgenerator.operations;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 
 /**
  * 
  * @author voidSentinel
  *
  */
-public class ElevationMapOperation extends AbstractTerrainAction implements IMapOperation {
+public class ElevationMapOperation extends AbstractMapOperation{
 
 	private int	waterLevel;
 	private int	groundLevel;
@@ -34,8 +33,7 @@ public class ElevationMapOperation extends AbstractTerrainAction implements IMap
 	 * org.voidsentinel.hexmap.model.HexMap)
 	 */
 	@Override
-	public void filter(HexMap map) {
-		LOG.info("   Operation : " + this.getClass().getSimpleName());
+	public void specificFilter(HexMap map) {
 		LOG.info("        from  0");
 		LOG.info("          to " + groundLevel + waterLevel);
 

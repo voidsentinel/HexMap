@@ -6,7 +6,6 @@ import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.HexMapAStar;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 import org.voidsentinel.hexmap.utils.TerrainImage;
 
 /**
@@ -18,11 +17,10 @@ import org.voidsentinel.hexmap.utils.TerrainImage;
  * @author voidSentinel
  *
  */
-public class PathMapOperation extends AbstractTerrainAction implements IMapOperation {
+public class PathMapOperation extends AbstractMapOperation {
 
 	@Override
-	public void filter(HexMap map) {
-		LOG.info("   Operation : " + this.getClass().getSimpleName());
+	public void specificFilter(HexMap map) {
 		int count = 0;
 
 		float[][] prevalence = new float[map.HEIGHT][map.WIDTH];

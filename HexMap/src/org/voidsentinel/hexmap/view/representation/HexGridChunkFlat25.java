@@ -3,17 +3,16 @@ package org.voidsentinel.hexmap.view.representation;
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
 import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.MeshUtil;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 
 /**
@@ -26,11 +25,12 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
-	private float[] coeff = new float[] { 0.5f, 0.25f, 0.5f, 0.9f, 1.05f, 0.9f };
+	private float[] coeff = new float[] { 0.75f, 0.5f, 0.75f, 1f, 1.15f, 1f };
+//	private float[] coeff = new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
 
-	public HexGridChunkFlat25(HexMap map, int xstart, int zstart, int chunkSize,
-			AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, colorExtractor);
+	public HexGridChunkFlat25(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
+	      AbstractCellColorExtractor colorExtractor) {
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
 	}
 
 	/**
@@ -39,8 +39,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	 * @param map
 	 * @return the generated geometry.
 	 */
-	public void generateGeometry() {
-		Material mat = TerrainRepository.getTerrainMaterial();
+	protected Spatial generateSpecializedGeometries() {
 		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
@@ -55,8 +54,8 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
 		Mesh mesh = meshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
-		terrain.setMaterial(mat);
-		representation.attachChild(terrain);
+		terrain.setMaterial(this.getTerrainMaterial());
+		return terrain;
 	}
 
 	/**
@@ -64,8 +63,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	 * for each cell with the new extractor, and fill the color buffer of the mesh
 	 * with the new values
 	 * 
-	 * @param colorExtractor
-	 *           the new colorExtractor to use.
+	 * @param colorExtractor the new colorExtractor to use.
 	 */
 	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
 		this.colorExtractor = colorExtractor;
@@ -122,8 +120,8 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 			MeshUtility.addVertice(v4);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
 
-		   points.put(v1, cell);
-		   points.put(v4, cell);
+			points.put(v1, cell);
+			points.put(v4, cell);
 
 		}
 
@@ -133,7 +131,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 			MeshUtility.addTriangle(index, index + offsetDirNext * 4 + 1, index + offsetDir * 4 + 1);
 			MeshUtility.addTriangle(index + offsetDir * 4 + 1, index + offsetDir * 4 + 3, index + offsetDir * 4 + 2);
 			MeshUtility.addTriangle(index + offsetDirNext * 4 + 1, index + offsetDirNext * 4 + 2,
-					index + offsetDir * 4 + 4);
+			      index + offsetDir * 4 + 4);
 
 			MeshUtility.addTriangle(index + offsetDir * 4 + 1, index + offsetDirNext * 4 + 1, index + offsetDir * 4 + 4);
 			MeshUtility.addTriangle(index + offsetDir * 4 + 1, index + offsetDir * 4 + 4, index + offsetDir * 4 + 3);
@@ -158,7 +156,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
 			// internal point
 			MeshUtility.addColor(color);
-			
+
 			// corner
 			if (neighbor == null || neighborp == null) {
 				MeshUtility.addColor(color2);
@@ -210,9 +208,8 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	}
 
 	protected void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
-//		ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(0.90f);
 		for (Direction direction : Direction.values()) {
-			ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(coeff[direction.ordinal()]);						
+			ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(coeff[direction.ordinal()]);
 			colorizeCellSideDirection(cell, direction, meshUtility, c1);
 		}
 	}

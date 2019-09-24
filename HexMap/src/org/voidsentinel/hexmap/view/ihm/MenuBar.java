@@ -39,10 +39,10 @@ public class MenuBar extends Container {
 		} else {
 			addChild(button);
 		}
+		// replace the background
 		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent.create(
 		      ImageRepository.datas.getData("buttonSelectedBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
 		button.setBackground(btTexture);
-		LOG.info("added to menuBar " +ImageRepository.datas.getData("buttonSelectedBackground").getFilename());
 	}
 
 	public List<Button> getButtons(){

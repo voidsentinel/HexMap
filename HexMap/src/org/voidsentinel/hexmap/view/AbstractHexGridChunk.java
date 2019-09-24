@@ -6,12 +6,15 @@ import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
+import org.voidsentinel.hexmap.utils.Alea;
+import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 
 import com.jme3.material.Material;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 /**
  * generate and store the representation of a chunk of the map. also store
@@ -22,10 +25,13 @@ import com.jme3.scene.Node;
  *
  */
 public abstract class AbstractHexGridChunk {
-	protected static final Logger LOG = Logger.getLogger(AbstractHexGridChunk.class.toString());
+	protected static final Logger				LOG					= Logger.getLogger(AbstractHexGridChunk.class.toString());
 
-	//
-	static final public String					CHUNK_PREFIX	= "CHUNK_";
+	// prefix for the Chunk Node
+	static final public String					CHUNK_PREFIX		= "CHUNK_";
+
+	// perturbation source
+	protected static final FastNoise			fn						= new FastNoise(Alea.nextInt());
 
 	// the (part of) map to display
 	protected HexMap								map;
@@ -33,57 +39,58 @@ public abstract class AbstractHexGridChunk {
 	final protected int							zStart;
 	final protected int							xEnd;
 	final protected int							zEnd;
+	// representation informations
+	protected boolean								perturbated			= false;
+
 	// the geometryNode corresponding to the (part of) map
-	protected Node									representation	= null;
+	protected Node									representation		= null;
 	// points associated with each cell. Should be the minimal number of points (ie
 	// the points that are associated with the max nb of triangle)
-	protected Map<Vector3f, HexCell>			points			= new HashMap<Vector3f, HexCell>();
+	protected Map<Vector3f, HexCell>			points				= new HashMap<Vector3f, HexCell>();
 
 	// the colorExtractor
 	protected AbstractCellColorExtractor	colorExtractor;
-	protected Material terrainMaterial = null;
+	protected Material							terrainMaterial	= null;
 
 	/**
 	 * Constructor
 	 * 
-	 * @param map
-	 *           the map to display
-	 * @param xstart
-	 *           the x position that the chunk will start to display
-	 * @param zstart
-	 *           the z position that the chunk will start to display
-	 * @param chunkSize
-	 *           the size of the displayed area (will display to xtsart+size and
-	 *           zstart+size)
-	 * @param colorExtractor
-	 *           the color Extractor to use
+	 * @param map            the map to display
+	 * @param xstart         the x position that the chunk will start to display
+	 * @param zstart         the z position that the chunk will start to display
+	 * @param chunkSize      the size of the displayed area (will display to
+	 *                       xtsart+size and zstart+size)
+	 * @param colorExtractor the color Extractor to use
 	 */
-	public AbstractHexGridChunk(HexMap map, int xstart, int zstart, int chunkSize,
-			AbstractCellColorExtractor colorExtractor) {
+	public AbstractHexGridChunk(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
+	      AbstractCellColorExtractor colorExtractor) {
 		this.map = map;
 		this.xStart = xstart;
 		this.zStart = zstart;
-		this.xEnd = Math.min(xstart + chunkSize-1, map.WIDTH - 1);
-		this.zEnd = Math.min(zstart + chunkSize-1, map.HEIGHT - 1);
+		this.xEnd = Math.min(xstart + chunkSize - 1, map.WIDTH - 1);
+		this.zEnd = Math.min(zstart + chunkSize - 1, map.HEIGHT - 1);
 		this.colorExtractor = colorExtractor;
+		this.perturbated = perturbated;
 		this.representation = new Node(CHUNK_PREFIX + xStart + "_" + zStart);
 	}
 
 	/**
-	 * generate the geometry for a given map portion this will fill the
-	 * representation member value
+	 * generate the geometry for a given map portion.
 	 * 
 	 * @see representation
 	 */
-	public abstract void generateGeometry();
+	public void generateGeometry() {
+		representation.attachChild(generateSpecializedGeometries());
+	}
+
+	protected abstract Spatial generateSpecializedGeometries();
 
 	/**
 	 * Should be called only if representation is non empty. Will extract the colors
 	 * for each cell with the new extractor, and fill the color buffer of the mesh
 	 * with the new values
 	 * 
-	 * @param colorExtractor
-	 *           the new colorExtractor to use.
+	 * @param colorExtractor the new colorExtractor to use.
 	 */
 	public abstract void regenerateColor(AbstractCellColorExtractor colorExtractor);
 
@@ -127,7 +134,13 @@ public abstract class AbstractHexGridChunk {
 	public void setTerrainMaterial(Material terrainMaterial) {
 		this.terrainMaterial = terrainMaterial;
 	}
-	
-	
-	
+
+	protected void perturbate(Vector3f v1) {
+		final float VARIATION = HexMetrics.INNERRADIUS / 1.3f;
+
+		float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
+		float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
+		v1.addLocal(o1, 0f, o2);
+	}
+
 }

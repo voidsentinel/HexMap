@@ -18,7 +18,7 @@ public class MapRepresentation extends RepositoryData {
 	String	iconName			= "";
 	String	tooltipName		= "";
 	boolean	defaultMapper	= false;
-	// Material material = null;
+	boolean	perturbated		= false;
 
 	public MapRepresentation(String id) {
 		super(id);
@@ -30,19 +30,52 @@ public class MapRepresentation extends RepositoryData {
 	}
 
 	/**
-	 * add an information to the object. Since this is mostly used for object generated from
-	 * config file, additionnal data can be added. 
-	 * @param name  the name if the information
-	 * @param value the value of the information
-	 * @param additional additional data. 
+	 * add an information to the object. Since this is mostly used for object
+	 * generated from config file, additionnal data can be added.
+	 * 
+	 * @param name       the name if the information
+	 * @param value      the value of the information
+	 * @param additional additional data.
 	 */
 	@Override
-	public void addDataParameters(String name, String value, String additional) {
+	public boolean addDataParameters(String name, String value, String additional) {
+		boolean used = false;
+		if ("class".equalsIgnoreCase(name)) {
+			this.setClassName(value);
+			this.defaultMapper = "true".equalsIgnoreCase(value);
+			used = true;
+		}
+		
 		if ("default".equalsIgnoreCase(name)) {
 			this.defaultMapper = "true".equalsIgnoreCase(value);
+			used = true;
 		}
+		
+		if ("material".equalsIgnoreCase(name)) {
+			setMaterialName(value);
+			used = true;
+		}
+
+		if ("perturbation".equalsIgnoreCase(name)) {
+			this.setPerturbated(Boolean.parseBoolean(value));
+			used = true;
+		}
+
+		if ("icon".equalsIgnoreCase(name)) {
+			setIconName(value);
+			used = true;
+		}
+		if ("text".equalsIgnoreCase(name)) {
+			setLabelName(value);
+			used = true;
+		}
+		if ("tooltip".equalsIgnoreCase(name)) {
+			setTooltipName(value);
+			used = true;
+		}
+		
+		return used;
 	}
-	
 
 	/**
 	 * @return the className
@@ -52,8 +85,21 @@ public class MapRepresentation extends RepositoryData {
 	}
 
 	/**
-	 * @param className
-	 *           the className to set
+	 * @return the perturbated
+	 */
+	public boolean isPerturbated() {
+		return perturbated;
+	}
+
+	/**
+	 * @param perturbated the perturbated to set
+	 */
+	public void setPerturbated(boolean perturbated) {
+		this.perturbated = perturbated;
+	}
+
+	/**
+	 * @param className the className to set
 	 */
 	public void setClassName(String className) {
 		this.className = className;
@@ -67,8 +113,7 @@ public class MapRepresentation extends RepositoryData {
 	}
 
 	/**
-	 * @param labelName
-	 *           the labelName to set
+	 * @param labelName the labelName to set
 	 */
 	public void setLabelName(String labelName) {
 		this.labelName = labelName;
@@ -82,8 +127,7 @@ public class MapRepresentation extends RepositoryData {
 	}
 
 	/**
-	 * @param materialName
-	 *           the materialName to set
+	 * @param materialName the materialName to set
 	 */
 	public void setMaterialName(String materialName) {
 		this.materialName = materialName;
@@ -97,8 +141,7 @@ public class MapRepresentation extends RepositoryData {
 	}
 
 	/**
-	 * @param iconName
-	 *           the iconName to set
+	 * @param iconName the iconName to set
 	 */
 	public void setIconName(String iconName) {
 		this.iconName = iconName;
@@ -112,8 +155,7 @@ public class MapRepresentation extends RepositoryData {
 	}
 
 	/**
-	 * @param defaultMapper
-	 *           the defaultMapper to set
+	 * @param defaultMapper the defaultMapper to set
 	 */
 	public void setDefaultMapper(boolean defaultMapper) {
 		this.defaultMapper = defaultMapper;
@@ -127,8 +169,7 @@ public class MapRepresentation extends RepositoryData {
 	}
 
 	/**
-	 * @param tooltipName
-	 *           the tooltipName to set
+	 * @param tooltipName the tooltipName to set
 	 */
 	public void setTooltipName(String tooltipName) {
 		this.tooltipName = tooltipName;

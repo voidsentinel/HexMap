@@ -6,7 +6,6 @@ package org.voidsentinel.hexmap.model.mapgenerator.operations;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.utils.TerrainImage;
 
@@ -16,14 +15,11 @@ import org.voidsentinel.hexmap.utils.TerrainImage;
  * @author VoidSentinel
  *
  */
-public class FertilityMapOperation extends AbstractTerrainAction implements IMapOperation {
+public class FertilityMapOperation extends AbstractMapOperation {
 
 	@Override
-	public void filter(HexMap map) {
-		LOG.info("   Operation : " + this.getClass().getSimpleName());
-
+	public void specificFilter(HexMap map) {
 		float[][] values = new float[map.HEIGHT][map.WIDTH];
-
 		FastNoise noise = new FastNoise();
 		float value;
 		for (int y = 0; y < map.HEIGHT; y++) {
@@ -40,9 +36,7 @@ public class FertilityMapOperation extends AbstractTerrainAction implements IMap
 				cell.setData(HexCell.SOIL_DATA, value);
 			}
 		}
-
 		TerrainImage.generateImage(values, this.getClass().getSimpleName());
-
 	}
 
 }

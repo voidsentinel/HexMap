@@ -53,12 +53,11 @@ public class I18nMultiFile {
 	public static String getText(String key) {
 		for (Iterator<ResourceBundle> iterator = bundles.iterator(); iterator.hasNext();) {
 			ResourceBundle resourceBundle = (ResourceBundle) iterator.next();
-			LOG.info("> Searching " + key + " in " + resourceBundle.getBaseBundleName());
 			if (resourceBundle.containsKey(key)) {
 				return resourceBundle.getString(key);
 			}
 		}
-		LOG.info("> Failure Searching " + key);
+		LOG.severe("> Failure Searching text for " + key);
 		return key;
 	}
 

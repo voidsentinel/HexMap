@@ -39,17 +39,22 @@ public class HeightColorExtractor extends FileMappedColorExtractor {
 	 * org.voidsentinel.hexmap.model.repositories.RepositoryData#addDataParameters(
 	 * java.lang.String, java.lang.String)
 	 */
-	public void addDataParameters(String name, String value, String additional) {
-		super.addDataParameters(name, value, additional);      
-		if ("groundColorMap".equalsIgnoreCase(name)) {
-			LOG.log(Level.INFO, "Loading color map " + additional + value);
-			colorMap = this.getImage(additional + value);
+	public boolean addDataParameters(String name, String value, String additional) {
+		boolean used = false;
+		used = super.addDataParameters(name, value, additional);
+		if (!used) {
+			if ("groundcolormap".equalsIgnoreCase(name)) {
+				LOG.log(Level.INFO, "Loading color map " + additional + value);
+				colorMap = this.getImage(additional + "/" + value);
+				used = true;
+			}
+			if ("watercolormap".equalsIgnoreCase(name)) {
+				LOG.log(Level.INFO, "Loading color map " + additional + value);
+				waterColorMap = this.getImage(additional + "/" + value);
+				used = true;
+			}
 		}
-		if ("waterColorMap".equalsIgnoreCase(name)) {
-			LOG.log(Level.INFO, "Loading color map " + additional + value);
-			waterColorMap = this.getImage(additional + value);
-		}
-
+		return used;
 	}
 
 	/**
@@ -60,11 +65,11 @@ public class HeightColorExtractor extends FileMappedColorExtractor {
 	 * @param map  the map of cell
 	 * @return the color at attribute %
 	 */
-	public ColorRGBA getColor(HexCell cell, HexMap map) {
+	protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map) {
 		if (cell.getHeight() <= map.getWaterHeight()) {
-			return getColor(waterColorMap, cell.getHeight() / map.getWaterHeight());
+			return getImageColor(waterColorMap, cell.getHeight() / map.getWaterHeight());
 		} else {
-			return getColor(colorMap, (cell.getHeight() - map.getWaterHeight()) / (1f - map.getWaterHeight()));
+			return getImageColor(colorMap, (cell.getHeight() - map.getWaterHeight()) / (1f - map.getWaterHeight()));
 		}
 	}
 

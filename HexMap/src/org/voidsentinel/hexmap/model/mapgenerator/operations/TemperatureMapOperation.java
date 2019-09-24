@@ -3,7 +3,6 @@ package org.voidsentinel.hexmap.model.mapgenerator.operations;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 import org.voidsentinel.hexmap.utils.Alea;
 import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.utils.TerrainImage;
@@ -15,16 +14,14 @@ import org.voidsentinel.hexmap.utils.TerrainImage;
  * @author voidSentinel
  *
  */
-public class TemperatureMapOperation extends AbstractTerrainAction implements IMapOperation {
+public class TemperatureMapOperation extends AbstractMapOperation {
 
 	public float			minTemperature		= -25;
 	public float			maxTemperature		= 35;
 	public final float	HEIGHTATTENUATION	= 1f;	// expressed in °/elevation
 
 	@Override
-	public void filter(HexMap map) {
-		LOG.info("   Operation : " + this.getClass().getSimpleName());
-
+	public void specificFilter(HexMap map) {
 		final float LATITATTENUATION = (maxTemperature - minTemperature) / (map.HEIGHT*1.1f); // expressed in °/ cell
 
 		float[][] temperature = new float[map.HEIGHT][map.WIDTH];

@@ -16,7 +16,6 @@ import org.voidsentinel.hexmap.model.mapgenerator.MapGenerator;
 import org.voidsentinel.hexmap.utils.Alea;
 import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
-import org.voidsentinel.hexmap.utils.TerrainImage;
 import org.voidsentinel.hexmap.view.HexGrid;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.ihm.ImageData;
@@ -25,7 +24,7 @@ import org.voidsentinel.hexmap.view.ihm.MenuBar;
 import org.voidsentinel.hexmap.view.ihm.MenuButton;
 import org.voidsentinel.hexmap.view.ihm.StepCameraControl;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
-import org.voidsentinel.hexmap.view.mapColor.colorMapperRepository;
+import org.voidsentinel.hexmap.view.mapColor.ColorMapperRepository;
 import org.voidsentinel.hexmap.view.representation.MapRepresentation;
 import org.voidsentinel.hexmap.view.representation.MapRepresentationRepository;
 
@@ -42,7 +41,6 @@ import com.simsilica.lemur.TextField;
 import com.simsilica.lemur.VAlignment;
 import com.simsilica.lemur.component.IconComponent;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
-import com.simsilica.lemur.component.TbtQuadBackgroundComponent;
 import com.simsilica.lemur.style.BaseStyles;
 import com.simsilica.lemur.style.ElementId;
 
@@ -79,9 +77,8 @@ public class HexTuto extends SimpleApplication {
 
 		// generate the map
 		MapGenerator generator = new CapitalismGenerator();
-		HexMap map = new HexMap(256, 128);
+		HexMap map = new HexMap(128, 64);
 		generator.generate(map);
-		TerrainImage.generateImage(map, true);
 
 		// generate the representation
 		mapNode = new HexGrid(map, this.getRootNode());
@@ -142,7 +139,7 @@ public class HexTuto extends SimpleApplication {
 
 	private void addMapRepresentationRoll(MenuBar menu, TextField hooverField) {
 		// defaul value
-		AbstractCellColorExtractor extract = colorMapperRepository.repository.getDefaultMapper();
+		AbstractCellColorExtractor extract = ColorMapperRepository.repository.getDefaultMapper();
 		// Create a simple container for view elements
 		MenuButton ddb = new MenuButton("", (IconComponent)null, new ElementId("visual"), true, true);
 		menu.addButton(ddb);
@@ -150,7 +147,7 @@ public class HexTuto extends SimpleApplication {
 		ddb.setToolTip("Visualisation");
 
 		int count = -1;
-		Iterator<Map.Entry<String, AbstractCellColorExtractor>> it = colorMapperRepository.repository.datas.entrySet()
+		Iterator<Map.Entry<String, AbstractCellColorExtractor>> it = ColorMapperRepository.repository.datas.entrySet()
 		      .iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, AbstractCellColorExtractor> colorizer = it.next();
@@ -170,7 +167,7 @@ public class HexTuto extends SimpleApplication {
 			String text = I18nMultiFile.getText(colorizer.getValue().getTextName());
 			String tooltip = I18nMultiFile.getText(colorizer.getValue().getTooltipName());
 			ddb.addButton(text, icon, tooltip,
-			      new VisualCommand(colorMapperRepository.repository.getData(colorizer.getKey())));
+			      new VisualCommand(ColorMapperRepository.repository.getData(colorizer.getKey())));
 			if (extract == colorizer.getValue()) {
 				ddb.setSelected(count);
 			}

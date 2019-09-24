@@ -4,12 +4,9 @@
 package org.voidsentinel.hexmap.model.mapgenerator.operations;
 
 import org.voidsentinel.hexmap.model.HexCell;
-import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.utils.TerrainImage;
-import org.voidsentinel.hexmap.utils.FastNoise.NoiseType;
 
 /**
  * Set The Humidity value for each cell of the map based on distance to water
@@ -17,7 +14,7 @@ import org.voidsentinel.hexmap.utils.FastNoise.NoiseType;
  * @author voidSentinel
  *
  */
-public class HumidityMapOperation extends AbstractTerrainAction implements IMapOperation {
+public class HumidityMapOperation extends AbstractMapOperation {
 
 	/*
 	 * (non-Javadoc)
@@ -27,38 +24,24 @@ public class HumidityMapOperation extends AbstractTerrainAction implements IMapO
 	 * org.voidsentinel.hexmap.model.HexMap)
 	 */
 	@Override
-	public void filter(HexMap map) {
-		float[][] values = new float[map.HEIGHT][map.WIDTH];
-
+	public void specificFilter(HexMap map) {
 		FastNoise noise = new FastNoise();
-		noise.SetNoiseType(NoiseType.Perlin);
-		noise.SetFractalOctaves(6);
-		noise.SetGradientPerturbAmp(1.5f);
-
-		LOG.info("   Operation : " + this.getClass().getSimpleName());
-		int distance = 0;
-		float value = 0f;
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
-				HexCell cell = map.getCell(new HexCoordinates(x, y));
-				distance = cell.getDistanceToWater();
-				float water = (float) (Math.pow(0.98d, cell.getDistanceToWater()));
-				float variation = (noise.GetPerlin((float) x * 2f, (float) y * 2f) + 1f) / 2f;
-
-				if (distance < 0) { // unknow
-					value = 0f;
-				} else if (distance == 0) {
-					value = 1f;
+				HexCell cell = map.getCell(x, y);
+				if (cell.getBooleanData(HexCell.UNDERWATER)) {
+					cell.setData(HexCell.HUMIDITY_DATA, 1f);
 				} else {
-					value = Math.min(variation * 0.25f + water * 0.80f, 1f);
+					double waterdist = Math.pow(0.98d, (double) cell.getDistanceToWater());
+					double perlin = Math.min(noise.GetPerlin((float) (x)*3, (float) (y)*3), 0f)*0.2f;
+					
+					float humidity = (float)Math.min(waterdist+perlin, 1d);
+					cell.setData(HexCell.HUMIDITY_DATA, humidity );
 				}
-				cell.setData(HexCell.HUMIDITY_DATA, value);
-				values[y][x] = value;
-
 			}
 		}
-		TerrainImage.generateImage(values, this.getClass().getSimpleName());
-
+		map.normalizeData(HexCell.HUMIDITY_DATA);
+		TerrainImage.generateImage(map, HexCell.HUMIDITY_DATA, this.getClass().getSimpleName());
 	}
 
 }

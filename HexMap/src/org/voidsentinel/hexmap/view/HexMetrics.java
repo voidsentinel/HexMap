@@ -31,12 +31,6 @@ public class HexMetrics {
 	// negative unit Y
 	public static final Vector3f		CELL_UNIT_NORMAL		= Vector3f.UNIT_Y.mult(-1f);
 
-	// number of terrace per slope
-	public static final int				TERRACEPERSLOPE		= 2;
-	// number of steps per slope
-	public static final int				TERRACESTEPS			= TERRACEPERSLOPE * 2 + 1;
-	public static final float			HORIZONTALSTEPSIZE	= 1f / TERRACESTEPS;
-	public static final float			VERTICALSTEPSIZE		= 1f / (TERRACEPERSLOPE + 1);
 
 	// position of the six corners. We put a corner at the Top
 	public static final Vector3f[]	corners					= { new Vector3f(0f, 0f, OUTERRADIUS),
@@ -94,35 +88,9 @@ public class HexMetrics {
 		return corners[direction].add(corners[direction + 1]).mult(0.5f).mult(BLURFACTOR);
 	}
 
-	/**
-	 * 
-	 * @param a
-	 * @param b
-	 * @param step
-	 * @return
-	 */
-	public static Vector3f interpolateTerraceLerp(Vector3f a, Vector3f b, int step) {
-		Vector3f response = new Vector3f();
-		float h = step * HORIZONTALSTEPSIZE;
-		response.x = a.x + (b.x - a.x) * h;
-		response.z = a.z + (b.z - a.z) * h;
-		float v = ((step + 1) / 2) * VERTICALSTEPSIZE;
-		response.y = a.y + (b.y - a.y) * v;
-		return response;
-	}
-
-	public static ColorRGBA interpolateTerraceColor(ColorRGBA a, ColorRGBA b, int step) {
-		ColorRGBA response = new ColorRGBA();
-		float h = step * HORIZONTALSTEPSIZE;
-		response.interpolateLocal(a, b, h);
-		return response;
-	}
 
 	public static HexEdgeType getEdgeType(int elevation1, int elevation2) {
-		int diff = elevation2 - elevation1;
-		if (diff < 0) {
-			diff = diff * -1;
-		}
+		int diff = Math.abs(elevation2 - elevation1);
 		switch (diff) {
 		case 0:
 			return HexEdgeType.Flat;

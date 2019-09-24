@@ -27,7 +27,13 @@ import com.jme3.math.ColorRGBA;
 public class TerrainImage {
 	private static final Logger LOG = Logger.getLogger(TerrainImage.class.toString());
 
-	static public void generateImage(HexMap map, boolean colored) {
+	/**
+	 * Generate an image from the map based on the TerrainData for eachCell
+	 * 
+	 * @param map
+	 * @param colored
+	 */
+	static public void generateImage(HexMap map, boolean colored, String filename) {
 		LOG.info("Generating Image : " + TerrainImage.class.getSimpleName());
 
 		BufferedImage image = new BufferedImage(map.WIDTH * 2 + 1, map.HEIGHT * 2, BufferedImage.TYPE_INT_ARGB);
@@ -47,7 +53,7 @@ public class TerrainImage {
 					float gray = Math.max(Math.min(height / 255f, 1f), 0f);
 					rgb = new Color(gray, gray, gray, 1f).getRGB();
 				} else {
-					TerrainData terrain = (TerrainData)cell.getData(HexCell.TERRAIN_DATA);
+					TerrainData terrain = (TerrainData) cell.getData(HexCell.TERRAIN_DATA);
 					if (terrain == null) {
 						LOG.warning(x + "/" + y + " possess no terrain");
 					}
@@ -72,7 +78,7 @@ public class TerrainImage {
 			}
 		}
 
-		File outputfile = new File("terrain.png");
+		File outputfile = new File(filename + ".png");
 		try {
 			ImageIO.write(image, "png", outputfile);
 		} catch (IOException e) {
@@ -81,13 +87,67 @@ public class TerrainImage {
 
 	}
 
+	/**
+	 * Generate an image from the map based on the value for each cell of the key
+	 * given
+	 * 
+	 * @param map
+	 * @param key The key to the data. This data should be a normalized float [0..1]
+	 */
+	static public void generateImage(HexMap map, String key, String filename) {
+		LOG.info("Generating Image : " + TerrainImage.class.getSimpleName());
+		BufferedImage image = new BufferedImage(map.WIDTH * 2 + 1, map.HEIGHT * 2, BufferedImage.TYPE_INT_ARGB);
+
+		int rgb = 0;
+
+		for (int x = 0; x < map.WIDTH; x++) {
+			for (int y = 0; y < map.HEIGHT; y++) {
+				HexCell cell = map.getCell(x, y);
+				if (cell != null) {
+					float gray = cell.getFloatData(key);
+					rgb = new Color(gray, gray, gray, 1f).getRGB();
+
+				}
+				if (y % 2 == 0) {
+					int px = x * 2;
+					int py = (map.HEIGHT * 2) - (y * 2) - 1;
+					image.setRGB(px + 0, py - 0, rgb);
+					image.setRGB(px + 1, py - 0, rgb);
+					image.setRGB(px + 0, py - 1, rgb);
+					image.setRGB(px + 1, py - 1, rgb);
+				} else {
+					int px = x * 2 + 1;
+					int py = (map.HEIGHT * 2) - (y * 2) - 1;
+					image.setRGB(px + 0, py - 0, rgb);
+					image.setRGB(px + 1, py - 0, rgb);
+					image.setRGB(px + 0, py - 1, rgb);
+					image.setRGB(px + 1, py - 1, rgb);
+				}
+			}
+		}
+
+		File outputfile = new File(filename + ".png");
+		try {
+			ImageIO.write(image, "png", outputfile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Generate a greyscale image from the 2D array given. values should be a
+	 * normalized float
+	 * 
+	 * @param values
+	 * @param filename
+	 */
 	static public void generateImage(float[][] values, String filename) {
 		LOG.info("Generating Image : " + TerrainImage.class.getSimpleName());
 		final int WIDTH = values[0].length;
 		final int HEIGHT = values.length;
 		BufferedImage image = new BufferedImage(WIDTH * 2 + 1, HEIGHT * 2, BufferedImage.TYPE_INT_ARGB);
-		float min = findMinHeight(values);
-		float max = findMaxHeight(values);
+		float min = 0f;
+		float max = 1f;
 		float coeff = 1f / (max - min);
 		int rgb = 0;
 		int px = 0;

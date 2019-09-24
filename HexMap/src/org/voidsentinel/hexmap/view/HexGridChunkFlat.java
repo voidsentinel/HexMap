@@ -12,6 +12,7 @@ import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 
 /**
@@ -26,7 +27,7 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 
 	public HexGridChunkFlat(HexMap map, int xstart, int zstart, int chunkSize,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, colorExtractor);
+		super(map, xstart, zstart, chunkSize, false, colorExtractor);
 	}
 
 	/**
@@ -35,8 +36,7 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 	 * @param map
 	 * @return the generated geometry.
 	 */
-	public void generateGeometry() {
-		Material mat = TerrainRepository.getTerrainMaterial();
+	protected Spatial generateSpecializedGeometries() {
 		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;
 		for (int z = zStart; z <= zEnd; z++) {
@@ -55,8 +55,8 @@ public class HexGridChunkFlat extends AbstractHexGridChunk {
 
 		Mesh mesh = meshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
-		terrain.setMaterial(mat);
-		representation.attachChild(terrain);
+		terrain.setMaterial(this.getTerrainMaterial());
+		return terrain;
 	}
 
 	/**

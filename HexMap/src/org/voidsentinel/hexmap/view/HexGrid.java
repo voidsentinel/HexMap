@@ -13,7 +13,7 @@ import org.voidsentinel.hexmap.HexTuto;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
-import org.voidsentinel.hexmap.view.mapColor.colorMapperRepository;
+import org.voidsentinel.hexmap.view.mapColor.ColorMapperRepository;
 import org.voidsentinel.hexmap.view.representation.MapRepresentation;
 import org.voidsentinel.hexmap.view.representation.MapRepresentationRepository;
 
@@ -63,7 +63,7 @@ public class HexGrid {
 		rootNode.attachChild(terrainNode);
 
 		// Color for each cell
-		colorExtractor = colorMapperRepository.repository.getDefaultMapper();
+		colorExtractor = ColorMapperRepository.repository.getDefaultMapper();
 		// mesh generator information
 		meshGenerator = MapRepresentationRepository.repository.getDefault();
 
@@ -118,12 +118,12 @@ public class HexGrid {
 		terrainMaterial = (Material) assets.loadMaterial(generatorInfo.getMaterialName());
 
 		Class<?> clazz = Class.forName(generatorInfo.getClassName());
-		Constructor<?> ctor = clazz.getConstructor(HexMap.class, Integer.TYPE, Integer.TYPE, Integer.TYPE,
+		Constructor<?> ctor = clazz.getConstructor(HexMap.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE,
 				AbstractCellColorExtractor.class);
 
 		for (int z = 0; z < map.HEIGHT; z = z + CHUNKSIZE) {
 			for (int x = 0; x < map.WIDTH; x = x + CHUNKSIZE) {
-				Object object = ctor.newInstance(new Object[] { map, x, z, CHUNKSIZE, colorExtractor });
+				Object object = ctor.newInstance(new Object[] { map, x, z, CHUNKSIZE, generatorInfo.isPerturbated(), colorExtractor });
 				AbstractHexGridChunk generator = ((AbstractHexGridChunk) (object));
 				generator.setTerrainMaterial(terrainMaterial);
 				generator.generateGeometry();
@@ -176,9 +176,11 @@ public class HexGrid {
 
 				selectedCell = chunks.get(result.getName()).getCell(collisionTriangle);
 				if (selectedCell != null) {
-					System.out.println("SelectedCell position " + selectedCell.hexCoordinates);
-					System.out.println("SelectedCell to Water " + selectedCell.getDistanceToWater());
-					System.out.println("SelectedCell Height   " + selectedCell.getHeight());
+					System.out.println("position    " + selectedCell.hexCoordinates);
+					System.out.println("terrain     " + selectedCell.getTerrain().id);
+					System.out.println("Height      " + selectedCell.getHeight());
+					System.out.println("Humidity    " + selectedCell.getFloatData(HexCell.HUMIDITY_DATA));
+					System.out.println("Temperature " + selectedCell.getFloatData(HexCell.TEMPERATURE_DATA));
 				}
 			}
 		}

@@ -3,8 +3,6 @@ package org.voidsentinel.hexmap.view.representation;
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.utils.Alea;
-import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.MeshUtil;
@@ -14,6 +12,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 
 /**
@@ -26,15 +25,11 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 
-	private float[]						coeff			= new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
+	private float[] coeff = new float[] { 0.75f, 0.5f, 0.75f, 1f, 1.15f, 1f };
 
-	private static final float			VARIATION	= HexMetrics.INNERRADIUS / 1.3f;
-
-	private static final FastNoise	fn				= new FastNoise(Alea.nextInt());
-
-	public HexGridChunkFlatSimple(HexMap map, int xstart, int zstart, int chunkSize,
+	public HexGridChunkFlatSimple(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
 
 	}
 
@@ -44,7 +39,7 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 	 * @param map
 	 * @return the generated geometry.
 	 */
-	public void generateGeometry() {
+	protected Spatial generateSpecializedGeometries() {
 		LOG.info("generation mesh with variation");
 		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;
@@ -61,7 +56,7 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 		Mesh mesh = meshUtility.generateMesh();
 		Geometry terrain = new Geometry("ground", mesh);
 		terrain.setMaterial(terrainMaterial);
-		representation.attachChild(terrain);
+		return terrain;
 	}
 
 	/**
@@ -94,8 +89,6 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 	private void triangulateCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		Vector3f center = HexMetrics.getCellCenter(cell);
 		Vector3f v2 = null;
-		Vector3f v3 = null;
-		Vector3f point = null;
 		int index = MeshUtility.getVerticeCount();
 		int offsetDir = 0;
 		int offsetDirNext = 0;
@@ -108,14 +101,14 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 			offsetDir = direction.ordinal();
 			v2 = center.add(HexMetrics.getFirstCornerVector(offsetDir, 1f));
 
-			float o1 = fn.GetPerlin(v2.x * 30, v2.z * 70) * VARIATION - 0.5f * VARIATION;
-			float o2 = fn.GetPerlin(v2.z * 30, v2.x * 70) * VARIATION - 0.5f * VARIATION;
-			point = v2.add(o1, 0f, o2);
+			if (perturbated) {
+				perturbate(v2);
+			}
 
-			MeshUtility.addVertice(point);
+			MeshUtility.addVertice(v2);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
-		   points.put(point, cell);
-						
+			points.put(v2, cell);
+
 		}
 
 		for (Direction direction : Direction.values()) {
@@ -155,14 +148,10 @@ public class HexGridChunkFlatSimple extends AbstractHexGridChunk {
 				Vector3f center = HexMetrics.getCellCenter(cell);
 				Vector3f v1 = center.add(HexMetrics.corners[direction.ordinal()]);
 				Vector3f v2 = center.add(HexMetrics.corners[direction.next().ordinal()]);
-
-				float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
-				float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
-				v1.addLocal(o1, 0f, o2);
-
-				o1 = fn.GetPerlin(v2.x * 30, v2.z * 70) * VARIATION - 0.5f * VARIATION;
-				o2 = fn.GetPerlin(v2.z * 30, v2.x * 70) * VARIATION - 0.5f * VARIATION;
-				v2.addLocal(o1, 0f, o2);
+				if (perturbated) {
+					perturbate(v1);
+					perturbate(v2);
+				}
 
 				Vector3f v3 = v1.clone();
 				Vector3f v4 = v2.clone();

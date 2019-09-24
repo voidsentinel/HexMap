@@ -9,9 +9,9 @@ import java.util.Map;
 import org.voidsentinel.hexmap.utils.Alea;
 
 /**
- * This class is a cell in the map. It possess come caracteristics
- * 
- * @author guipatry
+ * This class is a cell in the map. 
+ * Associated data are placed into an internal hashMap
+ * @author voidSentinel 
  *
  */
 public class HexCell {
@@ -27,7 +27,9 @@ public class HexCell {
 	public static final String		CITY_DATA			= "city";
 	public static final String		PATH_DATA			= "path";
 	public static final String		TERRAIN_DATA		= "biome";
-
+	
+	public static final String		UNDERWATER        = "underwater";
+	
 	// neighbor cells
 	private HexCell[]					neighbor				= new HexCell[Direction.NBDIRECTIONS];	// neighbors
 	

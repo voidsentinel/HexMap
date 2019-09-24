@@ -34,7 +34,7 @@ public class PathValueColorExtractor extends FileMappedColorExtractor {
 	 * @param map  the map of cell
 	 * @return the color at attribute %
 	 */
-	public ColorRGBA getColor(HexCell cell, HexMap map) {
+	protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map) {
 		float value;
 
 		if (cell.getDistanceToWater() == 0) {
@@ -42,7 +42,7 @@ public class PathValueColorExtractor extends FileMappedColorExtractor {
 		} else {
 			value = cell.getFloatData(HexCell.PATH_DATA) < 0.15f ? 0f : cell.getFloatData(HexCell.PATH_DATA);
 		}
-		return getColor(value);
+		return getColorSpecialized(value);
 	}
 
 }

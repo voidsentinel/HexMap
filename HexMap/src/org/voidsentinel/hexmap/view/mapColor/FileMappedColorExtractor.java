@@ -47,35 +47,16 @@ public class FileMappedColorExtractor extends KeyColorExtractor {
 		this.colorMap = ((FileMappedColorExtractor) (data)).colorMap;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.voidsentinel.hexmap.model.repositories.RepositoryData#addDataParameters(
-	 * java.lang.String, java.lang.String)
-	 */
-	public void addDataParameters(String name, String value, String additional) {
-		super.addDataParameters(name, value, additional);
-		if ("colorMap".equalsIgnoreCase(name)) {
-			this.setColorMap(additional + value);
-		}
-	}
-
-	public void setColorMap(String filename) {
-		LOG.log(Level.INFO, "Loading color map " + filename);
-		colorMap = this.getImage(filename);
-	}
-
 	/**
-	 * return the color based on float value and the instance colorMap. The value
-	 * is converted into a int value between 0 and the imagewidth. The returned
-	 * color is the color of the pixel at this point.
+	 * return the color based on float value and the instance colorMap. The value is
+	 * converted into a int value between 0 and the imagewidth. The returned color
+	 * is the color of the pixel at this point.
 	 * 
 	 * @param value the % of the image to get
 	 * @return the color at (value%, 0) in the image
 	 */
-	protected ColorRGBA getColor(float value) {
-		return getColor(colorMap, value);
+	protected ColorRGBA getColorSpecialized(float value) {
+		return getImageColor(colorMap, value);
 	}
 
 	/**
@@ -83,11 +64,11 @@ public class FileMappedColorExtractor extends KeyColorExtractor {
 	 * converted into a int value between 0 and the imagewidth. The returned color
 	 * is the color of the pixel at this point.
 	 * 
-	 * @param value    the % of the image to get
 	 * @param colorMap the colorMap to use
+	 * @param value    the % of the image to get
 	 * @return the color at (value%, 0) in the image
 	 */
-	protected ColorRGBA getColor(BufferedImage colorMap, float value) {
+	protected ColorRGBA getImageColor(BufferedImage colorMap, float value) {
 		int index = Math.min(Math.max((int) ((colorMap.getWidth() - 1) * value), 0), colorMap.getWidth() - 1);
 
 		int clr = colorMap.getRGB(index, 0);
@@ -96,7 +77,35 @@ public class FileMappedColorExtractor extends KeyColorExtractor {
 		int blue = clr & 0x000000ff;
 
 		return new ColorRGBA(red / 255f, green / 255f, blue / 255f, 1f);
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.voidsentinel.hexmap.model.repositories.RepositoryData#addDataParameters(
+	 * java.lang.String, java.lang.String)
+	 */
+	public boolean addDataParameters(String name, String value, String additional) {
+		boolean used = false;
+		used = super.addDataParameters(name, value, additional);
+		if (!used) {
+			if ("colormap".equalsIgnoreCase(name)) {
+				this.setColorMap(additional + '/' + value);
+				used = true;
+			}
+		}
+		return used;
+	}
+
+	/**
+	 * define the colrmap to use for this extractor
+	 * 
+	 * @param filename
+	 */
+	public void setColorMap(String filename) {
+		LOG.log(Level.INFO, "Loading color map " + filename);
+		colorMap = this.getImage(filename);
 	}
 
 	/**

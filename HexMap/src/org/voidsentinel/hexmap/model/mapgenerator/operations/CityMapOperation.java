@@ -5,7 +5,6 @@ import java.util.List;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexCoordinates;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.AbstractTerrainAction;
 import org.voidsentinel.hexmap.utils.TerrainImage;
 
 /**
@@ -23,15 +22,14 @@ import org.voidsentinel.hexmap.utils.TerrainImage;
  * @author voidSentinel
  *
  */
-public class CityMapOperation extends AbstractTerrainAction implements IMapOperation {
+public class CityMapOperation extends AbstractMapOperation {
 
 	@Override
-	public void filter(HexMap map) {
+	public void specificFilter(HexMap map) {
 		float[][] cities = new float[map.HEIGHT][map.WIDTH];
 
 		float value = 0f;
 		HexCell selectedCell = null;
-		LOG.info("   Operation : " + this.getClass().getSimpleName());
 
 		// set the city value
 		for (int y = 0; y < map.HEIGHT; y++) {
@@ -39,11 +37,11 @@ public class CityMapOperation extends AbstractTerrainAction implements IMapOpera
 				HexCell cell = map.getCell(x, y);
 				if (cell != null) {
 					value = 0f;
-					value = value + cell.getFloatData(HexCell.SOIL_DATA) * 0.25f;
+					value = value + cell.getFloatData(HexCell.SOIL_DATA) * 0.35f;
 					value = value + (1f - 2 * Math.abs(0.5f - cell.getFloatData(HexCell.TEMPERATURE_DATA))) * 0.2f;
 					value = value + (cell.getFloatData(HexCell.HUMIDITY_DATA)) * 0.15f;
 					value = value + (1f - cell.getFloatData(HexCell.HEIGHT_DATA)) * 0.15f;
-					value = value + cell.getFloatData(HexCell.PATH_DATA) * 0.25f;
+//					value = value + cell.getFloatData(HexCell.PATH_DATA) * 0.25f;
 					// add a little bit if on shore
 					if (cell.getDistanceToWater() == 1) {
 						value = value + 0.05f;

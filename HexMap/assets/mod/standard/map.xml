@@ -1,11 +1,17 @@
 <map>
 	<text>map</text>
 
+	<image id="biomeColorMapperIcon">icons/map-biome.png</image>
+	<mapColorMapper id="biomeColorMapper"
+		class="org.voidsentinel.hexmap.view.mapColor.BiomeColorExtractor"
+		default="true" icon="biomeColorMapperIcon"
+		text="map.biomeColorMapperIcon.label"
+		tooltip="map.biomeColorMapperIcon.tooltip" />
+
 	<image id="heightColorMapperIcon">icons/map-height.png</image>
 	<mapColorMapper id="heightColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor"
-		default="true" icon="heightColorMapperIcon"
-		text="map.heightColorMapper.label"
+		icon="heightColorMapperIcon" text="map.heightColorMapper.label"
 		tooltip="map.heightColorMapper.tooltip" key="height"
 		groundColorMap="colorMap/groundColormap.png"
 		waterColorMap="colorMap/waterColormap.png" />
@@ -13,38 +19,37 @@
 	<image id="heatColorMapperIcon">icons/map-temperature.png</image>
 	<mapColorMapper id="heatColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
-		text="map.heatColorMapper.label" tooltip="map.heatColorMapper.tooltip"
-		icon="heatColorMapperIcon" key="temperature"
-		colorMap="colorMap/tempColorMap.png" />
+		icon="heatColorMapperIcon" text="map.heatColorMapper.label"
+		tooltip="map.heatColorMapper.tooltip" key="temperature"
+		ignorewater="true" colorMap="colorMap/tempColorMap.png" />
 
 	<image id="fertilityColorMapperIcon">icons/map-fertility.png</image>
 	<mapColorMapper id="fertilityColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
-		text="map.fertilityColorMapper.label"
-		tooltip="map.fertilityColorMapper.tooltip"
-		icon="fertilityColorMapperIcon" key="fertility"
-		colorMap="colorMap/soilFertility2.png" />
+		icon="fertilityColorMapperIcon" text="map.fertilityColorMapper.label"
+		tooltip="map.fertilityColorMapper.tooltip" key="fertility"
+		ignorewater="true" colorMap="colorMap/soilFertility2.png" />
 
 	<image id="humidityColorMapperIcon">icons/map-humidity.png</image>
 	<mapColorMapper id="humidityColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
 		text="map.humidityColorMapper.label"
 		tooltip="map.humidityColorMapper.tooltip"
-		icon="humidityColorMapperIcon" key="humidity"
-		colorMap="colorMap/humidity2.png" />
+		icon="humidityColorMapperIcon" key="humidity" ignorewater="false"
+		ignoredColor="#00ffff" colorMap="colorMap/humidity2.png" />
 
 	<image id="cityColorMapperIcon">icons/map-cities.png</image>
 	<mapColorMapper id="cityColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
 		text="map.cityColorMapper.label" tooltip="map.cityColorMapper.tooltip"
-		icon="cityColorMapperIcon" key="city"
+		icon="cityColorMapperIcon" key="city" ignorewater="true"
 		colorMap="colorMap/cityColorMap.png" />
 
 	<image id="pathColorMapperIcon">icons/map-path.png</image>
 	<mapColorMapper id="pathColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
 		text="map.pathColorMapper.label" tooltip="map.pathColorMapper.tooltip"
-		icon="pathColorMapperIcon" key="path"
+		icon="pathColorMapperIcon" key="path" ignorewater="true"
 		colorMap="colorMap/cityColorMap.png" />
 
 	<mapRepresentation id="Flat"
@@ -53,9 +58,9 @@
 		tooltip="map.Flat.toolTip" />
 
 	<mapRepresentation id="FlatPerturbated"
-		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimplePerturbated"
-		material="terrains_shaded.j3m" text="map.FlatPerturbated.label"
-		tooltip="map.FlatPerturbated.toolTip" />
+		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimple"
+		material="terrains_unshaded.j3m" text="map.FlatPerturbated.label"
+		perturbated="true" tooltip="map.FlatPerturbated.toolTip" />
 
 	<mapRepresentation id="Flat25"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlat25"
@@ -69,12 +74,17 @@
 
 	<mapRepresentation id="gridChunkSlopped"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkSlopped"
-		material="terrains_unshaded.j3m" text="map.HexGridChunkSlopped.label"
+		material="terrains_shaded.j3m" text="map.HexGridChunkSlopped.label"
 		tooltip="map.HexGridChunkSlopped.toolTip" />
+
+	<mapRepresentation id="gridChunkTerrace"
+		class="org.voidsentinel.hexmap.view.representation.HexGridChunkTerraced"
+		material="terrains_shaded.j3m" text="map.HexGridChunkTerraced.label"
+		tooltip="map.HexGridChunkTerraced.toolTip" />
 
 	<mapRepresentation id="gridChunkFlatSimpleTron"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimpleTron"
-		material="terrains_unshaded.j3m" 
+		material="terrains_unshaded.j3m"
 		text="map.HexGridChunkFlatSimpleTron.label"
 		tooltip="map.HexGridChunkFlatSimpleTron.toolTip" />
 
