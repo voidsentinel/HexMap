@@ -74,7 +74,7 @@
 
 	<mapRepresentation id="gridChunkSlopped"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkSlopped"
-		material="terrains_shaded.j3m" text="map.HexGridChunkSlopped.label"
+		material="terrains_unshaded.j3m" text="map.HexGridChunkSlopped.label"
 		tooltip="map.HexGridChunkSlopped.toolTip" />
 
 	<mapRepresentation id="gridChunkTerrace"
