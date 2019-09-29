@@ -109,7 +109,7 @@
 	<terrain id="RainForest">
 		<colorKey>#AFE0F4</colorKey>
 		<representation>
-			<color>#AFCE59</color>
+			<color>#0026FF</color>
 			<borderColor>#AAAAAA</borderColor>
 			<uvcenter>0.5, 0.5</uvcenter>
 			<uvsize>1.0</uvsize>
