@@ -61,7 +61,7 @@ public class HexGrid {
 		this.map = map;
 		terrainNode = new Node("Terrain");
 		rootNode.attachChild(terrainNode);
-
+		
 		// Color for each cell
 		colorExtractor = ColorMapperRepository.repository.getDefaultMapper();
 		// mesh generator information
