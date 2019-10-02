@@ -1,7 +1,5 @@
 package org.voidsentinel.hexmap.view.representation;
 
-import java.util.List;
-
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
@@ -19,9 +17,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.VertexBuffer.Type;
-import com.jme3.util.BufferUtils;
 
 /**
  * a variation on the hexChunk where Hex border are slopped and terraced.
@@ -33,9 +28,9 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 
 	private float[] coeff = new float[] { 0.75f, 0.5f, 0.75f, 1f, 1.15f, 1f };
 
-	public HexGridChunkSlopped(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
+	public HexGridChunkSlopped(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbationPossible, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbationPossible, perturbated, colorExtractor);
 	}
 
 	/**

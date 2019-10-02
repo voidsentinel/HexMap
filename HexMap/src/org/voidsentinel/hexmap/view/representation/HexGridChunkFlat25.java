@@ -13,8 +13,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.VertexBuffer.Type;
 
 /**
  * generate and store the representation of a chunk of the map. also store
@@ -29,9 +27,9 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	private float[] coeff = new float[] { 0.75f, 0.5f, 0.75f, 1f, 1.15f, 1f };
 //	private float[] coeff = new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
 
-	public HexGridChunkFlat25(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
+	public HexGridChunkFlat25(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbationPossible, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbationPossible, perturbated, colorExtractor);
 	}
 
 	protected void generateSpecializedGeometries(Node localRoot) {

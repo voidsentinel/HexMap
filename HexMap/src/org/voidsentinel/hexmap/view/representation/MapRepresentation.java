@@ -180,4 +180,18 @@ public class MapRepresentation extends RepositoryData {
 		this.tooltipName = tooltipName;
 	}
 
+	/**
+	 * @return the perturbationPossible
+	 */
+	public boolean isPerturbationPossible() {
+		return perturbationPossible;
+	}
+
+	/**
+	 * @param perturbationPossible the perturbationPossible to set
+	 */
+	public void setPerturbationPossible(boolean perturbationPossible) {
+		this.perturbationPossible = perturbationPossible;
+	}
+
 }

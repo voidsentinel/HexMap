@@ -20,9 +20,9 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkFlat25Lighted extends HexGridChunkFlat25 {
 
-	public HexGridChunkFlat25Lighted(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
+	public HexGridChunkFlat25Lighted(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbationPossible, boolean perturbated,
 			AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbationPossible, perturbated, colorExtractor);
 	}
 
 	/**

@@ -24,13 +24,14 @@ import com.jme3.scene.Node;
  *
  */
 public abstract class AbstractHexGridChunk {
-	protected static final Logger				LOG					= Logger.getLogger(AbstractHexGridChunk.class.toString());
+	protected static final Logger				LOG							= Logger
+	      .getLogger(AbstractHexGridChunk.class.toString());
 
 	// prefix for the Chunk Node
-	static final public String					CHUNK_PREFIX		= "CHUNK_";
+	static final public String					CHUNK_PREFIX				= "CHUNK_";
 
 	// perturbation source
-	protected static final FastNoise			fn						= new FastNoise(Alea.nextInt());
+	protected static final FastNoise			fn								= new FastNoise(Alea.nextInt());
 
 	// the (part of) map to display
 	protected HexMap								map;
@@ -39,17 +40,18 @@ public abstract class AbstractHexGridChunk {
 	final protected int							xEnd;
 	final protected int							zEnd;
 	// representation informations
-	protected boolean								perturbated			= false;
+	protected boolean								perturbated					= false;
+	protected boolean								perturbationPossible   	= false;
 
 	// the geometryNode corresponding to the (part of) map
-	protected Node									representation		= null;
+	protected Node									representation				= null;
 	// points associated with each cell. Should be the minimal number of points (ie
 	// the points that are associated with the max nb of triangle)
-	protected Map<Vector3f, HexCell>			points				= new HashMap<Vector3f, HexCell>();
+	protected Map<Vector3f, HexCell>			points						= new HashMap<Vector3f, HexCell>();
 
 	// the colorExtractor
 	protected AbstractCellColorExtractor	colorExtractor;
-	protected Material							terrainMaterial	= null;
+	protected Material							terrainMaterial			= null;
 
 	/**
 	 * Constructor
@@ -61,14 +63,15 @@ public abstract class AbstractHexGridChunk {
 	 *                       xtsart+size and zstart+size)
 	 * @param colorExtractor the color Extractor to use
 	 */
-	public AbstractHexGridChunk(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
-	      AbstractCellColorExtractor colorExtractor) {
+	public AbstractHexGridChunk(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbationPossible,
+	      boolean perturbated, AbstractCellColorExtractor colorExtractor) {
 		this.map = map;
 		this.xStart = xstart;
 		this.zStart = zstart;
 		this.xEnd = Math.min(xstart + chunkSize - 1, map.WIDTH - 1);
 		this.zEnd = Math.min(zstart + chunkSize - 1, map.HEIGHT - 1);
 		this.colorExtractor = colorExtractor;
+		this.perturbationPossible = perturbationPossible;
 		this.perturbated = perturbated;
 		this.representation = new Node(CHUNK_PREFIX + xStart + "_" + zStart);
 	}

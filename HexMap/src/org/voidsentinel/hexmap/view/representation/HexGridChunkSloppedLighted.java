@@ -16,8 +16,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.VertexBuffer.Type;
 
 /**
  * a variation on the hexChunk where Hex border are slopped and terraced.
@@ -27,9 +25,9 @@ import com.jme3.scene.VertexBuffer.Type;
  */
 public class HexGridChunkSloppedLighted extends AbstractHexGridChunk {
 
-	public HexGridChunkSloppedLighted(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
-	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
+	public HexGridChunkSloppedLighted(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbationPossible,
+	      boolean perturbated, AbstractCellColorExtractor colorExtractor) {
+		super(map, xstart, zstart, chunkSize, perturbationPossible, perturbated, colorExtractor);
 	}
 
 	/**
@@ -47,24 +45,6 @@ public class HexGridChunkSloppedLighted extends AbstractHexGridChunk {
 
 		generateStructure();
 		generateColor(colorExtractor);
-//		MeshUtil MeshUtility = new MeshUtil();
-//		HexCell hexCell = null;
-//		for (int z = zStart; z <= zEnd; z++) {
-//			for (int x = xStart; x <= xEnd; x++) {
-//				hexCell = map.getCell(x, z);
-//				triangulateCellCenter(hexCell, MeshUtility);
-//				colorizeCellCenter(hexCell, MeshUtility);
-//				triangulateCellBridge(hexCell, MeshUtility);
-//				colorizeCellBridge(hexCell, MeshUtility);
-//				triangulateCellCorner(hexCell, MeshUtility);
-//				colorizeCellCorner(hexCell, MeshUtility);
-//			}
-//		}
-//
-//		Mesh mesh = MeshUtility.generateMesh();
-//		Geometry terrain = new Geometry("ground", mesh);
-//		terrain.setMaterial(this.getTerrainMaterial());
-//		localRoot.attachChild(terrain);
 	}
 
 	public void generateColor(AbstractCellColorExtractor colorExtractor) {
@@ -79,7 +59,8 @@ public class HexGridChunkSloppedLighted extends AbstractHexGridChunk {
 				colorizeCellCorner(hexCell, meshUtility);
 			}
 		}
-		((Geometry) (representation.getChild("ground"))).getMesh().setBuffer(Type.Color, 4, meshUtility.getColorArray());
+		Mesh mesh = ((Geometry) (representation.getChild("ground"))).getMesh();
+		meshUtility.generateMesh(mesh);
 	}
 
 	/**

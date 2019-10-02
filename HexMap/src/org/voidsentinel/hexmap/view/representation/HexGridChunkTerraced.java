@@ -15,7 +15,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 
 /**
@@ -35,9 +34,9 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 	public final float	HORIZONTALSTEPSIZE	= 1f / TERRACESTEPS;
 	public final float	VERTICALSTEPSIZE		= 1f / (TERRACEPERSLOPE + 1);
 
-	public HexGridChunkTerraced(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
+	public HexGridChunkTerraced(HexMap map, int xstart, int zstart, int chunkSize,boolean perturbationPossible, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbationPossible, perturbated, colorExtractor);
 	}
 
 	/**
