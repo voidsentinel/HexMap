@@ -23,20 +23,10 @@ public class CapitalismGenerator extends MapGenerator {
 
 		HeightMapOperation heightmap = new HeightMapOperation();
 		heightmap.addGenerator(new FlatGeneration(0f));
-//   	heightmap.addGenerator(new ImageGeneration("assets/mod/standard/world.jpg"));
-
-//		heightmap.addGenerator(new PerlinGeneration(0.25f), 0.5f);
-//		heightmap.addGenerator(new SimplexGeneration(0.25f), 0.33f);
-
 		heightmap.addGenerator(new FaultCirclesGeneration(2000));
-//		heightmap.addGenerator(new FaultLinesGeneration((map.WIDTH + map.HEIGHT)));
-//		heightmap.addGenerator(new DiamondSquareGeneration());
 		heightmap.addGenerator(new CellularGeneration(1f, 1f, 30f, 30f), 0.25f);
-
+		
 		heightmap.addOperation(new HexBlurOperation(3, 3));
-//		heightmap.addOperation(new HexBlurOperation(2, 1));
-//		heightmap.addOperation(new FastErosionOperation(0.05f, 64));
-//		heightmap.addOperation(new TorusOperation(TorusOperation.HTreatment.BOTH, TorusOperation.VTreatment.BOTH));
 
 		heightmap.filter(map);
 
@@ -49,5 +39,6 @@ public class CapitalismGenerator extends MapGenerator {
 		new FertilityMapOperation().filter(map);
 		new PathMapOperation().filter(map);
 		new CityMapOperation().filter(map);
+		
 	}
 }

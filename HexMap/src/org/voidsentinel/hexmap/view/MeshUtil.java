@@ -75,14 +75,80 @@ public class MeshUtil {
 			mesh.setBuffer(Type.TexCoord, 2, BufferUtils.createFloatBuffer(uvsArray));
 		mesh.setBuffer(Type.Index, 3, BufferUtils.createIntBuffer(trianglesArray));
 		mesh.setStatic();
-		
+
 		mesh.updateBound();
+
+		System.out.println("Creation    : " + mesh.getId());
+		System.out.println("  Vertices  : " + verticesArray.length);
+		System.out.println("  Colors    : " + colorsArray.length / 4);
+		System.out.println("  Normals   : " + normalsArray.length);
+		System.out.println("  UVs       : " + uvsArray.length);
+		System.out.println("  Triangles : " + trianglesArray.length / 3);
+
+		System.out.println(mesh.getBound().toString());
+
+		return mesh;
+	}
+
+	/**
+	 * update the given mesh with the data stored into the MeshUtil. This can be used to update a mesh, after recalculating some data
+	 * @param mesh the mesh to update
+	 * @return
+	 */
+	public Mesh generateMesh(Mesh mesh) {
+		int i = 0;
+		Vector3f[] verticesArray = new Vector3f[vertices.size()];
+		for (Vector3f f : vertices) {
+			verticesArray[i++] = f; // Or whatever default you want.
+		}
+
+		i = 0;
+		Vector3f[] normalsArray = new Vector3f[normals.size()];
+		for (Vector3f f : normals) {
+			normalsArray[i++] = f; // Or whatever default you want.
+		}
+
+		i = 0;
+		Vector2f[] uvsArray = new Vector2f[uvs.size()];
+		for (Vector2f f : uvs) {
+			uvsArray[i++] = f; // Or whatever default you want.
+		}
+
+		i = 0;
+		int[] trianglesArray = new int[triangles.size()];
+		for (Integer f : triangles) {
+			trianglesArray[i++] = f.intValue(); // Or whatever default you want.
+		}
+
+		i = 0;
+		float[] colorsArray = new float[colors.size() * 4];
+		for (ColorRGBA f : colors) {
+			colorsArray[i++] = f.r;
+			colorsArray[i++] = f.g;
+			colorsArray[i++] = f.b;
+			colorsArray[i++] = f.a;
+		}
 		
-		System.out.println("Vertices  : " + verticesArray.length);
-		System.out.println("Colors    : " + colorsArray.length / 4);
-		System.out.println("Normals   : " + normalsArray.length);
-		System.out.println("UVs       : " + uvsArray.length);
-		System.out.println("Triangles : " + trianglesArray.length / 3);
+		if (verticesArray.length > 0)
+			mesh.setBuffer(Type.Position, 3, BufferUtils.createFloatBuffer(verticesArray));
+		if (normalsArray.length > 0)
+			mesh.setBuffer(Type.Normal, 3, BufferUtils.createFloatBuffer(normalsArray));
+		if (colorsArray.length > 0)
+			mesh.setBuffer(Type.Color, 4, colorsArray);
+		if (uvsArray.length > 0)
+			mesh.setBuffer(Type.TexCoord, 2, BufferUtils.createFloatBuffer(uvsArray));
+		if (trianglesArray.length > 0)
+			mesh.setBuffer(Type.Index, 3, BufferUtils.createIntBuffer(trianglesArray));
+
+		mesh.setStatic();
+		mesh.updateBound();
+
+		System.out.println("Update      : " + mesh.getId());
+		System.out.println("  Vertices  : " + verticesArray.length);
+		System.out.println("  Colors    : " + colorsArray.length / 4);
+		System.out.println("  Normals   : " + normalsArray.length);
+		System.out.println("  UVs       : " + uvsArray.length);
+		System.out.println("  Triangles : " + trianglesArray.length / 3);
 
 		System.out.println(mesh.getBound().toString());
 

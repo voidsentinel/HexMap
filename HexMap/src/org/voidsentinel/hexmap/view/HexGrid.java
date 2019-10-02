@@ -52,16 +52,14 @@ public class HexGrid {
 	/**
 	 * Contructor for the representation of a HexMap
 	 * 
-	 * @param map
-	 *           the map to display
-	 * @param rootNode
-	 *           the 3d node to put the map under
+	 * @param map      the map to display
+	 * @param rootNode the 3d node to put the map under
 	 */
 	public HexGrid(HexMap map, Node rootNode) {
 		this.map = map;
 		terrainNode = new Node("Terrain");
 		rootNode.attachChild(terrainNode);
-		
+
 		// Color for each cell
 		colorExtractor = ColorMapperRepository.repository.getDefaultMapper();
 		// mesh generator information
@@ -72,7 +70,7 @@ public class HexGrid {
 		try {
 			setMeshGeneration(meshGenerator.id);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			;
 		}
@@ -83,22 +81,20 @@ public class HexGrid {
 	 * change the colorExtractor, and reapply the extraction to the current map
 	 * representation
 	 * 
-	 * @param extractor
-	 *           the colorExtractor to use
+	 * @param extractor the colorExtractor to use
 	 */
 	public void setColorExtractor(AbstractCellColorExtractor extractor) {
 		colorExtractor = extractor;
 		Iterator<AbstractHexGridChunk> it = chunks.values().iterator();
 		while (it.hasNext()) {
-			it.next().regenerateColor(extractor);
+			it.next().generateColor(extractor);
 		}
 	}
 
 	/**
 	 * chenge the metho used to generate the mesh
 	 * 
-	 * @param id
-	 *           the id of the class to use in MapRepresentationRepository
+	 * @param id the id of the class to use in MapRepresentationRepository
 	 * @throws ClassNotFoundException
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
@@ -108,7 +104,7 @@ public class HexGrid {
 	 * @throws InvocationTargetException
 	 */
 	public void setMeshGeneration(String id) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	      InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		terrainNode.detachAllChildren();
 		chunks.clear();
 
@@ -119,11 +115,12 @@ public class HexGrid {
 
 		Class<?> clazz = Class.forName(generatorInfo.getClassName());
 		Constructor<?> ctor = clazz.getConstructor(HexMap.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE,
-				AbstractCellColorExtractor.class);
+		      AbstractCellColorExtractor.class);
 
 		for (int z = 0; z < map.HEIGHT; z = z + CHUNKSIZE) {
 			for (int x = 0; x < map.WIDTH; x = x + CHUNKSIZE) {
-				Object object = ctor.newInstance(new Object[] { map, x, z, CHUNKSIZE, generatorInfo.isPerturbated(), colorExtractor });
+				Object object = ctor
+				      .newInstance(new Object[] { map, x, z, CHUNKSIZE, generatorInfo.isPerturbated(), colorExtractor });
 				AbstractHexGridChunk generator = ((AbstractHexGridChunk) (object));
 				generator.setTerrainMaterial(terrainMaterial);
 				generator.generateGeometry();
@@ -132,6 +129,27 @@ public class HexGrid {
 			}
 		}
 
+	}
+
+	public MapRepresentation getMapRepresentation() {
+		return meshGenerator;
+	}
+
+	public void setPerturbated(boolean perturbated) {
+		if (perturbated != meshGenerator.isPerturbated()) {
+//			if ((perturbated && meshGenerator.canBePerturbated()) ||
+//					!perturbated
+//					) {
+//				
+				Iterator<AbstractHexGridChunk> it = chunks.values().iterator();
+				while (it.hasNext()) {
+					AbstractHexGridChunk chunk = it.next();
+					chunk.setPerturbated(perturbated);
+//					//chunk.regenerateVertices();
+				}
+//				
+//			}			
+		}
 	}
 
 	/**
@@ -155,7 +173,7 @@ public class HexGrid {
 		HexCell selectedCell = null;
 		Vector3f click3d = camera.getWorldCoordinates(new Vector2f(cursor.x, cursor.y), 0f).clone();
 		Vector3f dir = camera.getWorldCoordinates(new Vector2f(cursor.x, cursor.y), 1f).subtractLocal(click3d)
-				.normalizeLocal();
+		      .normalizeLocal();
 
 		// 1. Reset results list.
 		CollisionResults results = new CollisionResults();
@@ -188,7 +206,6 @@ public class HexGrid {
 		return selectedCell;
 	}
 
-	
 	/**
 	 * 
 	 */

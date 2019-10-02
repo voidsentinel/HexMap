@@ -14,7 +14,6 @@ import com.jme3.material.Material;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 
 /**
  * generate and store the representation of a chunk of the map. also store
@@ -80,19 +79,32 @@ public abstract class AbstractHexGridChunk {
 	 * @see representation
 	 */
 	public void generateGeometry() {
-		representation.attachChild(generateSpecializedGeometries());
+		generateSpecializedGeometries(representation);
 	}
 
-	protected abstract Spatial generateSpecializedGeometries();
+	/**
+	 * generate the representation(s) for the chunk, and attach it to the given
+	 * node. The representation could consist of several subnode. The protected
+	 * HashMap points should contains the points that can be checked to find a cell
+	 * when clicking on screen
+	 * 
+	 * @param localRoot the root node for the current chunk (and this chunk alone)
+	 */
+	protected abstract void generateSpecializedGeometries(Node localRoot);
 
 	/**
-	 * Should be called only if representation is non empty. Will extract the colors
-	 * for each cell with the new extractor, and fill the color buffer of the mesh
-	 * with the new values
+	 * Will (re) generate the colors of the map representation with the given
+	 * colorExtractor. Should be called only if representation is non empty.
 	 * 
 	 * @param colorExtractor the new colorExtractor to use.
 	 */
-	public abstract void regenerateColor(AbstractCellColorExtractor colorExtractor);
+	public abstract void generateColor(AbstractCellColorExtractor colorExtractor);
+
+	/**
+	 * will (re) generate the mesh structure (vertices, normals, triangles) of the
+	 * map representation. Should be called only if representation is non empty.
+	 */
+	public abstract void generateStructure();
 
 	/**
 	 * return the representation of the part of the map.
@@ -135,9 +147,12 @@ public abstract class AbstractHexGridChunk {
 		this.terrainMaterial = terrainMaterial;
 	}
 
+	public void setPerturbated(boolean perturbated) {
+		this.perturbated = perturbated;
+	}
+
 	protected void perturbate(Vector3f v1) {
 		final float VARIATION = HexMetrics.INNERRADIUS / 1.3f;
-
 		float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
 		float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
 		v1.addLocal(o1, 0f, o2);

@@ -33,7 +33,7 @@ public class HexGridChunkFlat25Lighted extends HexGridChunkFlat25 {
 	 * @param colorExtractor
 	 *           the new colorExtractor to use.
 	 */
-	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
+	public void generateColor(AbstractCellColorExtractor colorExtractor) {
 		this.colorExtractor = colorExtractor;
 		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;

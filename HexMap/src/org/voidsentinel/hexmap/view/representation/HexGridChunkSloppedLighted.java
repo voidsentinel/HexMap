@@ -15,6 +15,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer.Type;
 
@@ -38,28 +39,35 @@ public class HexGridChunkSloppedLighted extends AbstractHexGridChunk {
 	 * 
 	 * @return the generated geometry.
 	 */
-	protected Spatial generateSpecializedGeometries() {
-		MeshUtil MeshUtility = new MeshUtil();
-		HexCell hexCell = null;
-		for (int z = zStart; z <= zEnd; z++) {
-			for (int x = xStart; x <= xEnd; x++) {
-				hexCell = map.getCell(x, z);
-				triangulateCellCenter(hexCell, MeshUtility);
-				colorizeCellCenter(hexCell, MeshUtility);
-				triangulateCellBridge(hexCell, MeshUtility);
-				colorizeCellBridge(hexCell, MeshUtility);
-				triangulateCellCorner(hexCell, MeshUtility);
-				colorizeCellCorner(hexCell, MeshUtility);
-			}
-		}
-
-		Mesh mesh = MeshUtility.generateMesh();
+	protected void generateSpecializedGeometries(Node localRoot) {
+		Mesh mesh = new Mesh();
 		Geometry terrain = new Geometry("ground", mesh);
 		terrain.setMaterial(this.getTerrainMaterial());
-		return terrain;
+		localRoot.attachChild(terrain);
+
+		generateStructure();
+		generateColor(colorExtractor);
+//		MeshUtil MeshUtility = new MeshUtil();
+//		HexCell hexCell = null;
+//		for (int z = zStart; z <= zEnd; z++) {
+//			for (int x = xStart; x <= xEnd; x++) {
+//				hexCell = map.getCell(x, z);
+//				triangulateCellCenter(hexCell, MeshUtility);
+//				colorizeCellCenter(hexCell, MeshUtility);
+//				triangulateCellBridge(hexCell, MeshUtility);
+//				colorizeCellBridge(hexCell, MeshUtility);
+//				triangulateCellCorner(hexCell, MeshUtility);
+//				colorizeCellCorner(hexCell, MeshUtility);
+//			}
+//		}
+//
+//		Mesh mesh = MeshUtility.generateMesh();
+//		Geometry terrain = new Geometry("ground", mesh);
+//		terrain.setMaterial(this.getTerrainMaterial());
+//		localRoot.attachChild(terrain);
 	}
 
-	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
+	public void generateColor(AbstractCellColorExtractor colorExtractor) {
 		this.colorExtractor = colorExtractor;
 		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;
@@ -72,6 +80,26 @@ public class HexGridChunkSloppedLighted extends AbstractHexGridChunk {
 			}
 		}
 		((Geometry) (representation.getChild("ground"))).getMesh().setBuffer(Type.Color, 4, meshUtility.getColorArray());
+	}
+
+	/**
+	 * will (re) generate the mesh structure (vertices, normals, triangles) of the
+	 * map representation. Should be called only if representation is non empty.
+	 */
+	public void generateStructure() {
+		MeshUtil MeshUtility = new MeshUtil();
+		HexCell hexCell = null;
+		for (int z = zStart; z <= zEnd; z++) {
+			for (int x = xStart; x <= xEnd; x++) {
+				hexCell = map.getCell(x, z);
+				triangulateCellCenter(hexCell, MeshUtility);
+				triangulateCellBridge(hexCell, MeshUtility);
+				triangulateCellCorner(hexCell, MeshUtility);
+			}
+		}
+
+		Mesh mesh = ((Geometry) (representation.getChild("ground"))).getMesh();
+		MeshUtility.generateMesh(mesh);
 	}
 
 	/**
