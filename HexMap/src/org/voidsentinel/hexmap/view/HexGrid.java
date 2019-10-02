@@ -114,7 +114,7 @@ public class HexGrid {
 		terrainMaterial = (Material) assets.loadMaterial(generatorInfo.getMaterialName());
 
 		Class<?> clazz = Class.forName(generatorInfo.getClassName());
-		Constructor<?> ctor = clazz.getConstructor(HexMap.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE,
+		Constructor<?> ctor = clazz.getConstructor(HexMap.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE, Boolean.TYPE,
 		      AbstractCellColorExtractor.class);
 
 		for (int z = 0; z < map.HEIGHT; z = z + CHUNKSIZE) {
