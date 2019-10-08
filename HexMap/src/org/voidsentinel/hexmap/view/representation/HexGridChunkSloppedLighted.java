@@ -25,9 +25,12 @@ import com.jme3.scene.Node;
  */
 public class HexGridChunkSloppedLighted extends AbstractHexGridChunk {
 
-	public HexGridChunkSloppedLighted(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbationPossible,
-	      boolean perturbated, AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, perturbationPossible, perturbated, colorExtractor);
+	public HexGridChunkSloppedLighted(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated, AbstractCellColorExtractor colorExtractor) {
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
+	}
+
+	public boolean canBePerturbated() {
+		return false;
 	}
 
 	/**

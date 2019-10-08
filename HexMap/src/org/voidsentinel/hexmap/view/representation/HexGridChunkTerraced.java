@@ -34,9 +34,13 @@ public class HexGridChunkTerraced extends AbstractHexGridChunk {
 	public final float	HORIZONTALSTEPSIZE	= 1f / TERRACESTEPS;
 	public final float	VERTICALSTEPSIZE		= 1f / (TERRACEPERSLOPE + 1);
 
-	public HexGridChunkTerraced(HexMap map, int xstart, int zstart, int chunkSize,boolean perturbationPossible, boolean perturbated,
+	public HexGridChunkTerraced(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, perturbationPossible, perturbated, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
+	}
+
+	public boolean canBePerturbated() {
+		return false;
 	}
 
 	/**

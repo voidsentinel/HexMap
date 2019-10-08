@@ -60,12 +60,12 @@
 	<mapRepresentation id="FlatPerturbated"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimple"
 		material="terrains_unshaded.j3m" text="map.FlatPerturbated.label"
-		perturbated="true" tooltip="map.FlatPerturbated.toolTip" />
+		perturbation="true" tooltip="map.FlatPerturbated.toolTip" />
 
 	<mapRepresentation id="Flat25"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlat25"
 		material="terrains_unshaded.j3m" default="true"
-		text="map.Flat25.label" tooltip="map.Flat25.toolTip" />
+		text="map.Flat25.label" tooltip="map.Flat25.toolTip" perturbation="true"/>
 
 	<mapRepresentation id="Flat25Lighted"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlat25Lighted"

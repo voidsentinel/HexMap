@@ -24,12 +24,24 @@ import com.jme3.scene.Node;
  */
 public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
-	private float[] coeff = new float[] { 0.75f, 0.5f, 0.75f, 1f, 1.15f, 1f };
-//	private float[] coeff = new float[] { 0.35f, 0.25f, 0.35f, 0.75f, 1.15f, 0.75f };
-
-	public HexGridChunkFlat25(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbationPossible, boolean perturbated,
+	/**
+	 * Constructor
+	 * 
+	 * @param map                  the full map to represent
+	 * @param xstart               Xstart of th zone to represent
+	 * @param zstart               Z start of the zone to represent
+	 * @param chunkSize            the size of the zone to represent
+	 * @param perturbationPossible to be removed
+	 * @param perturbated          current status of the perturbation
+	 * @param colorExtractor       the initial color extractor to use
+	 */
+	public HexGridChunkFlat25(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 	      AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, perturbationPossible, perturbated, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
+	}
+
+	public boolean canBePerturbated() {
+		return true;
 	}
 
 	protected void generateSpecializedGeometries(Node localRoot) {
@@ -74,7 +86,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 			for (int x = xStart; x <= xEnd; x++) {
 				hexCell = map.getCell(x, z);
 				triangulateCellCenter(hexCell, meshUtility);
-				triangulateCellSide(hexCell, meshUtility);
+				//triangulateCellSide(hexCell, meshUtility);
 			}
 		}
 		Mesh mesh = ((Geometry) (representation.getChild("ground"))).getMesh();
@@ -89,10 +101,10 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	 */
 	private void triangulateCellCenter(HexCell cell, MeshUtil MeshUtility) {
 		Vector3f center = HexMetrics.getCellCenter(cell);
-		Vector3f v0 = null;
+//		Vector3f v0 = null;
 		Vector3f v1 = null;
 		Vector3f v2 = null;
-		Vector3f v3 = null;
+//		Vector3f v3 = null;
 		Vector3f v4 = null;
 		int index = MeshUtility.getVerticeCount();
 		int offsetDir = 0;
@@ -106,20 +118,31 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 			offsetDir = direction.ordinal();
 
 			v1 = center.add(HexMetrics.getFirstCornerVector(offsetDir));
-			v0 = center.add(HexMetrics.getSecondCornerVector(offsetDir));
 			v2 = center.add(HexMetrics.getFirstCornerVector(offsetDir, 1f));
+//			v3 = center.add(HexMetrics.getSecondCornerVector(offsetDir));
+			v4 = center.add(HexMetrics.getSecondCornerVector(offsetDir, 1f));
+			if (perturbated) {
+				perturbate(v2);
+				perturbate(v4);
+			}
 
 			MeshUtility.addVertice(v1);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
 			MeshUtility.addVertice(v2);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
 
-			Vector3f bridge = HexMetrics.getBridgeVector(offsetDir);
-			v3 = v1.add(bridge);
-			v4 = v0.add(bridge);
-			MeshUtility.addVertice(v3);
+			float amount = 0.5f * HexMetrics.BLURFACTOR;
+			Vector3f v5 = v2.clone();
+			v5.interpolateLocal(v4, amount);
+			Vector3f v6 = v2.clone();
+			v6.interpolateLocal(v4, 1f - amount);
+
+//			Vector3f bridge = HexMetrics.getBridgeVector(offsetDir);
+//			v3 = v1.add(bridge);
+//			v4 = v0.add(bridge);
+			MeshUtility.addVertice(v5);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
-			MeshUtility.addVertice(v4);
+			MeshUtility.addVertice(v6);
 			MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
 
 			points.put(v1, cell);
@@ -203,6 +226,14 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 				v2.y = v1.y;
 				v3.y = (cell.getElevation() - height) * HexMetrics.CELL_ELEVATION;
 				v4.y = v3.y;
+
+				if (perturbated) {
+					perturbate(v1);
+					perturbate(v2);
+					perturbate(v3);
+					perturbate(v4);
+				}
+
 				meshUtility.addQuad(v1, v2, v3, v4);
 				points.put(v4, cell);
 			}
@@ -211,7 +242,8 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
 	protected void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
 		for (Direction direction : Direction.values()) {
-			ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(coeff[direction.ordinal()]);
+			float coeff = getColorCoefficient(cell, direction);
+			ColorRGBA c1 = colorExtractor.getColor(cell, map).mult(coeff);
 			colorizeCellSideDirection(cell, direction, meshUtility, c1);
 		}
 	}

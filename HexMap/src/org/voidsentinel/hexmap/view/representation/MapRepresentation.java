@@ -19,7 +19,6 @@ public class MapRepresentation extends RepositoryData {
 	String	tooltipName		= "";
 	boolean	defaultMapper	= false;
 	boolean	perturbated		= false;
-   boolean  perturbationPossible = false;
    
 	public MapRepresentation(String id) {
 		super(id);
@@ -59,10 +58,6 @@ public class MapRepresentation extends RepositoryData {
 
 		if ("perturbation".equalsIgnoreCase(name)) {
 			this.setPerturbated(Boolean.parseBoolean(value));
-			used = true;
-		}
-		if ("perturbationPossible".equalsIgnoreCase(name)) {
-			this.perturbationPossible = (Boolean.parseBoolean(value));
 			used = true;
 		}
 		
@@ -178,20 +173,6 @@ public class MapRepresentation extends RepositoryData {
 	 */
 	public void setTooltipName(String tooltipName) {
 		this.tooltipName = tooltipName;
-	}
-
-	/**
-	 * @return the perturbationPossible
-	 */
-	public boolean isPerturbationPossible() {
-		return perturbationPossible;
-	}
-
-	/**
-	 * @param perturbationPossible the perturbationPossible to set
-	 */
-	public void setPerturbationPossible(boolean perturbationPossible) {
-		this.perturbationPossible = perturbationPossible;
 	}
 
 }

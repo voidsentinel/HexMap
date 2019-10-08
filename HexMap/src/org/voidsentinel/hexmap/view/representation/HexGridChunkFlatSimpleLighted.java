@@ -18,9 +18,9 @@ import com.jme3.math.ColorRGBA;
  */
 public class HexGridChunkFlatSimpleLighted extends HexGridChunkFlatSimple {
 
-	public HexGridChunkFlatSimpleLighted(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbationPossible, boolean perturbated,
+	public HexGridChunkFlatSimpleLighted(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
 			AbstractCellColorExtractor colorExtractor) {
-		super(map, xstart, zstart, chunkSize, perturbationPossible, perturbated, colorExtractor);
+		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
 	}
 
 	/**
