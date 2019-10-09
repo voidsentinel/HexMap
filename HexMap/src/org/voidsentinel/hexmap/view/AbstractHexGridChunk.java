@@ -169,11 +169,27 @@ public abstract class AbstractHexGridChunk {
 		this.perturbated = perturbated && this.canBePerturbated();
 	}
 
+	/**
+	 * Return the perturbation of a given vertex.
+	 * 
+	 * @param v1 the vertex whose pertubation is requested
+	 * @return the perturbation to be added
+	 */
+	protected Vector3f getPerturbation(Vector3f v1) {
+		final float VARIATION = HexMetrics.INNERRADIUS * 0.75f;
+		float o1 = Math.abs(fn.GetPerlin(v1.x * 130, v1.z * 170)) * VARIATION - 0.5f * VARIATION;
+		float o2 = Math.abs(fn.GetPerlin(v1.z * 130, v1.x * 170)) * VARIATION - 0.5f * VARIATION;
+		return new Vector3f(o1, 0f, o2);
+	}
+
+	/**
+	 * Apply the perturbatio to the given vertice. Equilavalent to
+	 * v1.addLocal(getPerturbation(v1))
+	 * 
+	 * @param v1 the vertice to perturbate
+	 */
 	protected void perturbate(Vector3f v1) {
-		final float VARIATION = HexMetrics.INNERRADIUS / 1.3f;
-		float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
-		float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
-		v1.addLocal(o1, 0f, o2);
+		v1.addLocal(getPerturbation(v1));
 	}
 
 	/**
