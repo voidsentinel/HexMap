@@ -3,6 +3,7 @@ package org.voidsentinel.hexmap.view.representation;
 import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
+import org.voidsentinel.hexmap.utils.Perturbator;
 import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.MeshUtil;
@@ -102,7 +103,6 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	private void triangulateCellCenter(HexCell cell, MeshUtil meshUtility) {
 		Vector3f center = HexMetrics.getCellCenter(cell);
 		Vector3f v0 = null;
-		Vector3f v1 = null;
 		Vector3f v2 = null;
 		Vector3f v3 = null;
 		Vector3f v4 = null;
@@ -119,17 +119,16 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 			offsetDir = direction.ordinal();
 
 			v0 = center.add(HexMetrics.getFirstCornerVector(offsetDir));
-			v1 = center.add(HexMetrics.getSecondCornerVector(offsetDir));
 			v2 = center.add(HexMetrics.getFirstCornerVector(offsetDir, 1f));
 			v3 = center.add(HexMetrics.getSecondCornerVector(offsetDir, 1f));
 
 			if (this.perturbated) {
 				// we perturbate both v2 and v0, since the internal point should move the same vector
 				// so that the border representation does not change too much
-				Vector3f perturbation = this.getPerturbation(v2);
+				Vector3f perturbation = Perturbator.getPerturbation(v2);
 				v0.addLocal(perturbation);
 				v2.addLocal(perturbation);
-				perturbate(v3);
+				Perturbator.perturbate(v3);
 			}
 			
 			meshUtility.addVertice(v0);
@@ -228,10 +227,10 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 				v4.y = v3.y;
 
 				if (perturbated) {
-					perturbate(v1);
-					perturbate(v2);
-					perturbate(v3);
-					perturbate(v4);
+					Perturbator.perturbate(v1);
+					Perturbator.perturbate(v2);
+					Perturbator.perturbate(v3);
+					Perturbator.perturbate(v4);
 				}
 
 				meshUtility.addQuad(v1, v2, v3, v4);

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.utils;
+package org.voidsentinel.hexmap.view;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
@@ -18,8 +18,6 @@ public class ParametrableScreenshotAppState extends ScreenshotAppState {
 
 	private int linkedKey = KeyInput.KEY_SYSRQ;
 
-	
-	
 
 	public ParametrableScreenshotAppState() {
 		super();
@@ -44,12 +42,10 @@ public class ParametrableScreenshotAppState extends ScreenshotAppState {
 	}
 
 
-
 	public ParametrableScreenshotAppState(String filePath, String fileName) {
 		super(filePath, fileName);
 		// TODO Auto-generated constructor stub
 	}
-
 
 
 	public void changeLinkedKey(AppStateManager stateManager, Application app, int key) {

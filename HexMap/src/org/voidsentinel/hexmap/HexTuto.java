@@ -16,9 +16,9 @@ import org.voidsentinel.hexmap.model.mapgenerator.MapGenerator;
 import org.voidsentinel.hexmap.utils.Alea;
 import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
-import org.voidsentinel.hexmap.utils.ParametrableScreenshotAppState;
 import org.voidsentinel.hexmap.view.HexGrid;
 import org.voidsentinel.hexmap.view.HexMetrics;
+import org.voidsentinel.hexmap.view.ParametrableScreenshotAppState;
 import org.voidsentinel.hexmap.view.ihm.ImageData;
 import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 import org.voidsentinel.hexmap.view.ihm.MenuBar;
@@ -54,7 +54,11 @@ public class HexTuto extends SimpleApplication {
 
 	private static HexTuto	instance;
 
-	private HexGrid			mapNode	= null;
+	private HexGrid			mapNode			= null;
+	private MapGenerator		generator		= new CapitalismGenerator();
+	private HexMap				map				= new HexMap(256, 128);
+
+	StepCameraControl			cameraControl	= null;
 
 	/*
 	 * (non-Javadoc)
@@ -80,12 +84,11 @@ public class HexTuto extends SimpleApplication {
 		// allow for screeshot
 		ParametrableScreenshotAppState screenshot = new ParametrableScreenshotAppState("",
 		      this.getClass().getSimpleName());
+		screenshot.setFilePath("./screenshot/");
 		screenshot.changeLinkedKey(this.getStateManager(), this, KeyInput.KEY_PRTSCR);
 		this.stateManager.attach(screenshot);
 
 		// generate the map
-		MapGenerator generator = new CapitalismGenerator();
-		HexMap map = new HexMap(128, 64);
 		generator.generate(map);
 
 		// generate the representation
@@ -97,7 +100,7 @@ public class HexTuto extends SimpleApplication {
 		this.getCamera().lookAt(center, HexMetrics.CELL_UNIT_NORMAL);
 		this.getCamera().update();
 
-		StepCameraControl cameraControl = new StepCameraControl(this, mapNode, top, center, HexMetrics.CELL_UNIT_NORMAL);
+		cameraControl = new StepCameraControl(this, mapNode, top, center, HexMetrics.CELL_UNIT_NORMAL);
 		rootNode.addControl(cameraControl);
 		cameraControl.addControlMapping();
 
@@ -117,7 +120,7 @@ public class HexTuto extends SimpleApplication {
 
 	public void stop() {
 		// save current status
-		
+
 		// and stop
 		super.stop();
 	}
@@ -149,11 +152,11 @@ public class HexTuto extends SimpleApplication {
 		guiNode.attachChild(menu);
 
 		addMapRepresentationRoll(menu, hooverField);
-		addSettingMenu(menu, hooverField);		
+		addSettingMenu(menu, hooverField);
 	}
-	
+
 	/**
-	 * 	
+	 * 
 	 * @param menu
 	 * @param hooverField
 	 */
@@ -195,7 +198,7 @@ public class HexTuto extends SimpleApplication {
 	}
 
 	private void addSettingMenu(MenuBar menu, TextField hooverField) {
-		
+
 		// the System Menu
 		ImageData image = ImageRepository.datas.getData("settingsIcon");
 		String fileName = image.getFilename();
@@ -203,7 +206,7 @@ public class HexTuto extends SimpleApplication {
 		MenuButton ddb = new MenuButton("", icon, menu.getElementId().child("settingMenu"), false, true);
 		ddb.setHooverField(hooverField);
 		menu.addButton(ddb);
-		ddb.setToolTip( I18nMultiFile.getText("ihm.system.tooltip"));
+		ddb.setToolTip(I18nMultiFile.getText("ihm.system.tooltip"));
 
 		// the Map representation subMenu
 		image = ImageRepository.datas.getData("mapRepresentationIcon");
@@ -212,8 +215,8 @@ public class HexTuto extends SimpleApplication {
 		MenuButton ddbSettings = new MenuButton("", icon, ddb.getElementId().child("graphical"), false, false);
 		ddbSettings.setHooverField(hooverField);
 		ddb.addButton(ddbSettings, I18nMultiFile.getText("ihm.setting.tooltip"));
- 
-		// The content of the Map represenatation menu 
+
+		// The content of the Map represenatation menu
 		Iterator<String> it = MapRepresentationRepository.repository.datas.keySet().iterator();
 		while (it.hasNext()) {
 			MapRepresentation mr = MapRepresentationRepository.repository.getData(it.next());
@@ -226,6 +229,11 @@ public class HexTuto extends SimpleApplication {
 		fileName = image.getFilename();
 		icon = new IconComponent(fileName);
 		ddb.addButton("", icon, I18nMultiFile.getText("ihm.quit.tooltip"), new ExitCommand());
+
+		image = ImageRepository.datas.getData("reloadIcon");
+		fileName = image.getFilename();
+		icon = new IconComponent(fileName);
+		ddb.addButton("", icon, I18nMultiFile.getText("ihm.reload.tooltip"), new ReloadCommand());
 
 	}
 
@@ -275,6 +283,37 @@ public class HexTuto extends SimpleApplication {
 	protected class EmptyCommand implements Command<Button> {
 		@Override
 		public void execute(Button source) {
+		}
+	}
+
+	protected class ReloadCommand implements Command<Button> {
+		@Override
+		public void execute(Button source) {
+			
+			rootNode.detachAllChildren();
+			cameraControl.removeControlMapping();
+			rootNode.removeControl(cameraControl);
+
+			generator.generate(map);
+
+			// generate the representation
+			mapNode = new HexGrid(map, HexTuto.getInstance().getRootNode());
+
+			Vector3f center = HexMetrics.getCellCenter(map.getCenterCell());
+			Vector3f top = center.add(-0f, -15f, -15f);
+			HexTuto.getInstance().getCamera().setLocation(top);
+			HexTuto.getInstance().getCamera().lookAt(center, HexMetrics.CELL_UNIT_NORMAL);
+			HexTuto.getInstance().getCamera().update();
+
+			cameraControl = new StepCameraControl(HexTuto.getInstance(), mapNode, top, center,
+			      HexMetrics.CELL_UNIT_NORMAL);
+
+			rootNode.addControl(cameraControl);
+			cameraControl.addControlMapping();
+
+			getFlyByCamera().setEnabled(false);
+			mouseInput.setCursorVisible(true);
+
 		}
 	}
 

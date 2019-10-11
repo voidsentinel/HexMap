@@ -216,7 +216,6 @@ public class ModLoader {
 			break;
 		}
 		case "terrainMaterial": {
-//			loadTerrainMaterial(node, directory);
 			break;
 		}
 		case "mapColorMapper": {

@@ -40,7 +40,6 @@ public class I18nMultiFile {
 		} catch (MalformedURLException e) {// TODO Auto-generated catch block
 			LOG.severe("Impossible to find file " + filename + " into " + directory);
 		}
-
 	}
 
 	/**
