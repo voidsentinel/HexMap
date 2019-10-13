@@ -12,6 +12,7 @@ import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
@@ -30,31 +31,41 @@ import com.jme3.scene.control.AbstractControl;
  */
 public class StepCameraControl extends AbstractControl implements ActionListener {
 
-	// private static final Logger	LOG					= Logger.getLogger(StepCameraControl.class.toString());
+	// private static final Logger LOG =
+	// Logger.getLogger(StepCameraControl.class.toString());
 
 	// ** Total time for a movement
-	private static float				MVTTIME				= 20.0f;
+	private static float			MVTTIME				= 20.0f;
 
-	float									positionElapsed	= 0;
-	boolean								positionChange		= false;
-	Vector3f								startPosition		= null;
-	Vector3f								stopPosition		= null;
-	Vector3f								currentPosition	= null;
-	Vector3f								normal				= null;
+	float								positionElapsed	= 0;
+	boolean							positionChange		= false;
+	Vector3f							startPosition		= null;
+	Vector3f							stopPosition		= null;
+	Vector3f							currentPosition	= null;
+	Vector3f							normal				= null;
 
-	float									targetElapsed		= 0;
-	boolean								targetChange		= false;
-	Vector3f								startTarget			= null;
-	Vector3f								stopTarget			= null;
-	Vector3f								currentTarget		= null;
+	float								targetElapsed		= 0;
+	boolean							targetChange		= false;
+	Vector3f							startTarget			= null;
+	Vector3f							stopTarget			= null;
+	Vector3f							currentTarget		= null;
 
-	float									zoomStep				= 0.0f;
-	boolean								farMaterial			= false;
+	float								zoomStep				= 0.0f;
+	boolean							farMaterial			= false;
 
-	Camera								camera				= null;
-	final private Application		application;
-	final private HexGrid			mapdisplay;
+	Camera							camera				= null;
+	final private Application	application;
+	final private HexGrid		mapdisplay;
 
+	/**
+	 * create a camera
+	 * 
+	 * @param application
+	 * @param mapDisplay
+	 * @param position
+	 * @param target
+	 * @param normal
+	 */
 	public StepCameraControl(final Application application, final HexGrid mapDisplay, final Vector3f position,
 	      final Vector3f target, Vector3f normal) {
 		this.application = application;
@@ -91,6 +102,17 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 
 		// add the camera as listener for those actions
 		inputManager.addListener(this, "Rotate+", "Rotate-", "RightClick", "ZoomIn", "ZoomOut");
+
+		// The only input we need for android, touch. The engine automatically
+		// translates touch events into mouse events for Android, if you were wondering.
+		// In fact, the engine can pretty much be used the same way as it were to be
+		// used on desktop, except that resolutions are different.
+		inputManager.addMapping("Rotate", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+
+		// Add the names to the touch listener.
+		inputManager.addListener(touchMoveListener, new String[] { "Rotate" });
+		inputManager.addListener(touchListener, new String[] { "Rotate" });
+
 	}
 
 	public void removeControlMapping() {
@@ -100,8 +122,11 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 		inputManager.deleteMapping("Rotate+");
 		inputManager.deleteMapping("Rotate-");
 		inputManager.deleteMapping("RightClick");
+		inputManager.deleteMapping("Rotate");
 
 		application.getInputManager().removeListener(this);
+		application.getInputManager().removeListener(touchMoveListener);
+		application.getInputManager().removeListener(touchListener);
 	}
 
 	public void setPosition(final Vector3f target) {
@@ -120,7 +145,7 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 		// add delta to
 		stopPosition = stopTarget.add(delta);
 		positionChange = true;
-		positionElapsed = 0.0f;
+		positionElapsed = 10.0f;
 	}
 
 	public void setTarget(final Vector3f to) {
@@ -133,7 +158,6 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 			targetChange = true;
 			targetElapsed = 0.0f;
 		}
-
 	}
 
 	@Override
@@ -231,4 +255,39 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 		return camera;
 	}
 
+	// data for "swipe" listener
+	private Vector2f			mousePreviousPosition	= null;
+	private boolean			applyAnalog					= false;
+	private ActionListener	touchListener				= new ActionListener() {
+																		@Override
+																		public void onAction(String name, boolean keyPressed, float tpf) {
+																			final InputManager inputManager = application
+																			      .getInputManager();
+																			if (keyPressed) {
+																				mousePreviousPosition = inputManager.getCursorPosition()
+																				      .clone();
+																				applyAnalog = true;
+																			} else {
+																				applyAnalog = false;
+
+																			}
+																		}
+
+																	};
+	private AnalogListener	touchMoveListener			= new AnalogListener() {
+																		@Override
+																		public void onAnalog(String name, float value, float tpf) {
+																			final InputManager inputManager = application
+																			      .getInputManager();
+																			if (applyAnalog) {
+																				Vector2f MousePosition = inputManager.getCursorPosition()
+																				      .clone();
+
+																				rotatePosition(-1f
+																				      * (MousePosition.x - mousePreviousPosition.x) / 100f);
+
+																				mousePreviousPosition = MousePosition;
+																			}
+																		}
+																	};
 }

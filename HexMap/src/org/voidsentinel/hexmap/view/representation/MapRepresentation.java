@@ -19,7 +19,7 @@ public class MapRepresentation extends RepositoryData {
 	String	tooltipName		= "";
 	boolean	defaultMapper	= false;
 	boolean	perturbated		= false;
-
+   
 	public MapRepresentation(String id) {
 		super(id);
 	}
@@ -60,7 +60,7 @@ public class MapRepresentation extends RepositoryData {
 			this.setPerturbated(Boolean.parseBoolean(value));
 			used = true;
 		}
-
+		
 		if ("icon".equalsIgnoreCase(name)) {
 			setIconName(value);
 			used = true;

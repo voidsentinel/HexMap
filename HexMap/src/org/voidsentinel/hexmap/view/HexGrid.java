@@ -8,10 +8,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.HexTuto;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
+import org.voidsentinel.hexmap.utils.I18nMultiFile;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 import org.voidsentinel.hexmap.view.mapColor.ColorMapperRepository;
 import org.voidsentinel.hexmap.view.representation.MapRepresentation;
@@ -37,8 +39,9 @@ import com.jme3.scene.Node;
  *
  */
 public class HexGrid {
+	protected static final Logger					LOG					= Logger.getLogger(HexGrid.class.toString());
 
-	public static final int							CHUNKSIZE			= 256;
+	public static final int							CHUNKSIZE			= 16;
 
 	private HexMap										map					= null;
 	private Node										terrainNode			= null;
@@ -52,10 +55,8 @@ public class HexGrid {
 	/**
 	 * Contructor for the representation of a HexMap
 	 * 
-	 * @param map
-	 *           the map to display
-	 * @param rootNode
-	 *           the 3d node to put the map under
+	 * @param map      the map to display
+	 * @param rootNode the 3d node to put the map under
 	 */
 	public HexGrid(HexMap map, Node rootNode) {
 		this.map = map;
@@ -72,7 +73,7 @@ public class HexGrid {
 		try {
 			setMeshGeneration(meshGenerator.id);
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			;
 		}
@@ -83,22 +84,20 @@ public class HexGrid {
 	 * change the colorExtractor, and reapply the extraction to the current map
 	 * representation
 	 * 
-	 * @param extractor
-	 *           the colorExtractor to use
+	 * @param extractor the colorExtractor to use
 	 */
 	public void setColorExtractor(AbstractCellColorExtractor extractor) {
 		colorExtractor = extractor;
 		Iterator<AbstractHexGridChunk> it = chunks.values().iterator();
 		while (it.hasNext()) {
-			it.next().regenerateColor(extractor);
+			it.next().generateColor(extractor);
 		}
 	}
 
 	/**
 	 * chenge the metho used to generate the mesh
 	 * 
-	 * @param id
-	 *           the id of the class to use in MapRepresentationRepository
+	 * @param id the id of the class to use in MapRepresentationRepository
 	 * @throws ClassNotFoundException
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
@@ -108,22 +107,26 @@ public class HexGrid {
 	 * @throws InvocationTargetException
 	 */
 	public void setMeshGeneration(String id) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	      InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+
 		terrainNode.detachAllChildren();
 		chunks.clear();
 
 		MapRepresentation generatorInfo = MapRepresentationRepository.repository.getData(id);
+
+		LOG.info("Setting Mesh generator to " + I18nMultiFile.getText(generatorInfo.getLabelName()));
 
 		AssetManager assets = HexTuto.getInstance().getAssetManager();
 		terrainMaterial = (Material) assets.loadMaterial(generatorInfo.getMaterialName());
 
 		Class<?> clazz = Class.forName(generatorInfo.getClassName());
 		Constructor<?> ctor = clazz.getConstructor(HexMap.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE,
-				AbstractCellColorExtractor.class);
+		      AbstractCellColorExtractor.class);
 
 		for (int z = 0; z < map.HEIGHT; z = z + CHUNKSIZE) {
 			for (int x = 0; x < map.WIDTH; x = x + CHUNKSIZE) {
-				Object object = ctor.newInstance(new Object[] { map, x, z, CHUNKSIZE, generatorInfo.isPerturbated(), colorExtractor });
+				Object object = ctor
+				      .newInstance(new Object[] { map, x, z, CHUNKSIZE, generatorInfo.isPerturbated(), colorExtractor });
 				AbstractHexGridChunk generator = ((AbstractHexGridChunk) (object));
 				generator.setTerrainMaterial(terrainMaterial);
 				generator.generateGeometry();
@@ -131,7 +134,25 @@ public class HexGrid {
 				chunks.put(generator.getRepresentation().getName(), generator);
 			}
 		}
+	}
 
+	public MapRepresentation getMapRepresentation() {
+		return meshGenerator;
+	}
+
+	/**
+	 * Set all the chunk to the perturbated status. The result depends on the
+	 * canBePetrubed status.
+	 * 
+	 * @param perturbated tru if the map should be perturbated
+	 */
+	public void setPerturbated(boolean perturbated) {
+		Iterator<AbstractHexGridChunk> it = chunks.values().iterator();
+		while (it.hasNext()) {
+			AbstractHexGridChunk chunk = it.next();
+			chunk.setPerturbated(perturbated);
+			chunk.generateStructure();
+		}
 	}
 
 	/**
@@ -155,7 +176,7 @@ public class HexGrid {
 		HexCell selectedCell = null;
 		Vector3f click3d = camera.getWorldCoordinates(new Vector2f(cursor.x, cursor.y), 0f).clone();
 		Vector3f dir = camera.getWorldCoordinates(new Vector2f(cursor.x, cursor.y), 1f).subtractLocal(click3d)
-				.normalizeLocal();
+		      .normalizeLocal();
 
 		// 1. Reset results list.
 		CollisionResults results = new CollisionResults();
@@ -188,7 +209,6 @@ public class HexGrid {
 		return selectedCell;
 	}
 
-	
 	/**
 	 * 
 	 */

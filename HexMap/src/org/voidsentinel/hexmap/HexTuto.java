@@ -18,6 +18,7 @@ import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
 import org.voidsentinel.hexmap.view.HexGrid;
 import org.voidsentinel.hexmap.view.HexMetrics;
+import org.voidsentinel.hexmap.view.ParametrableScreenshotAppState;
 import org.voidsentinel.hexmap.view.ihm.ImageData;
 import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 import org.voidsentinel.hexmap.view.ihm.MenuBar;
@@ -30,6 +31,7 @@ import org.voidsentinel.hexmap.view.representation.MapRepresentationRepository;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.FileLocator;
+import com.jme3.input.KeyInput;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
@@ -52,7 +54,11 @@ public class HexTuto extends SimpleApplication {
 
 	private static HexTuto	instance;
 
-	private HexGrid			mapNode	= null;
+	private HexGrid			mapNode			= null;
+	private MapGenerator		generator		= new CapitalismGenerator();
+	private HexMap				map				= new HexMap(256, 128);
+
+	StepCameraControl			cameraControl	= null;
 
 	/*
 	 * (non-Javadoc)
@@ -75,9 +81,14 @@ public class HexTuto extends SimpleApplication {
 		ModData std = mods.get("standard");
 		ModLoader.loadMod(std, this.assetManager);
 
+		// allow for screeshot
+		ParametrableScreenshotAppState screenshot = new ParametrableScreenshotAppState("",
+		      this.getClass().getSimpleName());
+		screenshot.setFilePath("./screenshot/");
+		screenshot.changeLinkedKey(this.getStateManager(), this, KeyInput.KEY_PRTSCR);
+		this.stateManager.attach(screenshot);
+
 		// generate the map
-		MapGenerator generator = new CapitalismGenerator();
-		HexMap map = new HexMap(128, 64);
 		generator.generate(map);
 
 		// generate the representation
@@ -89,40 +100,14 @@ public class HexTuto extends SimpleApplication {
 		this.getCamera().lookAt(center, HexMetrics.CELL_UNIT_NORMAL);
 		this.getCamera().update();
 
-		StepCameraControl cameraControl = new StepCameraControl(this, mapNode, top, center, HexMetrics.CELL_UNIT_NORMAL);
+		cameraControl = new StepCameraControl(this, mapNode, top, center, HexMetrics.CELL_UNIT_NORMAL);
 		rootNode.addControl(cameraControl);
 		cameraControl.addControlMapping();
 
 		getFlyByCamera().setEnabled(false);
 		mouseInput.setCursorVisible(true);
 
-		
-		Container panel = new Container();
-		guiNode.attachChild(panel);
-
-		panel.setBackground(new QuadBackgroundComponent(ColorParser.parse("rgb(211, 191, 143, 211)")));// new ColorRGBA(0.36f, 0.54f, 0.66f, 0.75f)
-		//panel.setBorder(new QuadBackgroundComponent(ColorParser.parse("rgb(0, 0, 0, 211)")));// new ColorRGBA(0.36f, 0.54f, 0.66f, 0.75f)
-		panel.setPreferredSize(new Vector3f(settings.getWidth(),  25f, 0f));
-		panel.setLocalTranslation(0, settings.getHeight(), 0);
-		
-		TextField hooverField = new TextField("", new ElementId("tooltipElement"));
-		hooverField.setColor(ColorRGBA.White);
-		hooverField.setPreferredSize(new Vector3f(settings.getWidth(),  25f, 0f));
-		hooverField.setTextVAlignment(VAlignment.Center);
-      panel.addChild(hooverField);		
-		
-      MenuBar menu = new MenuBar(new ElementId("menuBar"));
-	   menu.setPreferredSize(new Vector3f(settings.getWidth(),  32f, 0f));
-		menu.setLocalTranslation(0, this.settings.getHeight() - hooverField.getPreferredSize().y, -0.10f);
-		guiNode.attachChild(menu);
-
-
-		addMapRepresentationRoll(menu, hooverField);
-		
-		addExitButton(menu, hooverField, "Quit game");
-
-		
-
+		generateIHM();
 	}
 
 	/**
@@ -133,15 +118,53 @@ public class HexTuto extends SimpleApplication {
 		instance.start();
 	}
 
+	public void stop() {
+		// save current status
+
+		// and stop
+		super.stop();
+	}
+
 	public static HexTuto getInstance() {
 		return instance;
 	}
 
+	/**
+	 * Generate the IHM with a toolyip bar and a menubar.
+	 */
+	private void generateIHM() {
+		Container panel = new Container();
+		guiNode.attachChild(panel);
+
+		panel.setBackground(new QuadBackgroundComponent(ColorParser.parse("rgb(211, 191, 143, 211)")));
+		panel.setPreferredSize(new Vector3f(settings.getWidth(), 25f, 0f));
+		panel.setLocalTranslation(0, settings.getHeight(), 0);
+
+		TextField hooverField = new TextField("", new ElementId("tooltipElement"));
+		hooverField.setColor(ColorRGBA.White);
+		hooverField.setPreferredSize(new Vector3f(settings.getWidth(), 25f, 0f));
+		hooverField.setTextVAlignment(VAlignment.Center);
+		panel.addChild(hooverField);
+
+		MenuBar menu = new MenuBar(new ElementId("menuBar"));
+		menu.setPreferredSize(new Vector3f(settings.getWidth(), 32f, 0f));
+		menu.setLocalTranslation(0, this.settings.getHeight() - hooverField.getPreferredSize().y, -0.10f);
+		guiNode.attachChild(menu);
+
+		addMapRepresentationRoll(menu, hooverField);
+		addSettingMenu(menu, hooverField);
+	}
+
+	/**
+	 * 
+	 * @param menu
+	 * @param hooverField
+	 */
 	private void addMapRepresentationRoll(MenuBar menu, TextField hooverField) {
 		// defaul value
 		AbstractCellColorExtractor extract = ColorMapperRepository.repository.getDefaultMapper();
 		// Create a simple container for view elements
-		MenuButton ddb = new MenuButton("", (IconComponent)null, new ElementId("visual"), true, true);
+		MenuButton ddb = new MenuButton("", (IconComponent) null, new ElementId("visual"), true, true);
 		menu.addButton(ddb);
 		ddb.setHooverField(hooverField);
 		ddb.setToolTip("Visualisation");
@@ -174,42 +197,46 @@ public class HexTuto extends SimpleApplication {
 		}
 	}
 
-	private void addExitButton(MenuBar menu,TextField hooverField, String toolipText) {
+	private void addSettingMenu(MenuBar menu, TextField hooverField) {
+
+		// the System Menu
 		ImageData image = ImageRepository.datas.getData("settingsIcon");
 		String fileName = image.getFilename();
 		IconComponent icon = new IconComponent(fileName);
-		
 		MenuButton ddb = new MenuButton("", icon, menu.getElementId().child("settingMenu"), false, true);
-      ddb.setHooverField(hooverField);
+		ddb.setHooverField(hooverField);
 		menu.addButton(ddb);
-		ddb.setToolTip("System Menu");
-			   
+		ddb.setToolTip(I18nMultiFile.getText("ihm.system.tooltip"));
+
+		// the Map representation subMenu
 		image = ImageRepository.datas.getData("mapRepresentationIcon");
 		fileName = image.getFilename();
 		icon = new IconComponent(fileName);
-		
-		MenuButton ddbSettings= new MenuButton("", icon, ddb.getElementId().child("graphical"), false, false);
+		MenuButton ddbSettings = new MenuButton("", icon, ddb.getElementId().child("graphical"), false, false);
 		ddbSettings.setHooverField(hooverField);
 		ddb.addButton(ddbSettings, I18nMultiFile.getText("ihm.setting.tooltip"));
-		
+
+		// The content of the Map represenatation menu
 		Iterator<String> it = MapRepresentationRepository.repository.datas.keySet().iterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			MapRepresentation mr = MapRepresentationRepository.repository.getData(it.next());
-			ddbSettings.addButton(
-                     I18nMultiFile.getText(mr.getLabelName()),
-                     null,
-                     I18nMultiFile.getText(mr.getTooltipName()), 
-                     new GeometryCommand(mr.id));
+			ddbSettings.addButton(I18nMultiFile.getText(mr.getLabelName()), null,
+			      I18nMultiFile.getText(mr.getTooltipName()), new GeometryCommand(mr.id));
 		}
-      
+
+		// The QUIT button
 		image = ImageRepository.datas.getData("exitIcon");
 		fileName = image.getFilename();
 		icon = new IconComponent(fileName);
-	   ddb.addButton("",   icon, "Quit Game", new ExitCommand());
+		ddb.addButton("", icon, I18nMultiFile.getText("ihm.quit.tooltip"), new ExitCommand());
+
+		image = ImageRepository.datas.getData("reloadIcon");
+		fileName = image.getFilename();
+		icon = new IconComponent(fileName);
+		ddb.addButton("", icon, I18nMultiFile.getText("ihm.reload.tooltip"), new ReloadCommand());
 
 	}
 
-	
 	protected class VisualCommand implements Command<Button> {
 		AbstractCellColorExtractor extractor = null;
 
@@ -225,7 +252,6 @@ public class HexTuto extends SimpleApplication {
 		}
 	}
 
-		
 	protected class GeometryCommand implements Command<Button> {
 		String geometry = null;
 
@@ -242,12 +268,11 @@ public class HexTuto extends SimpleApplication {
 				      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}				
+				}
 			}
 		}
 	}
 
-	
 	protected class ExitCommand implements Command<Button> {
 		@Override
 		public void execute(Button source) {
@@ -257,9 +282,39 @@ public class HexTuto extends SimpleApplication {
 
 	protected class EmptyCommand implements Command<Button> {
 		@Override
-		public void execute(Button source) {			
+		public void execute(Button source) {
 		}
 	}
-	
+
+	protected class ReloadCommand implements Command<Button> {
+		@Override
+		public void execute(Button source) {
+			
+			rootNode.detachAllChildren();
+			cameraControl.removeControlMapping();
+			rootNode.removeControl(cameraControl);
+
+			generator.generate(map);
+
+			// generate the representation
+			mapNode = new HexGrid(map, HexTuto.getInstance().getRootNode());
+
+			Vector3f center = HexMetrics.getCellCenter(map.getCenterCell());
+			Vector3f top = center.add(-0f, -15f, -15f);
+			HexTuto.getInstance().getCamera().setLocation(top);
+			HexTuto.getInstance().getCamera().lookAt(center, HexMetrics.CELL_UNIT_NORMAL);
+			HexTuto.getInstance().getCamera().update();
+
+			cameraControl = new StepCameraControl(HexTuto.getInstance(), mapNode, top, center,
+			      HexMetrics.CELL_UNIT_NORMAL);
+
+			rootNode.addControl(cameraControl);
+			cameraControl.addControlMapping();
+
+			getFlyByCamera().setEnabled(false);
+			mouseInput.setCursorVisible(true);
+
+		}
+	}
 
 }

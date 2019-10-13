@@ -4,7 +4,6 @@ import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.TerrainData;
-import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.view.AbstractHexGridChunk;
 import org.voidsentinel.hexmap.view.HexMetrics;
 import org.voidsentinel.hexmap.view.MeshUtil;
@@ -16,8 +15,7 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.VertexBuffer.Type;
+import com.jme3.scene.Node;
 
 /**
  * a variation on the hexChunk where Hex border are slopped and terraced.
@@ -34,6 +32,10 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 		super(map, xstart, zstart, chunkSize, perturbated, colorExtractor);
 	}
 
+	public boolean canBePerturbated() {
+		return false;
+	}
+
 	/**
 	 * generate and store the geometry for a given map
 	 * 
@@ -41,28 +43,18 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 	 * 
 	 * @return the generated geometry.
 	 */
-	protected Spatial generateSpecializedGeometries() {
-		MeshUtil MeshUtility = new MeshUtil();
-		HexCell hexCell = null;
-		for (int z = zStart; z <= zEnd; z++) {
-			for (int x = xStart; x <= xEnd; x++) {
-				hexCell = map.getCell(x, z);
-				triangulateCellCenter(hexCell, MeshUtility);
-				colorizeCellCenter(hexCell, MeshUtility);
-				triangulateCellBridge(hexCell, MeshUtility);
-				colorizeCellBridge(hexCell, MeshUtility);
-				triangulateCellCorner(hexCell, MeshUtility);
-				colorizeCellCorner(hexCell, MeshUtility);
-			}
-		}
-
-		Mesh mesh = MeshUtility.generateMesh();
+	protected void generateSpecializedGeometries(Node localRoot) {
+		Mesh mesh = new Mesh();
 		Geometry terrain = new Geometry("ground", mesh);
 		terrain.setMaterial(this.getTerrainMaterial());
-		return terrain;
+		localRoot.attachChild(terrain);
+
+		generateStructure();
+		generateColor(colorExtractor);
+
 	}
 
-	public void regenerateColor(AbstractCellColorExtractor colorExtractor) {
+	public void generateColor(AbstractCellColorExtractor colorExtractor) {
 		this.colorExtractor = colorExtractor;
 		MeshUtil meshUtility = new MeshUtil();
 		HexCell hexCell = null;
@@ -74,7 +66,28 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 				colorizeCellCorner(hexCell, meshUtility);
 			}
 		}
-		((Geometry) (representation.getChild("ground"))).getMesh().setBuffer(Type.Color, 4, meshUtility.getColorArray());
+		Mesh mesh = ((Geometry) (representation.getChild("ground"))).getMesh();
+		meshUtility.generateMesh(mesh);
+	}
+
+	/**
+	 * will (re) generate the mesh structure (vertices, normals, triangles) of the
+	 * map representation. Should be called only if representation is non empty.
+	 */
+	public void generateStructure() {
+		MeshUtil meshUtility = new MeshUtil();
+		HexCell hexCell = null;
+		for (int z = zStart; z <= zEnd; z++) {
+			for (int x = xStart; x <= xEnd; x++) {
+				hexCell = map.getCell(x, z);
+				triangulateCellCenter(hexCell, meshUtility);
+				triangulateCellBridge(hexCell, meshUtility);
+				triangulateCellCorner(hexCell, meshUtility);
+			}
+		}
+
+		Mesh mesh = ((Geometry) (representation.getChild("ground"))).getMesh();
+		meshUtility.generateMesh(mesh);
 	}
 
 	/**
@@ -112,8 +125,6 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			uv3 = new Vector2f(HexMetrics.getSecondCornerVector(offsetDir).x,
 			      HexMetrics.getSecondCornerVector(offsetDir).z).mult(terrain.getUVSize());
 
-//			perturbate(v2);
-//			perturbate(v3);
 			MeshUtility.addVertice(v2);
 			MeshUtility.addVertice(v3);
 			MeshUtility.addNormal(normal);
@@ -180,11 +191,6 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			Vector3f v3 = v1.add(bridge);
 			Vector3f v4 = v2.add(bridge);
 
-//			perturbate(v1);
-//			perturbate(v2);			
-//			perturbate(v3);
-//			perturbate(v4);
-
 			v3.y = neighbor.getElevation() * HexMetrics.CELL_ELEVATION;
 			v4.y = v3.y;
 
@@ -208,19 +214,10 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 	private void colorizeBridgeDirection(HexCell cell, Direction direction, MeshUtil MeshUtility) {
 		HexCell neighbor = cell.getNeighbor(direction);
 		if (neighbor != null) {
-			int difference = neighbor.getElevation() - cell.getElevation();
-			if (difference == 0) {
-				ColorRGBA c1 = colorExtractor.getColor(cell, map);
-				MeshUtility.addQuadColors(c1, c1, c1, c1);
-			} else if (difference > 0) {
-				ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(coeff[direction.oppposite().ordinal()]);
-				ColorRGBA c2 = colorExtractor.getColor(neighbor, map).clone().mult(coeff[direction.oppposite().ordinal()]);
-				MeshUtility.addQuadColors(c1, c1, c2, c2);
-			} else {
-				ColorRGBA c1 = colorExtractor.getColor(cell, map).clone().mult(coeff[direction.ordinal()]);
-				ColorRGBA c2 = colorExtractor.getColor(neighbor, map).clone().mult(coeff[direction.ordinal()]);
-				MeshUtility.addQuadColors(c1, c1, c2, c2);
-			}
+			float coeff = getDirectionColorCoeff(cell, direction);
+			ColorRGBA c1 = colorExtractor.getColor(cell, map).mult(coeff);
+			ColorRGBA c2 = colorExtractor.getColor(neighbor, map).mult(coeff);
+			MeshUtility.addQuadColors(c1, c1, c2, c2);
 		}
 	}
 
@@ -269,10 +266,6 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			v1.y = h1.getElevation() * HexMetrics.CELL_ELEVATION;
 			v2.y = h2.getElevation() * HexMetrics.CELL_ELEVATION;
 
-//			perturbate(v0);
-//			perturbate(v1);
-//			perturbate(v2);
-
 			Vector2f uv0 = UVCenter.add(new Vector2f(HexMetrics.getFirstCornerVector(direction.ordinal()).x,
 			      HexMetrics.getFirstCornerVector(direction.ordinal()).z).mult(terrain.getUVSize()));
 
@@ -299,39 +292,68 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 		HexCell h1 = cell.getNeighbor(direction);
 		HexCell h2 = cell.getNeighbor(direction.previous());
 		if (h1 != null && h2 != null) {
-			ColorRGBA c0 = colorExtractor.getColor(cell, map).clone();
-			ColorRGBA s1 = colorExtractor.getColor(cell, map).clone();
-			ColorRGBA s2 = colorExtractor.getColor(cell, map).clone();
-			ColorRGBA c1 = colorExtractor.getColor(h1, map).clone();
-			ColorRGBA c2 = colorExtractor.getColor(h2, map).clone();
-			if (cell.getElevation() != h1.getElevation() || cell.getElevation() != h2.getHeight()) {				
-				c0.multLocal(coeff[direction.ordinal()]);
-			}
-			if (cell.getElevation() != h1.getElevation()) {
-				if (h1.getElevation() - cell.getElevation() > 0) {
-				   s1.multLocal(coeff[direction.oppposite().ordinal()]);
-					c1.multLocal(coeff[direction.oppposite().ordinal()]);
-				} else {
-					s1.multLocal(coeff[direction.ordinal()]);
-					c1.multLocal(coeff[direction.ordinal()]);
-				}
-			}
-			
-			if (cell.getElevation() != h2.getElevation()) {
-				if (h2.getElevation() - cell.getElevation() > 0) {
-				   s2.multLocal(coeff[direction.oppposite().ordinal()]);
-					c2.multLocal(coeff[direction.oppposite().ordinal()]);
-				} else {
-					s2.multLocal(coeff[direction.ordinal()]);
-					c2.multLocal(coeff[direction.ordinal()]);
-				}
-			}
-			c0 = ColorParser.mean(s1, s1, null);
+			float c1 = getDirectionColorCoeff(cell, direction);
+			float c2 = getDirectionColorCoeff(cell, direction.previous());
 
-			meshUtility.addColor(c0);
-			meshUtility.addColor(c1);
-			meshUtility.addColor(c2);
+			ColorRGBA c01 = colorExtractor.getColor(cell, map).mult((c1 + c2) / 2f);
+			ColorRGBA c02 = colorExtractor.getColor(h1, map).mult((c1));
+			ColorRGBA c03 = colorExtractor.getColor(h2, map).mult((c2));
+
+			meshUtility.addColor(c01);
+			meshUtility.addColor(c02);
+			meshUtility.addColor(c03);
+
 		}
+	}
+
+	private ColorRGBA getDirectionColor(HexCell cell, Direction direction) {
+		HexCell neighbor = cell.getNeighbor(direction);
+		if (neighbor != null) {
+			int difference = neighbor.getElevation() - cell.getElevation();
+			if (difference == 0) {
+				return colorExtractor.getColor(cell, map);
+			} else {
+				if (direction == Direction.NE || direction == Direction.SE || direction == Direction.EAST) {
+					if (difference > 0) {
+						return colorExtractor.getColor(cell, map).clone().mult(coeff[direction.oppposite().ordinal()]);
+					} else {
+						return colorExtractor.getColor(cell, map).clone().mult(coeff[direction.ordinal()]);
+					}
+				} else {
+					if (difference < 0) {
+						return colorExtractor.getColor(cell, map).clone().mult(coeff[direction.oppposite().ordinal()]);
+					} else {
+						return colorExtractor.getColor(cell, map).clone().mult(coeff[direction.ordinal()]);
+					}
+				}
+			}
+		}
+		return colorExtractor.getColor(cell, map).clone();
+	}
+
+	private float getDirectionColorCoeff(HexCell cell, Direction direction) {
+		HexCell neighbor = cell.getNeighbor(direction);
+		if (neighbor != null) {
+			int difference = neighbor.getElevation() - cell.getElevation();
+			if (difference == 0) {
+				return 1f;
+			} else {
+				if (direction == Direction.NE || direction == Direction.SE || direction == Direction.EAST) {
+					if (difference > 0) {
+						return coeff[direction.oppposite().ordinal()];
+					} else {
+						return coeff[direction.ordinal()];
+					}
+				} else {
+					if (difference < 0) {
+						return coeff[direction.oppposite().ordinal()];
+					} else {
+						return coeff[direction.ordinal()];
+					}
+				}
+			}
+		}
+		return 0f;
 	}
 
 }

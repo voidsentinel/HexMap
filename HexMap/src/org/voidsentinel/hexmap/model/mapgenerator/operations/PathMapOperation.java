@@ -27,6 +27,12 @@ public class PathMapOperation extends AbstractMapOperation {
 		HexMapAStar star = new HexMapAStar(map);
 
 		for (int x = 0; x < map.WIDTH; x++) {
+			for (int y = 0; y < map.HEIGHT; y++) {
+				prevalence[y][x] = 0.0f;
+			}
+		}
+		
+		for (int x = 0; x < map.WIDTH; x++) {
 			HexCell start = map.getCell(x, 0);
 			HexCell end = map.getCell(map.WIDTH - 1 - x, map.HEIGHT - 1);
 			if (start.getDistanceToWater() > 0 && end.getDistanceToWater() > 0) {

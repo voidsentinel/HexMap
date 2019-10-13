@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.voidsentinel.hexmap.model.Direction;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.utils.Alea;
@@ -14,7 +15,6 @@ import com.jme3.material.Material;
 import com.jme3.math.Triangle;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 
 /**
  * generate and store the representation of a chunk of the map. also store
@@ -25,13 +25,14 @@ import com.jme3.scene.Spatial;
  *
  */
 public abstract class AbstractHexGridChunk {
-	protected static final Logger				LOG					= Logger.getLogger(AbstractHexGridChunk.class.toString());
+	protected static final Logger				LOG						= Logger
+	      .getLogger(AbstractHexGridChunk.class.toString());
 
 	// prefix for the Chunk Node
-	static final public String					CHUNK_PREFIX		= "CHUNK_";
+	static final public String					CHUNK_PREFIX			= "CHUNK_";
 
 	// perturbation source
-	protected static final FastNoise			fn						= new FastNoise(Alea.nextInt());
+	protected static final FastNoise			fn							= new FastNoise(Alea.nextInt());
 
 	// the (part of) map to display
 	protected HexMap								map;
@@ -39,18 +40,20 @@ public abstract class AbstractHexGridChunk {
 	final protected int							zStart;
 	final protected int							xEnd;
 	final protected int							zEnd;
-	// representation informations
-	protected boolean								perturbated			= false;
 
+	// representation informations
+	protected boolean								perturbated				= false;
+	protected boolean								perturbationPossible	= false;
+	protected boolean								lighted					= false;
 	// the geometryNode corresponding to the (part of) map
-	protected Node									representation		= null;
+	protected Node									representation			= null;
 	// points associated with each cell. Should be the minimal number of points (ie
 	// the points that are associated with the max nb of triangle)
-	protected Map<Vector3f, HexCell>			points				= new HashMap<Vector3f, HexCell>();
+	protected Map<Vector3f, HexCell>			points					= new HashMap<Vector3f, HexCell>();
 
 	// the colorExtractor
 	protected AbstractCellColorExtractor	colorExtractor;
-	protected Material							terrainMaterial	= null;
+	protected Material							terrainMaterial		= null;
 
 	/**
 	 * Constructor
@@ -70,8 +73,8 @@ public abstract class AbstractHexGridChunk {
 		this.xEnd = Math.min(xstart + chunkSize - 1, map.WIDTH - 1);
 		this.zEnd = Math.min(zstart + chunkSize - 1, map.HEIGHT - 1);
 		this.colorExtractor = colorExtractor;
-		this.perturbated = perturbated;
 		this.representation = new Node(CHUNK_PREFIX + xStart + "_" + zStart);
+		this.setPerturbated(perturbated);
 	}
 
 	/**
@@ -79,20 +82,41 @@ public abstract class AbstractHexGridChunk {
 	 * 
 	 * @see representation
 	 */
-	public void generateGeometry() {
-		representation.attachChild(generateSpecializedGeometries());
+	public final void generateGeometry() {
+		generateSpecializedGeometries(representation);
 	}
 
-	protected abstract Spatial generateSpecializedGeometries();
+	/**
+	 * indicate if the representation can be perturbed If set to false, this will
+	 * cancel any try to set perturbation on.
+	 * 
+	 * @return true if the representation can be perturbed
+	 */
+	public abstract boolean canBePerturbated();
 
 	/**
-	 * Should be called only if representation is non empty. Will extract the colors
-	 * for each cell with the new extractor, and fill the color buffer of the mesh
-	 * with the new values
+	 * generate the representation(s) for the chunk, and attach it to the given
+	 * node. The representation may consist of several subnode. The protected
+	 * HashMap points should contains the points that can be checked to find a cell
+	 * when clicking on screen
+	 * 
+	 * @param localRoot the root node for the current chunk (and this chunk alone)
+	 */
+	protected abstract void generateSpecializedGeometries(Node localRoot);
+
+	/**
+	 * Will (re) generate the colors of the map representation with the given
+	 * colorExtractor. Should be called only if representation is non empty.
 	 * 
 	 * @param colorExtractor the new colorExtractor to use.
 	 */
-	public abstract void regenerateColor(AbstractCellColorExtractor colorExtractor);
+	public abstract void generateColor(AbstractCellColorExtractor colorExtractor);
+
+	/**
+	 * will (re) generate the mesh structure (vertices, normals, triangles) of the
+	 * map representation. Should be called only if representation is non empty.
+	 */
+	public abstract void generateStructure();
 
 	/**
 	 * return the representation of the part of the map.
@@ -135,12 +159,34 @@ public abstract class AbstractHexGridChunk {
 		this.terrainMaterial = terrainMaterial;
 	}
 
-	protected void perturbate(Vector3f v1) {
-		final float VARIATION = HexMetrics.INNERRADIUS / 1.3f;
-
-		float o1 = fn.GetPerlin(v1.x * 30, v1.z * 70) * VARIATION - 0.5f * VARIATION;
-		float o2 = fn.GetPerlin(v1.z * 30, v1.x * 70) * VARIATION - 0.5f * VARIATION;
-		v1.addLocal(o1, 0f, o2);
+	/**
+	 * set the pertubation on or off, if allowed
+	 * 
+	 * @param perturbated true if on.
+	 * @see AbstractHexGridChunk.canBePerturbated
+	 */
+	public void setPerturbated(boolean perturbated) {
+		this.perturbated = perturbated && this.canBePerturbated();
 	}
 
+
+	/**
+	 * return a coefficient for the color of a direction. The coefficient is based
+	 * on the direction and the height difference, as if the light was comming from
+	 * x=0; z= map/2
+	 * 
+	 * @param cell
+	 * @param direction
+	 * @return
+	 */
+	protected float getColorCoefficient(HexCell cell, Direction direction) {
+		// should be global protected to be used
+		final float[] coeff = new float[] { 0.75f, 0.5f, 0.75f, 1f, 1.15f, 1f };
+		float response = 1f;
+		HexCell neighbor = cell.getNeighbor(direction);
+		if (!lighted && neighbor != null) {
+			response = response * coeff[direction.ordinal()];
+		}
+		return response;
+	}
 }
