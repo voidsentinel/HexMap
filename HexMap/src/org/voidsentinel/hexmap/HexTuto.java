@@ -56,7 +56,7 @@ public class HexTuto extends SimpleApplication {
 
 	private HexGrid			mapNode			= null;
 	private MapGenerator		generator		= new CapitalismGenerator();
-	private HexMap				map				= new HexMap(256, 128);
+	private HexMap				map				= new HexMap(128, 64);
 
 	StepCameraControl			cameraControl	= null;
 
@@ -83,7 +83,7 @@ public class HexTuto extends SimpleApplication {
 
 		// allow for screeshot
 		ParametrableScreenshotAppState screenshot = new ParametrableScreenshotAppState("",
-		      this.getClass().getSimpleName());
+				this.getClass().getSimpleName());
 		screenshot.setFilePath("./screenshot/");
 		screenshot.changeLinkedKey(this.getStateManager(), this, KeyInput.KEY_PRTSCR);
 		this.stateManager.attach(screenshot);
@@ -94,16 +94,13 @@ public class HexTuto extends SimpleApplication {
 		// generate the representation
 		mapNode = new HexGrid(map, this.getRootNode());
 
+		// the camera
 		Vector3f center = HexMetrics.getCellCenter(map.getCenterCell());
-		Vector3f top = center.add(-0f, -15f, -15f);
-		this.getCamera().setLocation(top);
-		this.getCamera().lookAt(center, HexMetrics.CELL_UNIT_NORMAL);
-		this.getCamera().update();
-
-		cameraControl = new StepCameraControl(this, mapNode, top, center, HexMetrics.CELL_UNIT_NORMAL);
+		cameraControl = new StepCameraControl(this, mapNode, center, HexMetrics.CELL_UNIT_NORMAL);
 		rootNode.addControl(cameraControl);
 		cameraControl.addControlMapping();
 
+		cameraControl.updateCamera();
 		getFlyByCamera().setEnabled(false);
 		mouseInput.setCursorVisible(true);
 
@@ -171,7 +168,7 @@ public class HexTuto extends SimpleApplication {
 
 		int count = -1;
 		Iterator<Map.Entry<String, AbstractCellColorExtractor>> it = ColorMapperRepository.repository.datas.entrySet()
-		      .iterator();
+				.iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, AbstractCellColorExtractor> colorizer = it.next();
 			count++;
@@ -190,7 +187,7 @@ public class HexTuto extends SimpleApplication {
 			String text = I18nMultiFile.getText(colorizer.getValue().getTextName());
 			String tooltip = I18nMultiFile.getText(colorizer.getValue().getTooltipName());
 			ddb.addButton(text, icon, tooltip,
-			      new VisualCommand(ColorMapperRepository.repository.getData(colorizer.getKey())));
+					new VisualCommand(ColorMapperRepository.repository.getData(colorizer.getKey())));
 			if (extract == colorizer.getValue()) {
 				ddb.setSelected(count);
 			}
@@ -221,7 +218,7 @@ public class HexTuto extends SimpleApplication {
 		while (it.hasNext()) {
 			MapRepresentation mr = MapRepresentationRepository.repository.getData(it.next());
 			ddbSettings.addButton(I18nMultiFile.getText(mr.getLabelName()), null,
-			      I18nMultiFile.getText(mr.getTooltipName()), new GeometryCommand(mr.id));
+					I18nMultiFile.getText(mr.getTooltipName()), new GeometryCommand(mr.id));
 		}
 
 		// The QUIT button
@@ -265,7 +262,7 @@ public class HexTuto extends SimpleApplication {
 				try {
 					mapNode.setMeshGeneration(geometry);
 				} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-				      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+						| IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -289,24 +286,20 @@ public class HexTuto extends SimpleApplication {
 	protected class ReloadCommand implements Command<Button> {
 		@Override
 		public void execute(Button source) {
-			
+
 			rootNode.detachAllChildren();
 			cameraControl.removeControlMapping();
 			rootNode.removeControl(cameraControl);
 
+			map = new HexMap(128, 64);;
 			generator.generate(map);
 
 			// generate the representation
 			mapNode = new HexGrid(map, HexTuto.getInstance().getRootNode());
 
 			Vector3f center = HexMetrics.getCellCenter(map.getCenterCell());
-			Vector3f top = center.add(-0f, -15f, -15f);
-			HexTuto.getInstance().getCamera().setLocation(top);
-			HexTuto.getInstance().getCamera().lookAt(center, HexMetrics.CELL_UNIT_NORMAL);
-			HexTuto.getInstance().getCamera().update();
-
-			cameraControl = new StepCameraControl(HexTuto.getInstance(), mapNode, top, center,
-			      HexMetrics.CELL_UNIT_NORMAL);
+			// Vector3f top = center.add(-0f, -15f, -15f);
+			cameraControl = new StepCameraControl(HexTuto.getInstance(), mapNode, center, HexMetrics.CELL_UNIT_NORMAL);
 
 			rootNode.addControl(cameraControl);
 			cameraControl.addControlMapping();

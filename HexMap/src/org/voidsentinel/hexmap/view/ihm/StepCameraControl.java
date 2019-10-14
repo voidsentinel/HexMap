@@ -66,20 +66,24 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 	 * @param target
 	 * @param normal
 	 */
-	public StepCameraControl(final Application application, final HexGrid mapDisplay, final Vector3f position,
-	      final Vector3f target, Vector3f normal) {
+	public StepCameraControl(final Application application, final HexGrid mapDisplay, final Vector3f target,
+			Vector3f normal) {
+
 		this.application = application;
 		this.camera = application.getCamera();
 		this.mapdisplay = mapDisplay;
 		this.normal = normal;
-		this.currentPosition = position;
-		this.startPosition = position;
-		this.stopPosition = position;
-		camera.setLocation(position);
 
 		this.currentTarget = target;
 		this.startTarget = target;
 		this.stopTarget = target;
+
+		Vector3f top = target.add(-0f, -15f, -15f);
+		this.currentPosition = top;
+		this.startPosition = top;
+		this.stopPosition = top;
+
+		camera.setLocation(top);
 		camera.lookAt(target, normal);
 		camera.update();
 	}
@@ -88,6 +92,15 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 		camera.setLocation(stopPosition);
 		camera.lookAt(stopTarget, normal);
 		camera.update();
+	}
+
+	/**
+	 * change the grid looked at. If the target cell is not in the new map, then
+	 * 
+	 * @param grid
+	 */
+	public void changeMap(HexGrid grid) {
+
 	}
 
 	public void addControlMapping() {
@@ -262,10 +275,10 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 																		@Override
 																		public void onAction(String name, boolean keyPressed, float tpf) {
 																			final InputManager inputManager = application
-																			      .getInputManager();
+																					.getInputManager();
 																			if (keyPressed) {
 																				mousePreviousPosition = inputManager.getCursorPosition()
-																				      .clone();
+																						.clone();
 																				applyAnalog = true;
 																			} else {
 																				applyAnalog = false;
@@ -278,13 +291,13 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 																		@Override
 																		public void onAnalog(String name, float value, float tpf) {
 																			final InputManager inputManager = application
-																			      .getInputManager();
+																					.getInputManager();
 																			if (applyAnalog) {
 																				Vector2f MousePosition = inputManager.getCursorPosition()
-																				      .clone();
+																						.clone();
 
 																				rotatePosition(-1f
-																				      * (MousePosition.x - mousePreviousPosition.x) / 100f);
+																						* (MousePosition.x - mousePreviousPosition.x) / 100f);
 
 																				mousePreviousPosition = MousePosition;
 																			}
