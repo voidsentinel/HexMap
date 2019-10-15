@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
+import org.voidsentinel.hexmap.utils.Alea;
 
 import com.jme3.math.ColorRGBA;
 
@@ -66,11 +67,15 @@ public class HeightColorExtractor extends FileMappedColorExtractor {
 	 * @return the color at attribute %
 	 */
 	protected ColorRGBA getColorSpecialized(HexCell cell, HexMap map) {
+		ColorRGBA color = null;
 		if (cell.getHeight() <= map.getWaterHeight()) {
-			return getImageColor(waterColorMap, cell.getHeight() / map.getWaterHeight());
+			color = getImageColor(waterColorMap, cell.getHeight() / map.getWaterHeight());
 		} else {
-			return getImageColor(colorMap, (cell.getHeight() - map.getWaterHeight()) / (1f - map.getWaterHeight()));
+			color = getImageColor(colorMap, (cell.getHeight() - map.getWaterHeight()) / (1f - map.getWaterHeight()));
 		}
+		color.multLocal(1f+Alea.nextFloat()/20f);
+		
+		return color;		
 	}
 
 }

@@ -25,7 +25,7 @@ import com.jme3.scene.Node;
  */
 public class HexGridChunkFlatSimple2 extends AbstractHexGridChunk {
 
-	final float	nbEdge		= 3f;
+	final float	nbEdge		= 5f;
 	final float	edgecoeff	= 1f / (1f + nbEdge);
 
 	public HexGridChunkFlatSimple2(HexMap map, int xstart, int zstart, int chunkSize, boolean perturbated,
