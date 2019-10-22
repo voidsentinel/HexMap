@@ -58,7 +58,7 @@
 		tooltip="map.Flat.toolTip" />
 
 	<mapRepresentation id="FlatPerturbated"
-		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimple2"
+		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimple3"
 		material="terrains_unshaded.j3m" text="map.FlatPerturbated.label"
 		perturbation="true" tooltip="map.FlatPerturbated.toolTip" />
 
