@@ -13,7 +13,7 @@
 		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor"
 		icon="heightColorMapperIcon" text="map.heightColorMapper.label"
 		tooltip="map.heightColorMapper.tooltip" key="height"
-		groundColorMap="colorMap/groundColormap.png"
+		groundColorMap="colorMap/groundColormap2.png"
 		waterColorMap="colorMap/waterColormap.png" />
 
 	<image id="heatColorMapperIcon">icons/map-temperature.png</image>

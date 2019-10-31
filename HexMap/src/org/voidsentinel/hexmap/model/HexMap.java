@@ -157,7 +157,7 @@ public class HexMap {
 				int index = z * WIDTH + x;
 				if (cells[index] != null) {
 					float data = cells[index].getFloatData(key);
-					cells[index].setData(key, (data-mindata)/coeff);
+					cells[index].setData(key, Math.max(0f, Math.min((data - mindata) / coeff, 1f)));
 				}
 			}
 		}

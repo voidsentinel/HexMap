@@ -300,8 +300,8 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			ColorRGBA c03 = colorExtractor.getColor(h2, map).mult((c2));
 
 			meshUtility.addColor(c01);
-			meshUtility.addColor(c02);
-			meshUtility.addColor(c03);
+			meshUtility.addColor(c01);
+			meshUtility.addColor(c01);
 
 		}
 	}
