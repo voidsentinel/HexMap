@@ -25,6 +25,9 @@ import com.jme3.scene.Node;
  */
 public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
+	
+	static final private float TOPCOLORCOEFF = 1.1f;
+	
 	/**
 	 * Constructor
 	 * 
@@ -171,7 +174,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	 * @param meshUtility
 	 */
 	protected void colorizeCellCenter(HexCell cell, MeshUtil meshUtility) {
-		ColorRGBA color = colorExtractor.getColor(cell, map).clone().mult(1.1f);
+		ColorRGBA color = colorExtractor.getColor(cell, map).clone().mult(TOPCOLORCOEFF);
 		ColorRGBA color2 = color.mult(0.8f);
 		
 		meshUtility.addColor(color);
@@ -180,7 +183,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 		Direction direction : Direction.values()) {
 			HexCell neighbor = cell.getNeighbor(direction);
 			HexCell neighborp = cell.getNeighbor(direction.previous());
-
+			
 			// internal point
 			meshUtility.addColor(color);
 
@@ -242,7 +245,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	protected void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
 		for (Direction direction : Direction.values()) {
 			float coeff = getColorCoefficient(cell, direction);
-			ColorRGBA c1 = colorExtractor.getColor(cell, map).mult(coeff);
+			ColorRGBA c1 = colorExtractor.getColor(cell, map).mult(coeff*TOPCOLORCOEFF);
 			colorizeCellSideDirection(cell, direction, meshUtility, c1);
 		}
 	}
@@ -257,7 +260,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 		}
 
 		if (height > 0) {
-			meshUtility.addQuadColors(c1, c1, c1, c1);
+			meshUtility.addQuadColors(c1, c1, c1.mult(0.8f), c1.mult(0.8f));
 		}
 	}
 

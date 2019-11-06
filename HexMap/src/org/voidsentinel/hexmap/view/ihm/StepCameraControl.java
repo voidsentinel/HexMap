@@ -35,27 +35,27 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 	// Logger.getLogger(StepCameraControl.class.toString());
 
 	// ** Total time for a movement
-	private static float			MVTTIME				= 20.0f;
+	private static float	MVTTIME				= 20.0f;
 
-	float								positionElapsed	= 0;
-	boolean							positionChange		= false;
-	Vector3f							startPosition		= null;
-	Vector3f							stopPosition		= null;
-	Vector3f							currentPosition	= null;
-	Vector3f							normal				= null;
+	float						positionElapsed	= 0;
+	boolean					positionChange		= false;
+	Vector3f					startPosition		= null;
+	Vector3f					stopPosition		= null;
+	Vector3f					currentPosition	= null;
+	Vector3f					normal				= null;
 
-	float								targetElapsed		= 0;
-	boolean							targetChange		= false;
-	Vector3f							startTarget			= null;
-	Vector3f							stopTarget			= null;
-	Vector3f							currentTarget		= null;
+	float						targetElapsed		= 0;
+	boolean					targetChange		= false;
+	Vector3f					startTarget			= null;
+	Vector3f					stopTarget			= null;
+	Vector3f					currentTarget		= null;
 
-	float								zoomStep				= 0.0f;
-	boolean							farMaterial			= false;
+	float						zoomStep				= 0.0f;
+	boolean					farMaterial			= false;
 
-	Camera							camera				= null;
-	final private Application	application;
-	final private HexGrid		mapdisplay;
+	private Camera			camera				= null;
+	private Application	application;
+	private HexGrid		mapdisplay;
 
 	/**
 	 * create a camera
@@ -67,7 +67,7 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 	 * @param normal
 	 */
 	public StepCameraControl(final Application application, final HexGrid mapDisplay, final Vector3f target,
-			Vector3f normal) {
+	      Vector3f normal) {
 
 		this.application = application;
 		this.camera = application.getCamera();
@@ -87,6 +87,11 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 		camera.lookAt(target, normal);
 		camera.update();
 	}
+
+	public void setMapDisplay(final HexGrid mapDisplay) {
+		this.mapdisplay = mapDisplay;
+		updateCamera();
+	};
 
 	public void updateCamera() {
 		camera.setLocation(stopPosition);
@@ -275,10 +280,10 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 																		@Override
 																		public void onAction(String name, boolean keyPressed, float tpf) {
 																			final InputManager inputManager = application
-																					.getInputManager();
+																			      .getInputManager();
 																			if (keyPressed) {
 																				mousePreviousPosition = inputManager.getCursorPosition()
-																						.clone();
+																				      .clone();
 																				applyAnalog = true;
 																			} else {
 																				applyAnalog = false;
@@ -291,13 +296,13 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 																		@Override
 																		public void onAnalog(String name, float value, float tpf) {
 																			final InputManager inputManager = application
-																					.getInputManager();
+																			      .getInputManager();
 																			if (applyAnalog) {
 																				Vector2f MousePosition = inputManager.getCursorPosition()
-																						.clone();
+																				      .clone();
 
 																				rotatePosition(-1f
-																						* (MousePosition.x - mousePreviousPosition.x) / 100f);
+																				      * (MousePosition.x - mousePreviousPosition.x) / 100f);
 
 																				mousePreviousPosition = MousePosition;
 																			}

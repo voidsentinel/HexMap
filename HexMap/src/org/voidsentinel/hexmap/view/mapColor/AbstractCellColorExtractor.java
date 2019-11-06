@@ -30,7 +30,7 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 	protected String					tooltipName		= null;
 	protected boolean					defaultMapper	= false;
 	protected boolean					ignoreWater		= false;
-	protected ColorRGBA           ignoredColor   = ColorRGBA.Black;
+	protected ColorRGBA				ignoredColor	= ColorRGBA.Black;
 
 	/**
 	 * Contructor with an Id
@@ -127,8 +127,11 @@ public abstract class AbstractCellColorExtractor extends RepositoryData {
 			setTooltipName(value);
 			used = true;
 		}
-		
+
 		return used;
+	}
+
+	public void addDataParameters(RepositoryData data) {
 	}
 
 	/**

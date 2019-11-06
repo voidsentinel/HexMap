@@ -51,7 +51,7 @@ public class HumidityMapOperation extends AbstractMapOperation {
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(x, y);
-				float perlin = Math.abs(noise.GetPerlin((float) (x) * 3, (float) (y) * 3)) * 0.5f;
+				float perlin = Math.abs(noise.GetPerlin((float) (x) * 3, (float) (y) * 3));
 				cell.setData(HexCell.HUMIDITY_DATA, cell.getFloatData(HexCell.HUMIDITY_DATA)+perlin);
 			}
 		}

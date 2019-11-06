@@ -65,21 +65,62 @@ public class HexGrid {
 
 		// Color for each cell
 		colorExtractor = ColorMapperRepository.repository.getDefaultMapper();
+
 		// mesh generator information
 		meshGenerator = MapRepresentationRepository.repository.getDefault();
 
 		addLights();
+	}
 
+	/**
+	 * Generate The whole map representation
+	 */
+	public void generate() {
 		try {
-			setMeshGeneration(meshGenerator.id);
+			terrainNode.detachAllChildren();
+			chunks.clear();
+
+			LOG.info("Generating  Mesh with " + I18nMultiFile.getText(meshGenerator.getLabelName()) + " and "
+			      + colorExtractor.getClass().getSimpleName());
+
+			AssetManager assets = HexTuto.getInstance().getAssetManager();
+			terrainMaterial = (Material) assets.loadMaterial(meshGenerator.getMaterialName());
+
+			Class<?> clazz = Class.forName(meshGenerator.getClassName());
+			Constructor<?> ctor = clazz.getConstructor(HexMap.class, Integer.TYPE, Integer.TYPE, Integer.TYPE,
+			      Boolean.TYPE, AbstractCellColorExtractor.class);
+
+			for (int z = 0; z < map.HEIGHT; z = z + CHUNKSIZE) {
+				for (int x = 0; x < map.WIDTH; x = x + CHUNKSIZE) {
+					Object object = ctor
+					      .newInstance(new Object[] { map, x, z, CHUNKSIZE, meshGenerator.isPerturbated(), colorExtractor });
+					AbstractHexGridChunk generatorChunk = ((AbstractHexGridChunk) (object));
+					generatorChunk.setTerrainMaterial(terrainMaterial);
+					generatorChunk.generateGeometry();
+					terrainNode.attachChild(generatorChunk.getRepresentation());
+					chunks.put(generatorChunk.getRepresentation().getName(), generatorChunk);
+				}
+			}
+
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
 		      | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			;
 		}
-
 	}
 
+	
+	/**
+	 * regenerate the colors pof the map. Called after setColorExtractor
+	 */
+	public void generateColor() {
+		Iterator<AbstractHexGridChunk> it = chunks.values().iterator();
+		while (it.hasNext()) {
+			it.next().generateColor(colorExtractor);
+		}
+	}
+	
+	
 	/**
 	 * change the colorExtractor, and reapply the extraction to the current map
 	 * representation
@@ -95,48 +136,31 @@ public class HexGrid {
 	}
 
 	/**
-	 * chenge the metho used to generate the mesh
+	 * return the currrently used ColorExtractor
 	 * 
-	 * @param id the id of the class to use in MapRepresentationRepository
-	 * @throws ClassNotFoundException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
+	 * @return
 	 */
-	public void setMeshGeneration(String id) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-	      InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-
-		terrainNode.detachAllChildren();
-		chunks.clear();
-
-		MapRepresentation generatorInfo = MapRepresentationRepository.repository.getData(id);
-
-		LOG.info("Setting Mesh generator to " + I18nMultiFile.getText(generatorInfo.getLabelName()));
-
-		AssetManager assets = HexTuto.getInstance().getAssetManager();
-		terrainMaterial = (Material) assets.loadMaterial(generatorInfo.getMaterialName());
-
-		Class<?> clazz = Class.forName(generatorInfo.getClassName());
-		Constructor<?> ctor = clazz.getConstructor(HexMap.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Boolean.TYPE,
-		      AbstractCellColorExtractor.class);
-
-		for (int z = 0; z < map.HEIGHT; z = z + CHUNKSIZE) {
-			for (int x = 0; x < map.WIDTH; x = x + CHUNKSIZE) {
-				Object object = ctor
-				      .newInstance(new Object[] { map, x, z, CHUNKSIZE, generatorInfo.isPerturbated(), colorExtractor });
-				AbstractHexGridChunk generator = ((AbstractHexGridChunk) (object));
-				generator.setTerrainMaterial(terrainMaterial);
-				generator.generateGeometry();
-				terrainNode.attachChild(generator.getRepresentation());
-				chunks.put(generator.getRepresentation().getName(), generator);
-			}
-		}
+	public AbstractCellColorExtractor getColorExtractor() {
+		return colorExtractor;
 	}
 
-	public MapRepresentation getMapRepresentation() {
+	/**
+	 * change the method used to generate the mesh
+	 * 
+	 */
+	public void setMeshGeneration(String id) {
+		setMeshGeneration(MapRepresentationRepository.repository.getData(id));
+	}
+
+	/**
+	 * change the method used to generate the mesh
+	 * 
+	 */
+	public void setMeshGeneration(MapRepresentation generator) {
+		meshGenerator = generator;
+	}
+
+	public MapRepresentation getMeshGeneration() {
 		return meshGenerator;
 	}
 

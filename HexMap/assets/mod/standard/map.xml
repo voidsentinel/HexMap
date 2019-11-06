@@ -2,19 +2,24 @@
 	<text>map</text>
 
 	<image id="biomeColorMapperIcon">icons/map-biome.png</image>
-	<mapColorMapper id="biomeColorMapper"
+<!-- 	<mapColorMapper id="biomeColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.BiomeColorExtractor"
 		default="true" icon="biomeColorMapperIcon"
 		text="map.biomeColorMapperIcon.label"
 		tooltip="map.biomeColorMapperIcon.tooltip" />
-
+ -->
 	<image id="heightColorMapperIcon">icons/map-height.png</image>
 	<mapColorMapper id="heightColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor"
-		icon="heightColorMapperIcon" text="map.heightColorMapper.label"
+		icon="biomeColorMapperIcon" text="map.heightColorMapper.label"
 		tooltip="map.heightColorMapper.tooltip" key="height"
 		groundColorMap="colorMap/groundColormap2.png"
 		waterColorMap="colorMap/waterColormap.png" />
+		
+	<mapColorMapper id="heightColorMapper2"
+		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor2"
+		icon="heightColorMapperIcon" text="map.heightColorMapper.label"
+		tooltip="map.heightColorMapper.tooltip" />
 
 	<image id="heatColorMapperIcon">icons/map-temperature.png</image>
 	<mapColorMapper id="heatColorMapper"
