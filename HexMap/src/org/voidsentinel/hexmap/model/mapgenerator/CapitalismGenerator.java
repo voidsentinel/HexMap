@@ -3,6 +3,7 @@ package org.voidsentinel.hexmap.model.mapgenerator;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FaultCirclesGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FlatGeneration;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.MapInitialization;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.HexBlurOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.IslandOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.BiomeOperation2;
@@ -20,17 +21,18 @@ public class CapitalismGenerator extends MapGenerator {
 		LOG.info("Generating map " + map.WIDTH + "/" + map.HEIGHT + " using " + this.getClass().getSimpleName());
 
 		HeightMapOperation heightmap = new HeightMapOperation();
-		heightmap.addGenerator(new FlatGeneration(0f));
-
-		heightmap.addGenerator(new FaultCirclesGeneration(2000));
-//		heightmap.addGenerator(new CellularGeneration(1f, 1f, 30f, 30f), 0.25f);
 		
-		heightmap.addOperation(new IslandOperation());
+		// define the height
+		heightmap.addGenerator(new FlatGeneration(0f));
+		heightmap.addGenerator(new FaultCirclesGeneration(2000));
 		heightmap.addOperation(new HexBlurOperation(3, 3));
-
+		heightmap.addOperation(new IslandOperation());
 		heightmap.filter(map);
-
+		
+		// water level
 		new WaterLevelOperation(0.5f).filter(map);
+
+	
 		new ElevationMapOperation(3, 20).filter(map);
 		new WaterPropagationOperation().filter(map);
 		new TemperatureMapOperation().filter(map);

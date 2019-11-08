@@ -32,7 +32,7 @@ public class TorusOperation extends AbstractTerrainOperation {
 		int ymax = height.length - 1;
 
 		int sizex = xmax / 2;
-		int sizey = height.length / 2;
+		int sizey = ymax / 2;
 
 		for (int y = 0; y < height.length; y++) {
 			for (int x = 0; x <= sizex; x++) {

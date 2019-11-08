@@ -73,7 +73,7 @@ public class HexBlurOperation extends AbstractTerrainOperation {
 			}
 		}
 
-		this.normalize(copy);
+//		this.normalize(copy);
 
 		for (int y = 0; y < height.length; y++) {
 			for (int x = 0; x < height[0].length; x++) {
