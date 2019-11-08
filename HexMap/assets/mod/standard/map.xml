@@ -11,7 +11,7 @@
 	<image id="heightColorMapperIcon">icons/map-height.png</image>
 	<mapColorMapper id="heightColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor"
-		icon="biomeColorMapperIcon" text="map.heightColorMapper.label"
+		default="true" icon="biomeColorMapperIcon" text="map.heightColorMapper.label"
 		tooltip="map.heightColorMapper.tooltip" key="height"
 		groundColorMap="colorMap/groundColormap2.png"
 		waterColorMap="colorMap/waterColormap.png" />
@@ -84,7 +84,7 @@
 
 	<mapRepresentation id="gridChunkTerrace"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkTerraced"
-		material="terrains_shaded.j3m" text="map.HexGridChunkTerraced.label"
+		material="terrains_unshaded.j3m" text="map.HexGridChunkTerraced.label"
 		tooltip="map.HexGridChunkTerraced.toolTip" />
 
 	<mapRepresentation id="gridChunkFlatSimpleTron"

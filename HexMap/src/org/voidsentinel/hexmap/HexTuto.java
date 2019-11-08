@@ -55,7 +55,7 @@ public class HexTuto extends SimpleApplication {
 
 	private HexGrid			mapNode			= null;
 	private MapGenerator		generator		= new CapitalismGenerator();
-	private HexMap				map				= new HexMap(128, 128);
+	private HexMap				map				= new HexMap(640, 480);
 
 	StepCameraControl			cameraControl	= null;
 

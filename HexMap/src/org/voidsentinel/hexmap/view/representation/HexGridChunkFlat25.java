@@ -25,9 +25,8 @@ import com.jme3.scene.Node;
  */
 public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
-	
 	static final private float TOPCOLORCOEFF = 1.1f;
-	
+
 	/**
 	 * Constructor
 	 * 
@@ -50,6 +49,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
 	protected void generateSpecializedGeometries(Node localRoot) {
 		Mesh mesh = new Mesh();
+		mesh.setId(zStart * map.WIDTH + xStart);
 		Geometry terrain = new Geometry("ground", mesh);
 		terrain.setMaterial(this.getTerrainMaterial());
 		localRoot.attachChild(terrain);
@@ -126,14 +126,15 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 			v3 = center.add(HexMetrics.getSecondCornerVector(offsetDir, 1f));
 
 			if (this.perturbated) {
-				// we perturbate both v2 and v0, since the internal point should move the same vector
+				// we perturbate both v2 and v0, since the internal point should move the same
+				// vector
 				// so that the border representation does not change too much
 				Vector3f perturbation = Perturbator.getPerturbation(v2);
 				v0.addLocal(perturbation);
 				v2.addLocal(perturbation);
 				Perturbator.perturbate(v3);
 			}
-			
+
 			meshUtility.addVertice(v0);
 			meshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
 			meshUtility.addVertice(v2);
@@ -141,8 +142,8 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 
 			float amount = 0.5f * HexMetrics.BLURFACTOR;
 			v4 = new Vector3f().interpolateLocal(v2, v3, amount);
-			v5 = new Vector3f().interpolateLocal(v2, v3, 1f-amount);
-			
+			v5 = new Vector3f().interpolateLocal(v2, v3, 1f - amount);
+
 			meshUtility.addVertice(v4);
 			meshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
 			meshUtility.addVertice(v5);
@@ -176,14 +177,14 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	protected void colorizeCellCenter(HexCell cell, MeshUtil meshUtility) {
 		ColorRGBA color = colorExtractor.getColor(cell, map).clone().mult(TOPCOLORCOEFF);
 		ColorRGBA color2 = color.mult(0.8f);
-		
+
 		meshUtility.addColor(color);
 
 		for (@SuppressWarnings("unused")
 		Direction direction : Direction.values()) {
 			HexCell neighbor = cell.getNeighbor(direction);
 			HexCell neighborp = cell.getNeighbor(direction.previous());
-			
+
 			// internal point
 			meshUtility.addColor(color);
 
@@ -245,7 +246,7 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	protected void colorizeCellSide(HexCell cell, MeshUtil meshUtility) {
 		for (Direction direction : Direction.values()) {
 			float coeff = getColorCoefficient(cell, direction);
-			ColorRGBA c1 = colorExtractor.getColor(cell, map).mult(coeff*TOPCOLORCOEFF);
+			ColorRGBA c1 = colorExtractor.getColor(cell, map).mult(coeff * TOPCOLORCOEFF);
 			colorizeCellSideDirection(cell, direction, meshUtility, c1);
 		}
 	}
@@ -265,5 +266,3 @@ public class HexGridChunkFlat25 extends AbstractHexGridChunk {
 	}
 
 }
-
-

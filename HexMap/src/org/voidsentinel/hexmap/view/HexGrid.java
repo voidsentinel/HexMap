@@ -41,7 +41,7 @@ import com.jme3.scene.Node;
 public class HexGrid {
 	protected static final Logger					LOG					= Logger.getLogger(HexGrid.class.toString());
 
-	public static final int							CHUNKSIZE			= 16;
+	public static final int							CHUNKSIZE			= 64;
 
 	private HexMap										map					= null;
 	private Node										terrainNode			= null;

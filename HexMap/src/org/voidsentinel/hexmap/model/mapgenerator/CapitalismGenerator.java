@@ -25,13 +25,13 @@ public class CapitalismGenerator extends MapGenerator {
 		heightmap.addGenerator(new FaultCirclesGeneration(2000));
 //		heightmap.addGenerator(new CellularGeneration(1f, 1f, 30f, 30f), 0.25f);
 		
-		heightmap.addOperation(new HexBlurOperation(3, 3));
 		heightmap.addOperation(new IslandOperation());
+		heightmap.addOperation(new HexBlurOperation(3, 3));
 
 		heightmap.filter(map);
 
-		new WaterLevelOperation(0.30f).filter(map);
-		new ElevationMapOperation(5, 20).filter(map);
+		new WaterLevelOperation(0.5f).filter(map);
+		new ElevationMapOperation(3, 20).filter(map);
 		new WaterPropagationOperation().filter(map);
 		new TemperatureMapOperation().filter(map);
 		new HumidityMapOperation().filter(map);

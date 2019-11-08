@@ -110,7 +110,7 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 
 		MeshUtility.addVertice(center);
 		MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
-		MeshUtility.addUV(UVCenter);
+//		MeshUtility.addUV(UVCenter);
 
 		TerrainData terrain = cell.getTerrain();
 
@@ -129,8 +129,8 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			MeshUtility.addVertice(v3);
 			MeshUtility.addNormal(normal);
 			MeshUtility.addNormal(normal);
-			MeshUtility.addUV(UVCenter.add(uv2));
-			MeshUtility.addUV(UVCenter.add(uv3));
+//			MeshUtility.addUV(UVCenter.add(uv2));
+//			MeshUtility.addUV(UVCenter.add(uv3));
 
 			MeshUtility.addTriangle(index, index + offsetDir * 2 + 2, index + offsetDir * 2 + 1);
 			// put one of the point to the interest list
@@ -203,10 +203,10 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			Vector2f uv4 = uv2.add(bridge2d).mult(terrain.getUVSize());
 
 			MeshUtility.addQuad(v1, v2, v3, v4);
-			MeshUtility.addUV(UVCenter.add(uv1));
-			MeshUtility.addUV(UVCenter.add(uv2));
-			MeshUtility.addUV(UVCenter.add(uv3));
-			MeshUtility.addUV(UVCenter.add(uv4));
+//			MeshUtility.addUV(UVCenter.add(uv1));
+//			MeshUtility.addUV(UVCenter.add(uv2));
+//			MeshUtility.addUV(UVCenter.add(uv3));
+//			MeshUtility.addUV(UVCenter.add(uv4));
 
 		}
 	}
@@ -281,9 +281,9 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			meshUtility.addNormal(normal);
 			meshUtility.addTriangle(index, index + 1, index + 2);
 
-			meshUtility.addUV(uv0);
-			meshUtility.addUV(uv1);
-			meshUtility.addUV(uv2);
+//			meshUtility.addUV(uv0);
+//			meshUtility.addUV(uv1);
+//			meshUtility.addUV(uv2);
 
 		}
 	}

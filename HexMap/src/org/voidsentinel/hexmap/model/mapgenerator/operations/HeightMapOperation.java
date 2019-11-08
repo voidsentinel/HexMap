@@ -51,11 +51,14 @@ public class HeightMapOperation extends AbstractMapOperation {
 		normalize(values);
 
 		// Operations
+		int count = 0;
 		Iterator<AbstractTerrainOperation> op = operations.iterator();
 		while (op.hasNext()) {
+			TerrainImage.generateImage(values, this.getClass().getSimpleName()+"-"+count++);
 			AbstractTerrainOperation operation = op.next();
 			operation.filter(values);
 		}
+		TerrainImage.generateImage(values, this.getClass().getSimpleName()+"-"+count++);
 
 		// Mpa conversion
 		for (int y = 0; y < map.HEIGHT; y++) {

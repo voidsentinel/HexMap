@@ -42,12 +42,11 @@ public class HumidityMapOperation extends AbstractMapOperation {
 			}
 		}
 		map.normalizeData(HexCell.HUMIDITY_DATA);
-		initialHumidity(map, noise);
-		map.normalizeData(HexCell.HUMIDITY_DATA);
+		additionnalHumidity(map, noise);
 		TerrainImage.generateImage(map, HexCell.HUMIDITY_DATA, this.getClass().getSimpleName());
 	}
 
-	private void initialHumidity(HexMap map, FastNoise noise) {
+	private void additionnalHumidity(HexMap map, FastNoise noise) {
 		for (int y = 0; y < map.HEIGHT; y++) {
 			for (int x = 0; x < map.WIDTH; x++) {
 				HexCell cell = map.getCell(x, y);
@@ -55,6 +54,7 @@ public class HumidityMapOperation extends AbstractMapOperation {
 				cell.setData(HexCell.HUMIDITY_DATA, cell.getFloatData(HexCell.HUMIDITY_DATA)+perlin);
 			}
 		}
+		map.normalizeData(HexCell.HUMIDITY_DATA);
 	}
 
 	private void overWater(HexMap map) {
