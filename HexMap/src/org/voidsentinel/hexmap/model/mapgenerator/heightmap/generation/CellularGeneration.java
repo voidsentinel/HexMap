@@ -71,7 +71,7 @@ public class CellularGeneration extends AbstractTerrainGenerator {
 
 		for (int y = 0; y < ySize; y++) {
 			for (int x = 0; x < xSize; x++) {
-				copy[y][x] = (noise.GetNoise(x / xscale + xoffset, y / zscale + zoffset) + 1f) / 2f;
+				copy[y][x] = (noise.GetNoise(x * xscale + xoffset, y * zscale + zoffset) + 1f) / 2f;
 			}
 		}
 		this.normalize(copy);

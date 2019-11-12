@@ -13,9 +13,11 @@ package org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation;
 public class PowerOperation extends AbstractTerrainOperation {
 
 	double power = 1;
+	double multiplier = 1;
 
-	public PowerOperation(double power) {
+	public PowerOperation(double power, double multiplier) {
 		this.power = power;
+		this.multiplier = multiplier;
 	}
 
 	/**
@@ -29,7 +31,7 @@ public class PowerOperation extends AbstractTerrainOperation {
 		LOG.info("   Operation : " + this.getClass().getSimpleName() + "(" + power + ")");
 		for (int y = 0; y < height.length; y++) {
 			for (int x = 0; x < height[0].length; x++) {
-				height[y][x] = (float) Math.pow(height[y][x], power);
+				height[y][x] = (float) (Math.pow(height[y][x], power)*multiplier);
 			}
 		}
 

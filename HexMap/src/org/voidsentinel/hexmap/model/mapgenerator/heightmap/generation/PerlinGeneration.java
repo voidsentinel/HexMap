@@ -82,9 +82,9 @@ public class PerlinGeneration extends AbstractTerrainGenerator {
 		FastNoise noise = new FastNoise();
 		float[][] copy = new float[zSize][xSize];
 		for (int z = 0; z < zSize; z++) {
-			zpos = z / zscale + zoffset;
+			zpos = z * zscale + zoffset;
 			for (int x = 0; x < xSize; x++) {
-				xpos = x / xscale + xoffset;
+				xpos = x * xscale + xoffset;
 				copy[z][x] = noise.GetPerlin(xpos, zpos);
 			}
 		}
