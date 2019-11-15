@@ -6,6 +6,7 @@
  */
 package org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation;
 
+import org.voidsentinel.hexmap.utils.Alea;
 import org.voidsentinel.hexmap.utils.FastNoise;
 import org.voidsentinel.hexmap.utils.FastNoise.CellularDistanceFunction;
 import org.voidsentinel.hexmap.utils.FastNoise.CellularReturnType;
@@ -56,7 +57,7 @@ public class CellularGeneration extends AbstractTerrainGenerator {
 	 *              2 points change more slowly
 	 */
 	public CellularGeneration(float scale) {
-		this(scale, scale, 0f, 0f);
+		this(scale, scale, Alea.nextFloat()*50f, Alea.nextFloat()*50f);
 	}
 
 	public float[][] generate(int xSize, int ySize) {

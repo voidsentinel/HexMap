@@ -1,21 +1,31 @@
 <map>
 	<text>map</text>
 
+	<!-- ****************************************************************** -->
+	<!-- Map Generation -->
+	<!-- ****************************************************************** -->
+
+	<mapGenerator id="DiamonSquared" class="" text=""
+		tooltip="" />
+
+
+	<!-- ****************************************************************** -->
+	<!-- Map Color Extractor -->
+	<!-- ****************************************************************** -->
+
 	<image id="biomeColorMapperIcon">icons/map-biome.png</image>
-<!-- 	<mapColorMapper id="biomeColorMapper"
-		class="org.voidsentinel.hexmap.view.mapColor.BiomeColorExtractor"
-		default="true" icon="biomeColorMapperIcon"
-		text="map.biomeColorMapperIcon.label"
-		tooltip="map.biomeColorMapperIcon.tooltip" />
- -->
+	<!-- <mapColorMapper id="biomeColorMapper" class="org.voidsentinel.hexmap.view.mapColor.BiomeColorExtractor" 
+		default="true" icon="biomeColorMapperIcon" text="map.biomeColorMapperIcon.label" 
+		tooltip="map.biomeColorMapperIcon.tooltip" /> -->
 	<image id="heightColorMapperIcon">icons/map-height.png</image>
 	<mapColorMapper id="heightColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor"
-		default="true" icon="biomeColorMapperIcon" text="map.heightColorMapper.label"
+		default="true" icon="biomeColorMapperIcon"
+		text="map.heightColorMapper.label"
 		tooltip="map.heightColorMapper.tooltip" key="height"
 		groundColorMap="colorMap/groundColormap2.png"
 		waterColorMap="colorMap/waterColormap.png" />
-		
+
 	<mapColorMapper id="heightColorMapper2"
 		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor2"
 		icon="heightColorMapperIcon" text="map.heightColorMapper.label"
@@ -57,9 +67,13 @@
 		icon="pathColorMapperIcon" key="path" ignorewater="true"
 		colorMap="colorMap/cityColorMap.png" />
 
+	<!-- ****************************************************************** -->
+	<!-- Map Representation -->
+	<!-- ****************************************************************** -->
+
 	<mapRepresentation id="Flat"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlatSimple2"
-		material="terrains_unshaded.j3m" text="map.Flat.label" 
+		material="terrains_unshaded.j3m" text="map.Flat.label"
 		tooltip="map.Flat.toolTip" />
 
 	<mapRepresentation id="FlatPerturbated"
@@ -70,12 +84,13 @@
 	<mapRepresentation id="Flat25"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlat25"
 		material="terrains_unshaded.j3m" default="true"
-		text="map.Flat25.label" tooltip="map.Flat25.toolTip" perturbation="false"/>
+		text="map.Flat25.label" tooltip="map.Flat25.toolTip"
+		perturbation="false" />
 
 	<mapRepresentation id="Flat25Perturbed"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkFlat25"
 		material="terrains_unshaded.j3m" text="map.Flat25Perturbed.label"
-		tooltip="map.Flat25Perturbed.toolTip" perturbation="true"/>
+		tooltip="map.Flat25Perturbed.toolTip" perturbation="true" />
 
 	<mapRepresentation id="gridChunkSlopped"
 		class="org.voidsentinel.hexmap.view.representation.HexGridChunkSlopped"
