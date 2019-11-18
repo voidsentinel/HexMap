@@ -222,7 +222,7 @@ public class HexGrid {
 				selectedCell = chunks.get(result.getName()).getCell(collisionTriangle);
 				if (selectedCell != null) {
 					System.out.println("position    " + selectedCell.hexCoordinates);
-					System.out.println("terrain     " + selectedCell.getTerrain().id);
+//					System.out.println("terrain     " + selectedCell.getTerrain().id);
 					System.out.println("Height      " + selectedCell.getHeight());
 					System.out.println("Humidity    " + selectedCell.getFloatData(HexCell.HUMIDITY_DATA));
 					System.out.println("Temperature " + selectedCell.getFloatData(HexCell.TEMPERATURE_DATA));

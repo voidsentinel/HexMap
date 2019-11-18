@@ -21,7 +21,12 @@ import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
+import org.voidsentinel.hexmap.HexTuto;
+import org.voidsentinel.hexmap.control.GameStateMap;
+import org.voidsentinel.hexmap.control.screen.GameState;
 import org.voidsentinel.hexmap.model.TerrainData;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.HeightMapTreatment;
+import org.voidsentinel.hexmap.model.repositories.MapTreatmentRepository;
 import org.voidsentinel.hexmap.model.repositories.RepositoryData;
 import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
@@ -192,7 +197,7 @@ public class ModLoader {
 	/**
 	 * dispatch le loading to a method, depending on the name of the node. If
 	 * unknown, distpach the childrens
-	 * 
+	 * @TODO : put this into dynamic call to class associated with registered nodeName (one more level of dynamic...)
 	 * @param node
 	 * @param directory
 	 */
@@ -201,6 +206,10 @@ public class ModLoader {
 		case "file": { // allow to load a external file
 			String name = node.getAttributeValue("name");
 			loadMod(directory + "/" + name, directory);
+			break;
+		}
+		case "screen": {
+			loadScreen(node, directory);
 			break;
 		}
 		case "image": {
@@ -216,6 +225,14 @@ public class ModLoader {
 			break;
 		}
 		case "terrainMaterial": {
+			break;
+		}
+		case "mapGenerator": {
+			loadMapTreatment(node, directory);
+			break;
+		}
+		case "mapOperation": {
+			loadMapTreatment(node, directory);
 			break;
 		}
 		case "mapColorMapper": {
@@ -289,6 +306,42 @@ public class ModLoader {
 		}
 	}
 
+	private static void loadMapTreatment(Element node, String directory) {
+		String className = null;
+		String id = node.getAttributeValue("id").trim().toLowerCase();
+		if (MapTreatmentRepository.method.getData(id) == null) {
+			if (node.getAttributeValue("class") != null) {
+				className = node.getAttributeValue("class").trim();
+				Class<?> clazz;
+				try {
+					clazz = Class.forName(className);
+					Constructor<?> constructor = clazz.getConstructor(String.class);
+					Object instance = constructor.newInstance(id);
+					MapTreatmentRepository.method.addData((HeightMapTreatment) (instance));
+				} catch (ClassNotFoundException e) {
+					LOG.log(Level.SEVERE, "Impossible to find class " + className);
+				} catch (NoSuchMethodException e) {
+					LOG.log(Level.SEVERE, "Impossible to find class constructor" + className);
+				} catch (SecurityException e) {
+					LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className + "due to security");
+				} catch (InstantiationException e) {
+					LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+				} catch (IllegalAccessException e) {
+					LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+				} catch (IllegalArgumentException e) {
+					LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+				} catch (InvocationTargetException e) {
+					LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+				}
+			}
+
+			HeightMapTreatment method = MapTreatmentRepository.method.getData(id);
+			// adding data
+			addElementData(method, node, directory);
+			addAttribuetData(method, node, directory);
+		}
+	}
+
 	/**
 	 * load a colorMapper a XML node. id and class attribute are mandatory.
 	 * 
@@ -348,6 +401,39 @@ public class ModLoader {
 			addAttribuetData(representation, node, directory);
 
 			MapRepresentationRepository.repository.addData(representation);
+		}
+	}
+
+	private static void loadScreen(Element node, String directory) {
+		GameStateMap screens = GameStateMap.getInstance();
+		String id = node.getAttributeValue("id").trim().toLowerCase();
+		// if not already present
+		if (screens.getData(id) == null) {
+			String className = node.getAttributeValue("class");
+			String defaultscreen = "false";
+			if (node.getAttribute("default") != null) {
+				defaultscreen = node.getAttributeValue("default");
+			}
+			try {
+				Class<?> clazz = Class.forName(className);
+				Constructor<?> constructor = clazz.getConstructor(HexTuto.class, String.class);
+				GameState state = (GameState) constructor.newInstance(HexTuto.getInstance(), id);
+				screens.addState(state, Boolean.parseBoolean(defaultscreen));
+			} catch (ClassNotFoundException e) {
+				LOG.log(Level.SEVERE, "Impossible to find class " + className);
+			} catch (NoSuchMethodException e) {
+				LOG.log(Level.SEVERE, "Impossible to find class constructor" + className);
+			} catch (SecurityException e) {
+				LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className + "due to security");
+			} catch (InstantiationException e) {
+				LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+			} catch (IllegalAccessException e) {
+				LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+			} catch (IllegalArgumentException e) {
+				LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+			} catch (InvocationTargetException e) {
+				LOG.log(Level.SEVERE, "Impossible to instanciate class constructor" + className);
+			}
 		}
 	}
 

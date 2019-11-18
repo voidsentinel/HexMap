@@ -1,0 +1,5 @@
+<screens>
+	<screen id="mapDisplay"
+		class="org.voidsentinel.hexmap.control.screen.MapDisplayScreen"
+		default="true" />
+</screens>

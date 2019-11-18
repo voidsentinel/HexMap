@@ -11,23 +11,22 @@ import org.voidsentinel.hexmap.view.ihm.ImageRepository;
  * @author guipatry
  *
  */
-public abstract class HeighMapTreatment extends RepositoryData {
+public abstract class HeightMapTreatment extends RepositoryData {
 
 	protected String	iconName		= null;
 	protected String	textName		= null;
 	protected String	tooltipName	= null;
 
-	public HeighMapTreatment(String id) {
+	public HeightMapTreatment(String id) {
 		super(id);
 	}
 
 	protected void addDataParameters(RepositoryData data) {
-		HeighMapTreatment source = (HeighMapTreatment) data;
+		HeightMapTreatment source = (HeightMapTreatment) data;
 		iconName = source.iconName;
 		textName = source.textName;
 		tooltipName = source.tooltipName;
 	}
-
 		
 	public boolean addDataParameters(String name, String value, String additional) {
 		boolean used = false;

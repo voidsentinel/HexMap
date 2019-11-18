@@ -4,9 +4,20 @@
 	<!-- ****************************************************************** -->
 	<!-- Map Generation -->
 	<!-- ****************************************************************** -->
+	<text>mapgenerators</text>
+	<mapGenerator id="diamondSquare" class="" text="mapgenerator.diamondSquare.label"
+		tooltip="mapgenerator.DiamondSquare.label" coefficient="1.0" />
+	<mapGenerator id="faultLines" class="" text="mapgenerator.faultLines.label"
+		tooltip="mapgenerator.faultLines.label" coefficient="1.0" />
 
-	<mapGenerator id="DiamonSquared" class="" text=""
+	<mapOperation id="HexBlur" class="" text="" icon=""
 		tooltip="" />
+
+
+	<!-- ****************************************************************** -->
+	<!-- Map Generation Template -->
+	<!-- ****************************************************************** -->
+
 
 
 	<!-- ****************************************************************** -->

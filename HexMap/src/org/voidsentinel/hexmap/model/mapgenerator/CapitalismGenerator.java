@@ -44,7 +44,7 @@ public class CapitalismGenerator extends MapGenerator {
 		new WaterPropagationOperation().filter(map);
 		new TemperatureMapOperation().filter(map);
 		new HumidityMapOperation().filter(map);
-		new BiomeOperation2("assets/mod/standard/biome.png").filter(map);;
+//		new BiomeOperation2("assets/mod/standard/biome.png").filter(map);;
 		new FertilityMapOperation().filter(map);
 //		new PathMapOperation().filter(map);
 //		new CityMapOperation().filter(map);
