@@ -55,6 +55,7 @@ public class HexTuto extends SimpleApplication {
 
 		getFlyByCamera().setEnabled(false);
 		mouseInput.setCursorVisible(true);
+		this.setDisplayStatView(false);
 		
 		GameStateMap.getInstance().moveToStart();
 

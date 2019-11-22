@@ -74,6 +74,7 @@ public class MapDisplayScreen extends GameState {
 	 */
 	@Override
 	public void initialize(final AppStateManager stateManager, final Application app) {
+		LOG.info("...Initializing State '" + this.id + "'");
 		if (rootNode == null) {
 			rootNode = new Node(this.id + ".root");
 			generateDisplay();
@@ -88,11 +89,12 @@ public class MapDisplayScreen extends GameState {
 	}
 
 	public void cleanup() {
+		LOG.info("...Cleaning State '" + this.id + "'");
+		cameraControl.removeControlMapping();		
 		super.cleanup();
 //		for (int i = 0; i < modifierStates.length; i++) {
 //			application.getStateManager().detach(modifierStates[i]);
 //		}
-		cameraControl.removeControlMapping();
 	}
 
 	/*

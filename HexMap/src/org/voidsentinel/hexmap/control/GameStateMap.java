@@ -55,7 +55,7 @@ public class GameStateMap {
 	 * @param statename the name of the state we wish to go to
 	 */
 	public void moveToState(final String statename) {
-		GameState state = this.getState(statename);
+		GameState state = this.getState(statename.trim().toLowerCase());
 		moveToState(state);
 	}
 
@@ -88,7 +88,7 @@ public class GameStateMap {
 	 *              it will be replaced
 	 */
 	public void addState(final GameState state) {
-		states.put(state.getId(), state);
+		states.put(state.getId().trim().toLowerCase(), state);
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class GameStateMap {
 	 * @return the corresponding GameState
 	 */
 	private GameState getState(final String id) {
-		return states.get(id);
+		return states.get(id.trim().toLowerCase());
 	}
 
 	/**

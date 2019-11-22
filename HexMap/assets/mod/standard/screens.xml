@@ -1,5 +1,10 @@
 <screens>
+	<text>screens</text>
 	<screen id="mapDisplay"
-		class="org.voidsentinel.hexmap.control.screen.MapDisplayScreen"
+		class="org.voidsentinel.hexmap.control.screen.MapDisplayScreen" />
+	<screen id="mapGeneration"
+		class="org.voidsentinel.hexmap.control.screen.MapGenerationScreen" />
+	<screen id="mainMenu"
+		class="org.voidsentinel.hexmap.control.screen.MainMenuScreen"
 		default="true" />
 </screens>

@@ -38,7 +38,7 @@ public abstract class GameState extends AbstractAppState {
 	 *
 	 * @param application
 	 */
-	public GameState(final HexTuto application, String id) {
+	public GameState(final HexTuto application, final String id) {
 		this.id = id;
 		this.application = application;
 		LOG.info("...Creating State '" + id + "'");
@@ -62,7 +62,6 @@ public abstract class GameState extends AbstractAppState {
 	 */
 	@Override
 	public void initialize(final AppStateManager stateManager, final Application app) {
-		LOG.info("...Initializing State '" + this.id + "'");
 		this.stateManager = stateManager;
 
 		super.initialize(stateManager, app);
@@ -90,7 +89,6 @@ public abstract class GameState extends AbstractAppState {
 	 */
 	@Override
 	public void cleanup() {
-		LOG.info("...Cleaning State '" + this.id + "'");
 		super.cleanup();
 		// spatial nodes
 		if (rootNode != null) {

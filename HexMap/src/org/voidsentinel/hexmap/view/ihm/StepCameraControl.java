@@ -79,6 +79,7 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 		this.stopTarget = target;
 
 		Vector3f top = target.add(-0f, -15f, -15f);
+//		Vector3f top = target.add(-0f, -15f, 0.001f);
 		this.currentPosition = top;
 		this.startPosition = top;
 		this.stopPosition = top;

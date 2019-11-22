@@ -337,8 +337,8 @@ public class ModLoader {
 
 			HeightMapTreatment method = MapTreatmentRepository.method.getData(id);
 			// adding data
-			addElementData(method, node, directory);
-			addAttribuetData(method, node, directory);
+//			addElementData(method, node, directory);
+//			addAttribuetData(method, node, directory);
 		}
 	}
 
