@@ -100,19 +100,19 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 		Vector3f center = HexMetrics.getCellCenter(cell);
 		Vector3f v2 = null;
 		Vector3f v3 = null;
-		Vector2f uv2 = null;
-		Vector2f uv3 = null;
+//		Vector2f uv2 = null;
+//		Vector2f uv3 = null;
 		int index = MeshUtility.getVerticeCount();
 		Vector3f normal = new Vector3f();
 		int offsetDir = 0;
 
-		Vector2f UVCenter = cell.getTerrain().getCenterUV(cell.random);
+//		Vector2f UVCenter = cell.getTerrain().getCenterUV(cell.random);
 
 		MeshUtility.addVertice(center);
 		MeshUtility.addNormal(HexMetrics.CELL_UNIT_NORMAL);
 //		MeshUtility.addUV(UVCenter);
 
-		TerrainData terrain = cell.getTerrain();
+//		TerrainData terrain = cell.getTerrain();
 
 		for (Direction direction : Direction.values()) {
 			offsetDir = direction.ordinal();
@@ -120,10 +120,10 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			v3 = center.add(HexMetrics.getSecondCornerVector(offsetDir));
 			Triangle.computeTriangleNormal(center, v3, v2, normal);
 
-			uv2 = new Vector2f(HexMetrics.getFirstCornerVector(offsetDir).x, HexMetrics.getFirstCornerVector(offsetDir).z)
-			      .mult(terrain.getUVSize());
-			uv3 = new Vector2f(HexMetrics.getSecondCornerVector(offsetDir).x,
-			      HexMetrics.getSecondCornerVector(offsetDir).z).mult(terrain.getUVSize());
+//			uv2 = new Vector2f(HexMetrics.getFirstCornerVector(offsetDir).x, HexMetrics.getFirstCornerVector(offsetDir).z)
+//			      .mult(terrain.getUVSize());
+//			uv3 = new Vector2f(HexMetrics.getSecondCornerVector(offsetDir).x,
+//			      HexMetrics.getSecondCornerVector(offsetDir).z).mult(terrain.getUVSize());
 
 			MeshUtility.addVertice(v2);
 			MeshUtility.addVertice(v3);
@@ -182,7 +182,7 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 	private void triangulateBridgeDirection(HexCell cell, Direction direction, MeshUtil MeshUtility) {
 		HexCell neighbor = cell.getNeighbor(direction);
 		TerrainData terrain = cell.getTerrain();
-		Vector2f UVCenter = terrain.getCenterUV(cell.random);
+//		Vector2f UVCenter = terrain.getCenterUV(cell.random);
 		if (neighbor != null) {
 			Vector3f center = HexMetrics.getCellCenter(cell);
 			Vector3f bridge = HexMetrics.getBridgeVector(direction.ordinal()).multLocal(2);
@@ -195,12 +195,12 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			v4.y = v3.y;
 
 			Vector2f bridge2d = new Vector2f(bridge.x, bridge.z).mult(1f);
-			Vector2f uv1 = new Vector2f(HexMetrics.getFirstCornerVector(direction.ordinal()).x,
-			      HexMetrics.getFirstCornerVector(direction.ordinal()).z).mult(terrain.getUVSize()).mult(0.25f);
-			Vector2f uv2 = new Vector2f(HexMetrics.getSecondCornerVector(direction.ordinal()).x,
-			      HexMetrics.getSecondCornerVector(direction.ordinal()).z).mult(terrain.getUVSize()).mult(0.25f);
-			Vector2f uv3 = uv1.add(bridge2d).mult(terrain.getUVSize());
-			Vector2f uv4 = uv2.add(bridge2d).mult(terrain.getUVSize());
+//			Vector2f uv1 = new Vector2f(HexMetrics.getFirstCornerVector(direction.ordinal()).x,
+//			      HexMetrics.getFirstCornerVector(direction.ordinal()).z).mult(terrain.getUVSize()).mult(0.25f);
+//			Vector2f uv2 = new Vector2f(HexMetrics.getSecondCornerVector(direction.ordinal()).x,
+//			      HexMetrics.getSecondCornerVector(direction.ordinal()).z).mult(terrain.getUVSize()).mult(0.25f);
+//			Vector2f uv3 = uv1.add(bridge2d).mult(terrain.getUVSize());
+//			Vector2f uv4 = uv2.add(bridge2d).mult(terrain.getUVSize());
 
 			MeshUtility.addQuad(v1, v2, v3, v4);
 //			MeshUtility.addUV(UVCenter.add(uv1));
@@ -254,7 +254,7 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 		HexCell h2 = cell.getNeighbor(direction.previous());
 
 		TerrainData terrain = cell.getTerrain();
-		Vector2f UVCenter = terrain.getCenterUV(cell.random);
+//		Vector2f UVCenter = terrain.getCenterUV(cell.random);
 
 		if (h1 != null && h2 != null) {
 			Vector3f normal = new Vector3f();
@@ -266,11 +266,11 @@ public class HexGridChunkSlopped extends AbstractHexGridChunk {
 			v1.y = h1.getElevation() * HexMetrics.CELL_ELEVATION;
 			v2.y = h2.getElevation() * HexMetrics.CELL_ELEVATION;
 
-			Vector2f uv0 = UVCenter.add(new Vector2f(HexMetrics.getFirstCornerVector(direction.ordinal()).x,
-			      HexMetrics.getFirstCornerVector(direction.ordinal()).z).mult(terrain.getUVSize()));
-
-			Vector2f uv1 = uv0.add(new Vector2f(o1.x, o1.z).mult(0.5f));
-			Vector2f uv2 = uv0.add(new Vector2f(o2.x, o2.z).mult(0.5f));
+//			Vector2f uv0 = UVCenter.add(new Vector2f(HexMetrics.getFirstCornerVector(direction.ordinal()).x,
+//			      HexMetrics.getFirstCornerVector(direction.ordinal()).z).mult(terrain.getUVSize()));
+//
+//			Vector2f uv1 = uv0.add(new Vector2f(o1.x, o1.z).mult(0.5f));
+//			Vector2f uv2 = uv0.add(new Vector2f(o2.x, o2.z).mult(0.5f));
 
 			Triangle.computeTriangleNormal(v0, v1, v2, normal);
 			meshUtility.addVertice(v0);

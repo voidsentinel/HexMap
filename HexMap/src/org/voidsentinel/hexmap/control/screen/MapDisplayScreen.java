@@ -53,7 +53,7 @@ public class MapDisplayScreen extends GameState {
 
 	private StepCameraControl	cameraControl	= null;
 	private MapGenerator			generator		= new CapitalismGenerator();
-	private HexMap					map				= new HexMap(640, 480);
+	private HexMap					map				= new HexMap(256, 128);
 	private HexGrid				mapNode			= null;
 
 //	private AbstractPanelState[] modifierStates = null;

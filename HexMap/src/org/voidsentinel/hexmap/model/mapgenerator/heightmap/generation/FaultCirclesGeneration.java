@@ -39,7 +39,7 @@ public class FaultCirclesGeneration extends AbstractTerrainGenerator {
 
 		for (int i = 0; i < lineCount; i++) {
 			if (Alea.nextBoolean()) {
-				splitCircle(copy, size, 0.1f);
+				splitCircle(copy, size, -0.1f);
 			} else {
 				splitCircle(copy, size, -0.1f);
 			}

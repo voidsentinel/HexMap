@@ -9,54 +9,40 @@ package org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation;
  */
 public class TorusOperation extends AbstractTerrainOperation {
 
-	public enum HTreatment {
-		LEFT, RIGHT, BOTH, NONE
-	};
 
-	public enum VTreatment {
-		TOP, BOTTOM, BOTH, NONE
-	};
-
-	private HTreatment	horizontal	= HTreatment.BOTH;
-	private VTreatment	vertical		= VTreatment.BOTH;
-
-	public TorusOperation(HTreatment horizontal, VTreatment vertical) {
-		this.horizontal = horizontal;
-		this.vertical = vertical;
+	public TorusOperation() {
 	}
 
 	public void filter(float[][] height) {
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
 
-		int xmax = height[0].length - 1;
-		int ymax = height.length - 1;
+		double centerX = height[0].length / 2;
+		double centerY = height.length / 2;
 
-		int sizex = xmax / 2;
-		int sizey = ymax / 2;
+		float[][] copy = new float[height.length][height[0].length];
 
 		for (int y = 0; y < height.length; y++) {
-			for (int x = 0; x <= sizex; x++) {
-				float coeff = ((float) (x) / (float) (sizex)) / 2.0f + 0.55f;
-				if (horizontal == HTreatment.LEFT || horizontal == HTreatment.BOTH) {
-					height[y][x] = height[y][x] * coeff + height[y][xmax - x] * (1.0f - coeff);
-				}
-				if (horizontal == HTreatment.RIGHT || horizontal == HTreatment.BOTH) {
-					height[y][xmax - x] = height[y][x] * (1.0f - coeff) + height[y][xmax - x] * coeff;
-				}
+			for (int x = 0; x < height[0].length; x++) {
+				double cx = Math.abs(x - centerX) / centerX; // range 0-1 (going from 1 to 0 to 1)
+				cx = Math.pow(cx, 4d) * 0.7d;
+
+				double cy = Math.abs(y - centerY) / centerY;
+				cy = Math.pow(cy, 4d) * 0.7d;
+
+				float v1 = height[height.length - 1 - y][x] * (float) cy / 2f;
+				float v2 = height[y][height[0].length - 1 - x] * (float) cx / 2f;
+				float v3 = height[height.length - 1 - y][height[0].length - 1 - x] * (float) ((cx + cy) / 4d);
+
+				float cfinal = 1f - (float) (cx / 2d + cy / 2d + ((cx + cy) / 4d));
+				float v0 = height[y][x] * cfinal;
+
+				copy[y][x] = v0 + v1 + v2 + v3;
 			}
 		}
-
-		for (int x = 0; x <= xmax; x++) {
-			for (int y = 0; y <= sizey; y++) {
-				float coeff = ((float) (y) / (float) (sizey)) / 2.0f + 0.50f;
-				if (vertical == VTreatment.TOP || vertical == VTreatment.BOTH) {
-					height[y][x] = height[y][x] * coeff + height[ymax - y][x] * (1.0f - coeff);
-				}
-				if (vertical == VTreatment.BOTTOM || vertical == VTreatment.BOTH) {
-					height[ymax - y][x] = height[y][x] * (1.0f - coeff) + height[ymax - y][x] * coeff;
-				}
+		for (int y = 0; y < height.length; y++) {
+			for (int x = 0; x < height[0].length; x++) {
+				height[y][x] = copy[y][x];
 			}
 		}
-
 	}
 }
