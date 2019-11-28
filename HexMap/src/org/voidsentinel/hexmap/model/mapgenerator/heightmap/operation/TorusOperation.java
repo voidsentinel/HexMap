@@ -67,6 +67,7 @@ public class TorusOperation extends AbstractTerrainOperation {
 				copy[y][x] = v0 + v1 + v2 + v3;
 			}
 		}
+		normalize(copy);
 		for (int y = 0; y < height.length; y++) {
 			for (int x = 0; x < height[0].length; x++) {
 				height[y][x] = copy[y][x];
