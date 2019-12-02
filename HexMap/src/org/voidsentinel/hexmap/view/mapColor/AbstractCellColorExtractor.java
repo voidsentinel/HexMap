@@ -7,10 +7,10 @@ import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
-import org.voidsentinel.hexmap.model.repositories.RepositoryData;
+import org.voidsentinel.hexmap.repositories.ImageRepository;
+import org.voidsentinel.hexmap.repositories.RepositoryData;
 import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
-import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 
 import com.jme3.math.ColorRGBA;
 

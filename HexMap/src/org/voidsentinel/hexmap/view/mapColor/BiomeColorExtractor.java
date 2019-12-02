@@ -6,7 +6,7 @@ package org.voidsentinel.hexmap.view.mapColor;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.TerrainData;
-import org.voidsentinel.hexmap.model.repositories.RepositoryData;
+import org.voidsentinel.hexmap.repositories.RepositoryData;
 
 import com.jme3.math.ColorRGBA;
 

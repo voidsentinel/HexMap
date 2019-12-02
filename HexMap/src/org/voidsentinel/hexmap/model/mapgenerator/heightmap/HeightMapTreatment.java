@@ -3,9 +3,9 @@
  */
 package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
 
-import org.voidsentinel.hexmap.model.repositories.RepositoryData;
+import org.voidsentinel.hexmap.repositories.ImageRepository;
+import org.voidsentinel.hexmap.repositories.RepositoryData;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
-import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 
 /**
  * @author guipatry

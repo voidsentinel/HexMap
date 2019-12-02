@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.TerrainData;
-import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
+import org.voidsentinel.hexmap.repositories.TerrainRepository;
 
 /**
  * This operation set the terrain depending on characteristics

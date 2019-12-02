@@ -21,7 +21,7 @@ import javax.imageio.ImageIO;
 import org.voidsentinel.hexmap.model.HexCell;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.TerrainData;
-import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
+import org.voidsentinel.hexmap.repositories.TerrainRepository;
 import org.voidsentinel.hexmap.utils.Alea;
 import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.utils.TerrainImage;

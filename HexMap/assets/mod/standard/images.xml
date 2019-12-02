@@ -4,7 +4,7 @@
 	<image id="mapRepresentationIcon">icons/settings-knobs.png</image>
 	<image id="reloadIcon">icons/uncertainty.png</image>
 	
-	<image id="buttonBackground">ihm/buttonSquare_beige.png</image>
+	<image id="buttonBackground">ihm/button.png</image>
 	<image id="buttonSelectedBackground">ihm/buttonSquare_brown_pressed.png</image>
 	<image id="panelBackground">ihm/panelInset_brown.png</image>	
 	

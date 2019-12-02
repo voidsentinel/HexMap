@@ -1,0 +1,6 @@
+<theme>
+	<font id="title.font"></font>
+	<image id="title.background"></image>
+	<data id="title.fontsize" type="flaot">25f</data>
+	<data id="title.9zone" type="vector4f"></data>
+</theme>

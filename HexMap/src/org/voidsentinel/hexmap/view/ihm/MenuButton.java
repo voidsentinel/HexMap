@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.HexTuto;
+import org.voidsentinel.hexmap.repositories.ImageRepository;
 import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.view.ihm.IHMEventController.IHMAction;
 

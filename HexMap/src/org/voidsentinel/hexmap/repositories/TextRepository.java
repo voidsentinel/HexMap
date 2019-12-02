@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.model.repositories;
+package org.voidsentinel.hexmap.repositories;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

@@ -6,7 +6,7 @@
  */
 package org.voidsentinel.hexmap.view.mapColor;
 
-import org.voidsentinel.hexmap.model.repositories.BaseRepository;
+import org.voidsentinel.hexmap.repositories.BaseRepository;
 
 /**
  * a repository for ColorMapper

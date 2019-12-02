@@ -5,9 +5,9 @@ package org.voidsentinel.hexmap.control.screen;
 
 import org.voidsentinel.hexmap.HexTuto;
 import org.voidsentinel.hexmap.control.GameStateMap;
+import org.voidsentinel.hexmap.repositories.ImageRepository;
 import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.view.HexGrid;
-import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 import org.voidsentinel.hexmap.view.representation.MapRepresentation;
 
@@ -40,7 +40,7 @@ import com.simsilica.lemur.style.ElementId;
  * @author guipatry
  *
  */
-public class MainMenuScreen extends GameState {
+public class MainMenuScreen extends TitledScreen {
 
 	public MainMenuScreen(final HexTuto application, final String id) {
 		super(application, id);
@@ -69,9 +69,9 @@ public class MainMenuScreen extends GameState {
 		}
 
 		AppSettings settings = HexTuto.getInstance().getSettings();
-		
+
 		// background
-		Container backgroundPanel = new Container(new ElementId(this.id+".background"));
+		Container backgroundPanel = new Container(new ElementId(this.id + ".background"));
 		guiNode.attachChild(backgroundPanel);
 		Texture t = GuiGlobals.getInstance()
 		      .loadTexture(ImageRepository.datas.getData("mainMenu.background").getFilename(), false, false);
@@ -83,33 +83,12 @@ public class MainMenuScreen extends GameState {
 		backgroundPanel.setPreferredSize(new Vector3f(settings.getWidth(), settings.getHeight(), 0f));
 		backgroundPanel.setLocalTranslation(0, settings.getHeight(), 0);
 
-				
-		// Title
-		Container title = new Container(new ElementId(this.id+".title"));
-		guiNode.attachChild(title);
-		title.setLayout(new BoxLayout(Axis.X, FillMode.Even));
-		// title.setBackground(new QuadBackgroundComponent(ColorParser.parse("rgb(211, 191, 143, 211)")));
-		title.setPreferredSize(new Vector3f(settings.getWidth()*2f/3f, 40f, 0f));
-		title.setLocalTranslation(settings.getWidth()*1f/3f, settings.getHeight(), 0.1f);
-		TextField hooverField = new TextField("", new ElementId("tooltipElement"));
-
-		hooverField.setColor(ColorRGBA.White);
-		hooverField.setFontSize(30f);
-		hooverField.setPreferredSize(new Vector3f(settings.getWidth(), 40f, 0f));
-		hooverField.setTextVAlignment(VAlignment.Center);
-		hooverField.setTextHAlignment(HAlignment.Center);
-		hooverField.setText("Map Generator");
-		title.addChild(hooverField);
-
-		
-		Container menuContainer = new Container(new ElementId(this.id+".menu"));
+		Container menuContainer = new Container(new ElementId(this.id + ".menu"));
 		menuContainer.setLayout(new BoxLayout(Axis.Y, FillMode.None));
 		menuContainer.setBackground(new QuadBackgroundComponent(ColorParser.parse("rgb(211, 191, 143, 211)")));
-		menuContainer.setPreferredSize(new Vector3f(settings.getWidth() / 3f, settings.getHeight(), 0f));
-		menuContainer.setLocalTranslation(0, settings.getHeight(), 0.1f);
+		menuContainer.setPreferredSize(new Vector3f(settings.getWidth() / 3f, settings.getHeight() - 40f, 0f));
+		menuContainer.setLocalTranslation(0, settings.getHeight() - 40f, 0.1f);
 		guiNode.attachChild(menuContainer);
-	
-//		buttonContainer.setLayout(new HB);
 
 		// random
 		Button button = new Button("Random Map", backgroundPanel.getElementId().child(".randomMap"));
@@ -130,12 +109,12 @@ public class MainMenuScreen extends GameState {
 		button.setTextVAlignment(VAlignment.Center);
 		button.setColor(ColorRGBA.White);
 		button.setLocalTranslation(25f, settings.getHeight() - 60f, 0.1f);
-		btTexture2 = TbtQuadBackgroundComponent
-		      .create(ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
+		btTexture2 = TbtQuadBackgroundComponent.create(ImageRepository.datas.getData("buttonBackground").getFilename(),
+		      1f, 5, 5, 40, 44, .1f, false);
 		button.setBackground(btTexture2);
 		button.addCommands(ButtonAction.Click, new ExitCommand());
 		menuContainer.addChild(button);
-		
+
 	}
 
 	/**

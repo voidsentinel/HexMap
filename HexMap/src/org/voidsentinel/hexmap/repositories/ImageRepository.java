@@ -4,9 +4,7 @@
  * @copyright 2018
  * @author VoidSentinel
  */
-package org.voidsentinel.hexmap.view.ihm;
-
-import org.voidsentinel.hexmap.model.repositories.BaseRepository;
+package org.voidsentinel.hexmap.repositories;
 
 /**
  * @author guipatry

@@ -1,4 +1,4 @@
-package org.voidsentinel.hexmap.model.repositories;
+package org.voidsentinel.hexmap.repositories;
 
 import java.util.HashMap;
 import java.util.Map;

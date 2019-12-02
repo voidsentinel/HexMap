@@ -11,12 +11,12 @@ import org.voidsentinel.hexmap.HexTuto;
 import org.voidsentinel.hexmap.model.HexMap;
 import org.voidsentinel.hexmap.model.mapgenerator.CapitalismGenerator;
 import org.voidsentinel.hexmap.model.mapgenerator.MapGenerator;
+import org.voidsentinel.hexmap.repositories.ImageData;
+import org.voidsentinel.hexmap.repositories.ImageRepository;
 import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
 import org.voidsentinel.hexmap.view.HexGrid;
 import org.voidsentinel.hexmap.view.HexMetrics;
-import org.voidsentinel.hexmap.view.ihm.ImageData;
-import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 import org.voidsentinel.hexmap.view.ihm.MenuBar;
 import org.voidsentinel.hexmap.view.ihm.MenuButton;
 import org.voidsentinel.hexmap.view.ihm.StepCameraControl;
@@ -53,7 +53,7 @@ public class MapDisplayScreen extends GameState {
 
 	private StepCameraControl	cameraControl	= null;
 	private MapGenerator			generator		= new CapitalismGenerator();
-	private HexMap					map				= new HexMap(800, 600);
+	private HexMap					map				= new HexMap(256, 128);
 	private HexGrid				mapNode			= null;
 
 //	private AbstractPanelState[] modifierStates = null;

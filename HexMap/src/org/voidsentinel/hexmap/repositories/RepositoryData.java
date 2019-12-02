@@ -4,7 +4,7 @@
  * @copyright 2018
  * @author guipatry
  */
-package org.voidsentinel.hexmap.model.repositories;
+package org.voidsentinel.hexmap.repositories;
 
 import java.util.logging.Logger;
 

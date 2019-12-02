@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.view.ihm;
+package org.voidsentinel.hexmap.repositories;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
-
-import org.voidsentinel.hexmap.model.repositories.RepositoryData;
 
 /**
  * @author guipatry

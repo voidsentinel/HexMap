@@ -6,7 +6,7 @@
  */
 package org.voidsentinel.hexmap.view.representation;
 
-import org.voidsentinel.hexmap.model.repositories.BaseRepository;
+import org.voidsentinel.hexmap.repositories.BaseRepository;
 
 /**
  * @author guipatry

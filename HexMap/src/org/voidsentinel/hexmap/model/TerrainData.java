@@ -9,7 +9,7 @@ package org.voidsentinel.hexmap.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.voidsentinel.hexmap.model.repositories.RepositoryData;
+import org.voidsentinel.hexmap.repositories.RepositoryData;
 import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.utils.VectorUtils;
 

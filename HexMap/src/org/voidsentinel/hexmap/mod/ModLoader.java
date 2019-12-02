@@ -26,12 +26,14 @@ import org.voidsentinel.hexmap.control.GameStateMap;
 import org.voidsentinel.hexmap.control.screen.GameState;
 import org.voidsentinel.hexmap.model.TerrainData;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.HeightMapTreatment;
-import org.voidsentinel.hexmap.model.repositories.MapTreatmentRepository;
-import org.voidsentinel.hexmap.model.repositories.RepositoryData;
-import org.voidsentinel.hexmap.model.repositories.TerrainRepository;
+import org.voidsentinel.hexmap.repositories.FontData;
+import org.voidsentinel.hexmap.repositories.FontRepository;
+import org.voidsentinel.hexmap.repositories.ImageData;
+import org.voidsentinel.hexmap.repositories.ImageRepository;
+import org.voidsentinel.hexmap.repositories.MapTreatmentRepository;
+import org.voidsentinel.hexmap.repositories.RepositoryData;
+import org.voidsentinel.hexmap.repositories.TerrainRepository;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
-import org.voidsentinel.hexmap.view.ihm.ImageData;
-import org.voidsentinel.hexmap.view.ihm.ImageRepository;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 import org.voidsentinel.hexmap.view.mapColor.ColorMapperRepository;
 import org.voidsentinel.hexmap.view.representation.MapRepresentation;
@@ -220,6 +222,10 @@ public class ModLoader {
 			loadText(node, directory);
 			break;
 		}
+		case "font": {
+			loadFont(node, directory);
+			break;
+		}
 		case "terrain": {
 			loadTerrain(node, directory);
 			break;
@@ -270,6 +276,25 @@ public class ModLoader {
 		}
 	}
 
+	/**
+	 * Load an image into the image repository
+	 * 
+	 * @param node      : the image node. id is the key, content is the filename
+	 * @param directory
+	 */
+	private static void loadFont(Element node, String directory) {
+		String id = node.getAttributeValue("id");
+		if (ImageRepository.datas.getData(id) == null) {
+			String file = directory + '/' + node.getValue().trim();
+			FontData data = new FontData(id);
+         data.addDataParameters("file", node.getValue().trim(), directory + '/');			
+			FontRepository.datas.addData(data);
+			LOG.log(Level.INFO, "   loading font " + id + " as " + data.getFilename());
+		} else {
+			LOG.log(Level.INFO, "   font " + id + " ignored as already existing");
+		}
+	}
+	
 	/**
 	 * Load a property file
 	 * 

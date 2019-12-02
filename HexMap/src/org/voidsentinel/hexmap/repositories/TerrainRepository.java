@@ -4,7 +4,7 @@
  * @copyright 2018
  * @author VoidSentinel
  */
-package org.voidsentinel.hexmap.model.repositories;
+package org.voidsentinel.hexmap.repositories;
 
 import org.voidsentinel.hexmap.model.TerrainData;
 

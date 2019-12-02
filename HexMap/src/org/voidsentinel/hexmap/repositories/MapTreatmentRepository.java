@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.voidsentinel.hexmap.model.repositories;
+package org.voidsentinel.hexmap.repositories;
 
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.HeightMapTreatment;
 

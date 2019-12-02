@@ -3,7 +3,7 @@
  */
 package org.voidsentinel.hexmap.view.representation;
 
-import org.voidsentinel.hexmap.model.repositories.RepositoryData;
+import org.voidsentinel.hexmap.repositories.RepositoryData;
 
 /**
  * @author Xerces
