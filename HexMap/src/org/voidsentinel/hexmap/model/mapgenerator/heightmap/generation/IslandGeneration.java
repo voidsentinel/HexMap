@@ -6,18 +6,13 @@
  */
 package org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation;
 
-import org.voidsentinel.hexmap.utils.FastNoise;
-import org.voidsentinel.hexmap.utils.FastNoise.CellularDistanceFunction;
-import org.voidsentinel.hexmap.utils.FastNoise.CellularReturnType;
-import org.voidsentinel.hexmap.utils.FastNoise.NoiseType;
-
 /**
  * @author Xerces 
  * 
  */
 public class IslandGeneration extends AbstractTerrainGenerator {
 
-	double power = 0f;
+	double power = 1f;
 
 	/**
 	 * Constructor

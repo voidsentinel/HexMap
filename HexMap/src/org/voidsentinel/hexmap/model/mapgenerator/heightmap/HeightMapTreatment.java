@@ -17,6 +17,11 @@ public abstract class HeightMapTreatment extends RepositoryData {
 	protected String	textName		= null;
 	protected String	tooltipName	= null;
 
+	
+	public HeightMapTreatment() {
+		super(HeightMapTreatment.class.getSimpleName());
+	}
+	
 	public HeightMapTreatment(String id) {
 		super(id);
 	}
@@ -42,7 +47,10 @@ public abstract class HeightMapTreatment extends RepositoryData {
 			setTooltipName(value);
 			used = true;
 		}
-
+		if ("class".equalsIgnoreCase(name)) {
+			//setTooltipName(value);
+			used = true;
+		}
 		return used;
 	}
 
@@ -104,6 +112,7 @@ public abstract class HeightMapTreatment extends RepositoryData {
 		this.tooltipName = tooltipName;
 	}
 
+	
 	
 	
 	protected void normalize(float[][] map) {
