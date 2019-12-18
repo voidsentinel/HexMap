@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.voidsentinel.hexmap.HexTuto;
+import org.voidsentinel.hexmap.repositories.FontRepository;
 import org.voidsentinel.hexmap.repositories.ImageRepository;
 import org.voidsentinel.hexmap.utils.ColorParser;
 import org.voidsentinel.hexmap.view.ihm.IHMEventController.IHMAction;
 
+import com.jme3.font.BitmapFont;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector2f;
 import com.simsilica.lemur.Axis;
@@ -138,9 +140,15 @@ public class MenuButton extends Button implements IIHMEventListener {
 		bt.setIcon(icon);
 		bt.setTextVAlignment(VAlignment.Center);
 
+		BitmapFont buttonFont = FontRepository.datas.getData("button.font").getFont();
+		
+		bt.setFont(buttonFont);
+		bt.setFontSize(ICONSIZE);
+		
 		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent
 		      .create(ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
 		bt.setBackground(btTexture);
+		bt.setColor(ColorRGBA.Black);
 		// manage the tooltip
 		if (helpString != null) {
 			bt.setUserData("tooltip", helpString);

@@ -53,7 +53,7 @@ public class MapDisplayScreen extends GameState {
 
 	private StepCameraControl	cameraControl	= null;
 	private MapGenerator			generator		= new CapitalismGenerator();
-	private HexMap					map				= new HexMap(256, 128);
+	private HexMap					map				= new HexMap(256, 160);
 	private HexGrid				mapNode			= null;
 
 //	private AbstractPanelState[] modifierStates = null;
@@ -213,11 +213,11 @@ public class MapDisplayScreen extends GameState {
 		image = ImageRepository.datas.getData("mapRepresentationIcon");
 		fileName = image.getFilename();
 		icon = new IconComponent(fileName);
-		MenuButton ddbSettings = new MenuButton("", icon, ddb.getElementId().child("graphical"), false, false);
+		MenuButton ddbSettings = new MenuButton("", icon, ddb.getElementId().child("graphical"), false, false);		
 		ddbSettings.setHooverField(hooverField);
 		ddb.addButton(ddbSettings, I18nMultiFile.getText("ihm.setting.tooltip"));
 
-		// The content of the Map represenatation menu
+		// The content of the Map representation menu
 		Iterator<String> it = MapRepresentationRepository.repository.datas.keySet().iterator();
 		while (it.hasNext()) {
 			MapRepresentation mr = MapRepresentationRepository.repository.getData(it.next());

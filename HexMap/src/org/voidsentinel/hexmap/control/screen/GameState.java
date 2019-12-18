@@ -10,29 +10,32 @@ import org.voidsentinel.hexmap.HexTuto;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.asset.AssetManager;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 
 /**
  * This is an AppState that correspond to a page of the application.
- * Initialization/removal are managed 
+ * Initialization/removal are managed
+ * 
  * @author Guillaume
  */
 public abstract class GameState extends AbstractAppState {
 
-	protected static final Logger LOG = Logger.getLogger(GameState.class.toString());
+	protected static final Logger	LOG			= Logger.getLogger(GameState.class.toString());
 
 	// State execution context
-	protected final String id;
-	protected String caller;
-	protected HexTuto application;
-	protected AppStateManager stateManager;
-	protected boolean displayed = false;
+	protected final String			id;
+	protected String					caller;
+	protected HexTuto					application;
+	protected AppStateManager		stateManager;
+	protected boolean					displayed	= false;
 	// State content
-	protected Node rootNode;
-	protected Node guiNode;
+	protected AssetManager			assetManager;
+	protected Node						rootNode;
+	protected Node						guiNode;
 	// camera informations
-	protected Camera saveCamera;
+	protected Camera					saveCamera;
 
 	/**
 	 *
@@ -41,21 +44,24 @@ public abstract class GameState extends AbstractAppState {
 	public GameState(final HexTuto application, final String id) {
 		this.id = id;
 		this.application = application;
+		this.assetManager = application.getAssetManager();
 		LOG.info("...Creating State '" + id + "'");
 	}
 
 	public GameState(final HexTuto application) {
 		this.id = this.getClass().getSimpleName();
 		this.application = application;
+		this.assetManager = application.getAssetManager();
 		LOG.info("...Creating State '" + id + "'");
 	}
 
 	/**
-	 * called when the state is attached to the screen (ie the state become one
-	 * of the active state). attach the rootNode, the GUI screen and set the
-	 * camera as it was last call (if this is not the first call)
+	 * called when the state is attached to the screen (ie the state become one of
+	 * the active state). attach the rootNode, the GUI screen and set the camera as
+	 * it was last call (if this is not the first call)
 	 * <p>
-	 * Child classes should initialize the protected rootNode and guiNode before calling super.initialize(...). 
+	 * Child classes should initialize the protected rootNode and guiNode before
+	 * calling super.initialize(...).
 	 *
 	 * @param stateManager
 	 * @param app
@@ -84,8 +90,8 @@ public abstract class GameState extends AbstractAppState {
 	}
 
 	/**
-	 * called when the state is detached from the screen (ie the state is no
-	 * more active)
+	 * called when the state is detached from the screen (ie the state is no more
+	 * active)
 	 */
 	@Override
 	public void cleanup() {

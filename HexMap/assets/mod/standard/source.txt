@@ -1,0 +1,18 @@
+
+This file contains the source for all material that does not comes from my own
+work.
+
+-- -----------------------------------------------------------------------------
+-- -- Fonts
+-- -----------------------------------------------------------------------------
+Fonts are coming from https://www.dafont.com/fr/
+
+Title   : Sketch Gothic School
+Buttons : Enchanted Fantasy
+
+-- -----------------------------------------------------------------------------
+-- -- Graphics
+-- -----------------------------------------------------------------------------
+
+Buttons : are a modification of the 
+

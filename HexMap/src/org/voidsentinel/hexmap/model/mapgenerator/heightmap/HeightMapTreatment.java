@@ -3,6 +3,9 @@
  */
 package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.voidsentinel.hexmap.repositories.ImageRepository;
 import org.voidsentinel.hexmap.repositories.RepositoryData;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
@@ -13,15 +16,15 @@ import org.voidsentinel.hexmap.utils.I18nMultiFile;
  */
 public abstract class HeightMapTreatment extends RepositoryData {
 
-	protected String	iconName		= null;
-	protected String	textName		= null;
-	protected String	tooltipName	= null;
+	protected String								iconName		= null;
+	protected String								textName		= null;
+	protected String								tooltipName	= null;
+	protected List<ParameterDescription>	parameters	= new ArrayList<ParameterDescription>();
 
-	
 	public HeightMapTreatment() {
 		super(HeightMapTreatment.class.getSimpleName());
 	}
-	
+
 	public HeightMapTreatment(String id) {
 		super(id);
 	}
@@ -31,8 +34,9 @@ public abstract class HeightMapTreatment extends RepositoryData {
 		iconName = source.iconName;
 		textName = source.textName;
 		tooltipName = source.tooltipName;
+		parameters = source.parameters;
 	}
-		
+
 	public boolean addDataParameters(String name, String value, String additional) {
 		boolean used = false;
 		if ("icon".equalsIgnoreCase(name)) {
@@ -48,7 +52,7 @@ public abstract class HeightMapTreatment extends RepositoryData {
 			used = true;
 		}
 		if ("class".equalsIgnoreCase(name)) {
-			//setTooltipName(value);
+			// setTooltipName(value);
 			used = true;
 		}
 		return used;
@@ -68,7 +72,8 @@ public abstract class HeightMapTreatment extends RepositoryData {
 	 * set the icon name for the color extractor (to be used in IHM)
 	 * 
 	 * @see ImageRepository
-	 * @param iconName the iconName associate with the extractor
+	 * @param iconName
+	 *           the iconName associate with the extractor
 	 */
 	final public void setIconName(String iconName) {
 		this.iconName = iconName;
@@ -87,7 +92,8 @@ public abstract class HeightMapTreatment extends RepositoryData {
 	/**
 	 * set the textid of the extractor's name.
 	 * 
-	 * @param textName the tetx id to associate with the extractor
+	 * @param textName
+	 *           the tetx id to associate with the extractor
 	 */
 	public void setTextName(String textName) {
 		this.textName = textName;
@@ -106,15 +112,15 @@ public abstract class HeightMapTreatment extends RepositoryData {
 	/**
 	 * set the textid of the extractor's tooltip.
 	 * 
-	 * @param tooltipName the tooltipName to set
+	 * @param tooltipName
+	 *           the tooltipName to set
 	 */
 	public void setTooltipName(String tooltipName) {
 		this.tooltipName = tooltipName;
 	}
 
-	
-	
-	
+	abstract public List<ParameterDescription> getParameters();
+
 	protected void normalize(float[][] map) {
 
 		float min = findMinHeight(map);
@@ -131,7 +137,8 @@ public abstract class HeightMapTreatment extends RepositoryData {
 	/**
 	 * find the minimum value of a float 2D table
 	 * 
-	 * @param map the float map
+	 * @param map
+	 *           the float map
 	 * @return the min value
 	 */
 	protected float findMinHeight(float[][] map) {
@@ -149,7 +156,8 @@ public abstract class HeightMapTreatment extends RepositoryData {
 	/**
 	 * find the minimum value of a float 2D table
 	 * 
-	 * @param map the float map
+	 * @param map
+	 *           the float map
 	 * @return the max value
 	 */
 	protected float findMaxHeight(float[][] map) {

@@ -5,14 +5,17 @@ package org.voidsentinel.hexmap.control.screen;
 
 import org.voidsentinel.hexmap.HexTuto;
 import org.voidsentinel.hexmap.control.GameStateMap;
+import org.voidsentinel.hexmap.repositories.FontRepository;
 import org.voidsentinel.hexmap.repositories.ImageRepository;
 import org.voidsentinel.hexmap.utils.ColorParser;
+import org.voidsentinel.hexmap.utils.I18nMultiFile;
 import org.voidsentinel.hexmap.view.HexGrid;
 import org.voidsentinel.hexmap.view.mapColor.AbstractCellColorExtractor;
 import org.voidsentinel.hexmap.view.representation.MapRepresentation;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.font.BitmapFont;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -27,9 +30,11 @@ import com.simsilica.lemur.Container;
 import com.simsilica.lemur.FillMode;
 import com.simsilica.lemur.GuiGlobals;
 import com.simsilica.lemur.HAlignment;
+import com.simsilica.lemur.Insets3f;
 import com.simsilica.lemur.TextField;
 import com.simsilica.lemur.VAlignment;
 import com.simsilica.lemur.component.BoxLayout;
+import com.simsilica.lemur.component.InsetsComponent;
 import com.simsilica.lemur.component.QuadBackgroundComponent;
 import com.simsilica.lemur.component.SpringGridLayout;
 import com.simsilica.lemur.component.TbtQuadBackgroundComponent;
@@ -74,7 +79,7 @@ public class MainMenuScreen extends TitledScreen {
 		Container backgroundPanel = new Container(new ElementId(this.id + ".background"));
 		guiNode.attachChild(backgroundPanel);
 		Texture t = GuiGlobals.getInstance()
-		      .loadTexture(ImageRepository.datas.getData("mainMenu.background").getFilename(), false, false);
+				.loadTexture(ImageRepository.datas.getData("mainMenu.background").getFilename(), false, false);
 		Image img = t.getImage();
 		TbtQuad q = new TbtQuad(img.getWidth(), img.getHeight());
 
@@ -85,32 +90,42 @@ public class MainMenuScreen extends TitledScreen {
 
 		Container menuContainer = new Container(new ElementId(this.id + ".menu"));
 		menuContainer.setLayout(new BoxLayout(Axis.Y, FillMode.None));
-		menuContainer.setBackground(new QuadBackgroundComponent(ColorParser.parse("rgb(211, 191, 143, 211)")));
 		menuContainer.setPreferredSize(new Vector3f(settings.getWidth() / 3f, settings.getHeight() - 40f, 0f));
-		menuContainer.setLocalTranslation(0, settings.getHeight() - 40f, 0.1f);
+		menuContainer.setLocalTranslation(40, settings.getHeight() - 50f, 0.1f);
 		guiNode.attachChild(menuContainer);
+		// menuContainer.setBackground(new
+		// QuadBackgroundComponent(ColorParser.parse("rgb(211, 191, 143, 211)")));
+
+		BitmapFont buttonFont = FontRepository.datas.getData("button.font").getFont();
+		float buttonFontSize = 25f;
+		ColorRGBA buttonColor = ColorRGBA.Brown;
+		ColorRGBA buttonColorFocus = ColorRGBA.Black;
+		Texture buttonTexture = assetManager.loadTexture(ImageRepository.datas.getData("buttonBackground").getFilename());
 
 		// random
-		Button button = new Button("Random Map", backgroundPanel.getElementId().child(".randomMap"));
-		button.setPreferredSize(new Vector3f(settings.getWidth() / 4f, 45f, 0f));
-		button.setFontSize(25f);
+		String buttonText = I18nMultiFile.getText("mainmenu.randommap.text");
+		Button button = new Button(buttonText, backgroundPanel.getElementId().child(".randomMap"));
+		button.setFontSize(buttonFontSize);
+		button.setFont(buttonFont);
+		button.setColor(buttonColor);
+		button.setHighlightColor(buttonColorFocus);
 		button.setTextVAlignment(VAlignment.Center);
-		button.setColor(ColorRGBA.White);
-		button.setLocalTranslation(25f, settings.getHeight() - 60f, 0.1f);
-		TbtQuadBackgroundComponent btTexture2 = TbtQuadBackgroundComponent
-		      .create(ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
+		button.setInsetsComponent(new InsetsComponent(10f, 2f, 2f, 2f));
+		TbtQuadBackgroundComponent btTexture2 = TbtQuadBackgroundComponent.create(buttonTexture, 1f, 5, 5, 40, 44, .1f,
+				false);
 		button.setBackground(btTexture2);
 		button.addCommands(ButtonAction.Click, new ToScreenCommand("mapDisplay"));
 		menuContainer.addChild(button);
 
-		button = new Button("Quit", backgroundPanel.getElementId().child(".quit"));
-		button.setPreferredSize(new Vector3f(settings.getWidth() / 4f, 45f, 0f));
-		button.setFontSize(25f);
+		buttonText = I18nMultiFile.getText("mainmenu.quit.text");
+		button = new Button(buttonText, backgroundPanel.getElementId().child(".quit"));
+		button.setFontSize(buttonFontSize);
+		button.setFont(buttonFont);
+		button.setColor(buttonColor);
+		button.setHighlightColor(buttonColorFocus);
 		button.setTextVAlignment(VAlignment.Center);
-		button.setColor(ColorRGBA.White);
-		button.setLocalTranslation(25f, settings.getHeight() - 60f, 0.1f);
-		btTexture2 = TbtQuadBackgroundComponent.create(ImageRepository.datas.getData("buttonBackground").getFilename(),
-		      1f, 5, 5, 40, 44, .1f, false);
+		button.setInsetsComponent(new InsetsComponent(10f, 2f, 2f, 2f));
+		btTexture2 = TbtQuadBackgroundComponent.create(buttonTexture, 1f, 5, 5, 40, 44, .1f, false);
 		button.setBackground(btTexture2);
 		button.addCommands(ButtonAction.Click, new ExitCommand());
 		menuContainer.addChild(button);

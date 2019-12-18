@@ -42,7 +42,7 @@
 		icon="heightColorMapperIcon" text="map.heightColorMapper.label"
 		tooltip="map.heightColorMapper.tooltip" />
 
-	<image id="heatColorMapperIcon">icons/map-temperature.png</image>
+	<image id="heatColorMapperIcon">icons/three-leaves.png</image>
 	<mapColorMapper id="heatColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
 		icon="heatColorMapperIcon" text="map.heatColorMapper.label"
