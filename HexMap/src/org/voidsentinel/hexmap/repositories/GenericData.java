@@ -16,9 +16,12 @@ import com.simsilica.lemur.GuiGlobals;
  */
 public class GenericData extends RepositoryData {
 
-	protected enum DataType {FLOAT_TYPE, INT_TYPE, STRING_TYPE};
-	
-	protected Object data	= null;
+	protected enum DataType {
+		FLOAT_TYPE, INT_TYPE, STRING_TYPE
+	};
+
+	protected Object		data	= null;
+	protected DataType	type	= DataType.STRING_TYPE;
 
 	/**
 	 * @param id
@@ -41,7 +44,7 @@ public class GenericData extends RepositoryData {
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * type (non-Javadoc)
 	 * 
 	 * @see
 	 * org.voidsentinel.hexmap.model.repositories.RepositoryData#addDataParameters(
@@ -57,6 +60,10 @@ public class GenericData extends RepositoryData {
 			used = true;
 		}
 		return used;
+	}
+
+	public void setData(DataType type, String value) {
+		this.type = type;
 	}
 
 }

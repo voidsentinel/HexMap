@@ -32,23 +32,24 @@ import com.simsilica.lemur.style.ElementId;
 
 /**
  * A Button that open a menu underIt
+ * 
  * @author VoidSentinel
  *
  */
 public class MenuButton extends Button implements IIHMEventListener {
-	private static final Logger			LOG		= Logger.getLogger(MenuButton.class.toString());
+	private static final Logger	LOG				= Logger.getLogger(MenuButton.class.toString());
 
-	public static float	ICONSIZE			= 24f;
+	public static float				ICONSIZE			= 24f;
 
-	private boolean		opened			= false;
-	private Container		contents			= null;
-	private Button			lastSelected	= null;
-	private TextField		hooverField		= null;
-	private String			toolTip			= "";
-	private boolean		showSelected	= true;
-	private boolean		firstLevel		= true;
+	private boolean					opened			= false;
+	private Container					contents			= null;
+	private Button						lastSelected	= null;
+	private TextField					hooverField		= null;
+	private String						toolTip			= "";
+	private boolean					showSelected	= true;
+	private boolean					firstLevel		= true;
 
-	final ColorRGBA		BROWN				= ColorParser.parse("#854C30");
+	final ColorRGBA					BROWN				= ColorParser.parse("#854C30");
 
 	/**
 	 * Contructor for the Menu
@@ -69,8 +70,8 @@ public class MenuButton extends Button implements IIHMEventListener {
 		this.setIcon(icon);
 		this.setTextVAlignment(VAlignment.Center);
 
-		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent.create(
-		      ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
+		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent
+		      .create(ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
 		this.setBackground(btTexture);
 
 		this.showSelected = showLastSelected;
@@ -141,10 +142,10 @@ public class MenuButton extends Button implements IIHMEventListener {
 		bt.setTextVAlignment(VAlignment.Center);
 
 		BitmapFont buttonFont = FontRepository.datas.getData("button.font").getFont();
-		
+
 		bt.setFont(buttonFont);
 		bt.setFontSize(ICONSIZE);
-		
+
 		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent
 		      .create(ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
 		bt.setBackground(btTexture);
@@ -158,8 +159,8 @@ public class MenuButton extends Button implements IIHMEventListener {
 
 		bt.setUserData("id", bt.getElementId().getId());
 		// set the cloick command, and add one to cllose the menu
-		bt.addClickCommands(command);
 		bt.addClickCommands(new CloseCommand());
+		bt.addClickCommands(command);
 		contents.addChild(bt);
 
 		return bt;
@@ -181,20 +182,20 @@ public class MenuButton extends Button implements IIHMEventListener {
 			bt.addCommands(ButtonAction.HighlightOff, new HighlightOffCommand());
 		}
 		// add the close command (if the is not a menu...
-		if (!MenuButton.class.isInstance(bt)) {			
+		if (!MenuButton.class.isInstance(bt)) {
 			bt.addClickCommands(new CloseCommand());
 		}
 		contents.addChild(bt);
 	}
 
 	/**
-	 * open/close the menu
+	 * open/close the menu. (Does not signal anything to anyone)
 	 * 
 	 * @param open true if the menu is to be opened
 	 */
 	public void setOpen(boolean open) {
 		if (open != opened) {
-			LOG.info("> Setting Open "+this.getElementId().getId());
+			LOG.info("> Setting Open " + this.getElementId().getId());
 			opened = open;
 			if (open) {
 				HexTuto.getInstance().getGuiNode().attachChild(contents);
@@ -202,12 +203,12 @@ public class MenuButton extends Button implements IIHMEventListener {
 					contents.setLocalTranslation(this.getWorldTranslation().x,
 					      this.getWorldTranslation().y - this.getSize().y - 2, 0);
 				} else {
-					contents.setLocalTranslation(this.getWorldTranslation().x + this.getPreferredSize().x,
+					contents.setLocalTranslation(this.getWorldTranslation().x + this.getPreferredSize().x + 2,
 					      this.getWorldTranslation().y, 0);
 				}
 
 			} else {
-				LOG.info("> Setting Close"+this.getElementId().getId());
+				LOG.info("> Setting Close" + this.getElementId().getId());
 				HexTuto.getInstance().getGuiNode().detachChild(contents);
 			}
 		}
@@ -236,9 +237,10 @@ public class MenuButton extends Button implements IIHMEventListener {
 
 	/**
 	 * change the representation of the dropdonw button. does not act on the
-	 * selection
+	 * selection.
 	 * 
-	 * @param bt the button to select
+	 * @param bt     the button to select
+	 * @param action true if the button action(s) should be executed
 	 */
 	public void setSelected(Button bt, boolean action) {
 		if (showSelected) {
@@ -277,28 +279,35 @@ public class MenuButton extends Button implements IIHMEventListener {
 	}
 
 	/**
-	 * indicate that a even occured on another IHM object (for exemple another menu
-	 * was opened). If this is not a child of this object, then close the menu
+	 * Called when an even occured on another IHM object (for exemple another menu
+	 * was opened, or a button was clicked).
+	 * <li>if the action is MENU_OPEN and the source is not a child then close this
+	 * menu
+	 * <li>if the action is MENU_CLOSE and the source is not a child then close this
+	 * menu
+	 * <li>if the action is BUTTON_CLICK then close this menu
 	 * 
 	 * @param source the source oif the event
+	 * @param action the nature of the action exected
 	 */
 	@Override
 	public void signalAction(Panel source, IHMAction action) {
 //		LOG.info("> Receiving IHM Event "+action.toString()+ " from "+source.getElementId().getId()
 //				+" to "+this.getElementId().getId());
-
+		if (source == this) {
+			return;
+		}
 		switch (action) {
 		case MENU_OPEN:
+		case MENU_CLOSE:
+//       if this is a sub menu (start with the same id than me), do not close			
 			if (!source.getElementId().getId().startsWith(this.getElementId().getId())) {
 //				LOG.info("> Closing the menu "+this.getElementId().getId());
 				this.setOpen(false);
 			}
 			break;
-		case MENU_CLOSE:
-			if (source.getElementId().getId().startsWith(this.getElementId().getId())) {
-//				LOG.info("> Closing the menu "+this.getElementId().getId());
-				this.setOpen(false);
-			}
+		case BUTTON_CLICK:
+			this.setOpen(false);
 			break;
 		}
 	}
@@ -351,7 +360,7 @@ public class MenuButton extends Button implements IIHMEventListener {
 	protected class ToggleOpenCommand implements Command<Button> {
 		@Override
 		public void execute(Button source) {
-			LOG.info("> Toggling "+source.getElementId().getId());
+			LOG.info("> Toggling " + source.getElementId().getId());
 			// and act
 			setOpen(!isOpen());
 			// if needed signal that this menu will open
@@ -375,7 +384,7 @@ public class MenuButton extends Button implements IIHMEventListener {
 	public class CloseCommand implements Command<Button> {
 		@Override
 		public void execute(Button source) {
-			IHMEventController.signalEvent(source, IHMEventController.IHMAction.MENU_CLOSE);
+			IHMEventController.signalEvent(source, IHMEventController.IHMAction.BUTTON_CLICK);
 			setSelected(source);
 			setOpen(false);
 		}

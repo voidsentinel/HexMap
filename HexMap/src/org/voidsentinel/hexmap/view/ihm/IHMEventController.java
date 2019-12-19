@@ -18,7 +18,7 @@ public class IHMEventController {
 	private static final Logger			LOG		= Logger.getLogger(IHMEventController.class.toString());
 
 	public static enum IHMAction {
-		MENU_OPEN, MENU_CLOSE
+		MENU_OPEN, MENU_CLOSE, BUTTON_CLICK
 	};
 
 	private static List<IIHMEventListener> listener = new ArrayList<IIHMEventListener>();

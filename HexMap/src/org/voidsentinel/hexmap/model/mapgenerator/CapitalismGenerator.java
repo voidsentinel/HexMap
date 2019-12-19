@@ -1,10 +1,14 @@
 package org.voidsentinel.hexmap.model.mapgenerator;
 
 import org.voidsentinel.hexmap.model.HexMap;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.DiamondSquareGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FaultCirclesGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FaultLinesGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.FlatGeneration;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.IslandGeneration;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.PerlinGeneration;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.HexBlurOperation;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.PowerOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.TorusOperation;
 import org.voidsentinel.hexmap.model.mapgenerator.heightmap.operation.TorusOperation.Direction;
 import org.voidsentinel.hexmap.model.mapgenerator.operations.ElevationMapOperation;
@@ -25,19 +29,21 @@ public class CapitalismGenerator extends MapGenerator {
 		// define the height
 		heightmap.addGenerator(new FlatGeneration(0f));
 
-		//heightmap.addGenerator(new IslandGeneration(1.6d), 1.00f);
+//		heightmap.addGenerator(new IslandGeneration(1d), 0.8f);
 //		heightmap.addGenerator(new DiamondSquareGeneration(), 0.40f);
+		heightmap.addGenerator(new PerlinGeneration(1.2f), 0.40f);
+		
 //		heightmap.addGenerator(new CellularGeneration(1f), 0.20f);
-		heightmap.addGenerator(new FaultLinesGeneration(2000), 0.4f);
+//		heightmap.addGenerator(new FaultLinesGeneration(2000), 0.4f);
 		heightmap.addGenerator(new FaultCirclesGeneration(1000), 0.4f);
 
+//		heightmap.addOperation(new PowerOperation(4d, 1.0d));
 		heightmap.addOperation(new HexBlurOperation(3, 3));
 //		heightmap.addGenerator(new CellularGeneration(1f), 0.30f);
 //		heightmap.addGenerator(new FaultCirclesGeneration(2000), 0.70f);
-		heightmap.addOperation(new TorusOperation(Direction.horizontal));
+		heightmap.addOperation(new TorusOperation(Direction.both));
 //		heightmap.addOperation(new HexBlurOperation(3, 3));
 //		heightmap.addOperation(new IslandOperation());
-//		heightmap.addOperation(new PowerOperation(4d, 1.0d));
 		heightmap.filter(map);
 
 		// water level
