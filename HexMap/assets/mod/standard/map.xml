@@ -28,7 +28,7 @@
 	<!-- <mapColorMapper id="biomeColorMapper" class="org.voidsentinel.hexmap.view.mapColor.BiomeColorExtractor" 
 		default="true" icon="biomeColorMapperIcon" text="map.biomeColorMapperIcon.label" 
 		tooltip="map.biomeColorMapperIcon.tooltip" /> -->
-	<image id="heightColorMapperIcon">icons/map-height.png</image>
+	<image id="heightColorMapperIcon">icons/map-summits.png</image>
 	<mapColorMapper id="heightColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.HeightColorExtractor"
 		default="true" icon="biomeColorMapperIcon"
@@ -42,7 +42,7 @@
 		icon="heightColorMapperIcon" text="map.heightColorMapper.label"
 		tooltip="map.heightColorMapper.tooltip" />
 
-	<image id="heatColorMapperIcon">icons/three-leaves.png</image>
+	<image id="heatColorMapperIcon">icons/map-temperature.png</image>
 	<mapColorMapper id="heatColorMapper"
 		class="org.voidsentinel.hexmap.view.mapColor.FileMappedColorExtractor"
 		icon="heatColorMapperIcon" text="map.heatColorMapper.label"

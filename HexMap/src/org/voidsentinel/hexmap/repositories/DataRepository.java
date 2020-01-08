@@ -10,7 +10,7 @@ package org.voidsentinel.hexmap.repositories;
  * @author guipatry
  *
  */
-public class DataRepository extends BaseRepository<FontData> {
+public class DataRepository extends BaseRepository<GenericData> {
 
 	static public DataRepository datas = new DataRepository();
 

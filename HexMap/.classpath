@@ -3,5 +3,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Games"/>
+	<classpathentry kind="lib" path="D:/Developpement/Projets/Libraries/ihm/WCOmoCSGjme321-b20191021-j17.jar"/>
+	<classpathentry kind="lib" path="D:/Developpement/Projets/Libraries/ihm/WCOmoLoris321-b20191212-j17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

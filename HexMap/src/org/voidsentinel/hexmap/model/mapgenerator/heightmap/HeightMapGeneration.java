@@ -7,7 +7,7 @@ package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
  * @author guipatry
  *
  */
-public abstract class HeightMapGeneration extends HeightMapTreatment {
+public abstract class HeightMapGeneration extends HeightMapExecutor {
 
 	protected float coefficient = 1f;
 

@@ -5,14 +5,27 @@ package org.voidsentinel.hexmap.control.screen;
 
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.voidsentinel.hexmap.HexTuto;
+import org.voidsentinel.hexmap.repositories.FontRepository;
+import org.voidsentinel.hexmap.repositories.ImageData;
+import org.voidsentinel.hexmap.repositories.ImageRepository;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.asset.AssetManager;
+import com.jme3.font.BitmapFont;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector2f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
+import com.jme3.texture.Texture;
+import com.simsilica.lemur.Button;
+import com.simsilica.lemur.VAlignment;
+import com.simsilica.lemur.component.IconComponent;
+import com.simsilica.lemur.component.InsetsComponent;
+import com.simsilica.lemur.component.TbtQuadBackgroundComponent;
 
 /**
  * This is an AppState that correspond to a page of the application.
@@ -68,9 +81,11 @@ public abstract class GameState extends AbstractAppState {
 	 */
 	@Override
 	public void initialize(final AppStateManager stateManager, final Application app) {
+		LOG.info("...Attaching State '" + this.id + "'");
 		this.stateManager = stateManager;
-
 		super.initialize(stateManager, app);
+
+		attachScreen();
 
 		// place the graphic node
 		if (rootNode != null) {
@@ -83,10 +98,11 @@ public abstract class GameState extends AbstractAppState {
 		}
 
 		// set camera state
-		if (saveCamera != null)
+		if (saveCamera != null) {
 			application.getCamera().copyFrom(saveCamera);
+		}
+		
 		displayed = true;
-
 	}
 
 	/**
@@ -95,7 +111,10 @@ public abstract class GameState extends AbstractAppState {
 	 */
 	@Override
 	public void cleanup() {
+		LOG.info("...Detaching State '" + this.id + "'");
 		super.cleanup();
+		detachScreen();
+
 		// spatial nodes
 		if (rootNode != null) {
 			application.getRootNode().detachChild(rootNode);
@@ -160,5 +179,14 @@ public abstract class GameState extends AbstractAppState {
 	public final Node getRootNode() {
 		return rootNode;
 	}
+
+	public void attachScreen() {
+		
+	}
+
+	public void detachScreen() {
+		
+	}
+
 
 }

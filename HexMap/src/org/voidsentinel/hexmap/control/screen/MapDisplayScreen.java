@@ -73,8 +73,7 @@ public class MapDisplayScreen extends GameState {
 	 * .jme3.app.state.AppStateManager, com.jme3.app.Application)
 	 */
 	@Override
-	public void initialize(final AppStateManager stateManager, final Application app) {
-		LOG.info("...Initializing State '" + this.id + "'");
+	public void attachScreen() {
 		if (rootNode == null) {
 			rootNode = new Node(this.id + ".root");
 			generateDisplay();
@@ -84,17 +83,12 @@ public class MapDisplayScreen extends GameState {
 			guiNode = new Node(this.id + ".guiNode");
 			generateIHM();
 		}
-
-		super.initialize(stateManager, app);
+		
+		cameraControl.addControlMapping();		
 	}
 
-	public void cleanup() {
-		LOG.info("...Cleaning State '" + this.id + "'");
+	public void detachScreen() {
 		cameraControl.removeControlMapping();		
-		super.cleanup();
-//		for (int i = 0; i < modifierStates.length; i++) {
-//			application.getStateManager().detach(modifierStates[i]);
-//		}
 	}
 
 	/*
@@ -125,8 +119,6 @@ public class MapDisplayScreen extends GameState {
 		Vector3f center = HexMetrics.getCellCenter(map.getCenterCell());
 		cameraControl = new StepCameraControl(HexTuto.getInstance(), mapNode, center, HexMetrics.CELL_UNIT_NORMAL);
 		rootNode.addControl(cameraControl);
-		cameraControl.addControlMapping();
-
 	}
 
 	/**
@@ -165,7 +157,7 @@ public class MapDisplayScreen extends GameState {
 		// defaul value
 		AbstractCellColorExtractor extract = ColorMapperRepository.repository.getDefaultMapper();
 		// Create a simple container for view elements
-		MenuButton ddb = new MenuButton("", (IconComponent) null, new ElementId("visual"), true, true);
+		MenuButton ddb = new MenuButton("", null, new ElementId("visual"), true, true);
 		menu.addButton(ddb);
 		ddb.setHooverField(hooverField);
 		ddb.setToolTip("Visualisation");
@@ -176,21 +168,10 @@ public class MapDisplayScreen extends GameState {
 		while (it.hasNext()) {
 			Map.Entry<String, AbstractCellColorExtractor> colorizer = it.next();
 			count++;
-			IconComponent icon = null;
 			String iconName = colorizer.getValue().getIconName();
-			if (iconName != null) {
-				ImageData image = ImageRepository.datas.getData(iconName);
-				if (image != null) {
-					String fileName = image.getFilename();
-					if (fileName != null) {
-						icon = new IconComponent(fileName);
-						icon.setIconSize(new Vector2f(32, 32));
-					}
-				}
-			}
 			String text = I18nMultiFile.getText(colorizer.getValue().getTextName());
 			String tooltip = I18nMultiFile.getText(colorizer.getValue().getTooltipName());
-			ddb.addButton(text, icon, tooltip,
+			ddb.addButton(text, iconName, tooltip,
 			      new VisualCommand(ColorMapperRepository.repository.getData(colorizer.getKey())));
 			if (extract == colorizer.getValue()) {
 				ddb.setSelected(count);
@@ -201,20 +182,14 @@ public class MapDisplayScreen extends GameState {
 	private void addSettingMenu(MenuBar menu, TextField hooverField) {
 
 		// the System Menu
-		ImageData image = ImageRepository.datas.getData("settingsIcon");
-		String fileName = image.getFilename();
-		IconComponent icon = new IconComponent(fileName);
-		MenuButton ddb = new MenuButton("", icon, menu.getElementId().child("settingMenu"), false, true);
+		MenuButton ddb = new MenuButton("", "settingsIcon", menu.getElementId().child("settingMenu"), false, true);
 		ddb.setHooverField(hooverField);
 		menu.addButton(ddb);
 		ddb.setToolTip(I18nMultiFile.getText("ihm.system.tooltip"));
 
 		// the Map representation subMenu
-		image = ImageRepository.datas.getData("mapRepresentationIcon");
-		fileName = image.getFilename();
-		icon = new IconComponent(fileName);
-		MenuButton ddbSettings = new MenuButton("", icon, ddb.getElementId().child("graphical"), false, false);		
-		ddbSettings.setHooverField(hooverField);
+		MenuButton ddbSettings = new MenuButton("", "mapRepresentationIcon", ddb.getElementId().child("graphical"), false, false);		
+		ddbSettings.setHooverField(hooverField);		
 		ddb.addButton(ddbSettings, I18nMultiFile.getText("ihm.setting.tooltip"));
 
 		// The content of the Map representation menu
@@ -225,16 +200,12 @@ public class MapDisplayScreen extends GameState {
 			      I18nMultiFile.getText(mr.getTooltipName()), new GeometryCommand(mr.id));
 		}
 
-		// The QUIT button
-		image = ImageRepository.datas.getData("exitIcon");
-		fileName = image.getFilename();
-		icon = new IconComponent(fileName);
-		ddb.addButton("", icon, I18nMultiFile.getText("ihm.quit.tooltip"), new ExitCommand());
+		// Reload / generate
+		ddb.addButton(I18nMultiFile.getText("ihm.reload.label"), "generateIcon", I18nMultiFile.getText("ihm.reload.tooltip"), new ReloadCommand());
 
-		image = ImageRepository.datas.getData("reloadIcon");
-		fileName = image.getFilename();
-		icon = new IconComponent(fileName);
-		ddb.addButton("", icon, I18nMultiFile.getText("ihm.reload.tooltip"), new ReloadCommand());
+		// The QUIT button
+		ddb.addButton(I18nMultiFile.getText("ihm.quit.label"), "exitIcon", I18nMultiFile.getText("ihm.quit.tooltip"), new ExitCommand());
+
 
 	}
 

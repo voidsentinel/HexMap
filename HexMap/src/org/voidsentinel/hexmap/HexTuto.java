@@ -17,6 +17,8 @@ import com.jme3.system.AppSettings;
 import com.simsilica.lemur.GuiGlobals;
 import com.simsilica.lemur.style.BaseStyles;
 
+import net.wcomohundro.jme3.loris.GuiContext;
+
 /**
  * @author guipatry
  *
@@ -32,11 +34,13 @@ public class HexTuto extends SimpleApplication {
 	 */
 	@Override
 	public void simpleInitApp() {
+		
 		assetManager.registerLocator(".", FileLocator.class);
 		assetManager.registerLocator("./assets/", FileLocator.class);
 
 		Alea.setSeed(654);
-		GuiGlobals.initialize(this);
+		GuiGlobals.initialize(this);		
+		
 		// Load the 'glass' style
 		BaseStyles.loadGlassStyle();
 		GuiGlobals.getInstance().getStyles().setDefaultStyle("glass");

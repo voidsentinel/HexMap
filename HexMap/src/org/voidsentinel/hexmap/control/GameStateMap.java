@@ -63,9 +63,11 @@ public class GameStateMap {
 		LOG.info("moving to " + state.getId());
 		if (current != null) {
 			state.setCaller(current.getId());
+			LOG.info("   detaching " + current.getId());
 			application.getStateManager().detach(current);
 		}
 		current = state;
+		LOG.info("   attaching " + current.getId());
 		application.getStateManager().attach(current);
 	}
 
@@ -73,8 +75,8 @@ public class GameStateMap {
 	 * return to the caller state, if not null
 	 */
 	public void moveBack() {
-		if (current.getClass() != null) {
-			GameState caller = states.get(current.getCaller());
+		if (current != null && current.getCaller()!= null) {
+			GameState caller = states.get(current.getCaller());			
 			application.getStateManager().detach(current);
 			current = caller;
 			application.getStateManager().attach(current);

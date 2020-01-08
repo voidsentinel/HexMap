@@ -54,25 +54,33 @@ public class MenuButton extends Button implements IIHMEventListener {
 	/**
 	 * Contructor for the Menu
 	 * 
-	 * @param text             the text of the menu
-	 * @param icon             the icon of the menu
-	 * @param elementId        the id of the menu
-	 * @param showLastSelected does the selection of a subelement change the content
-	 *                         of the menu (text, icon)
-	 * @param firstlevel       is the menu at firstlevel(open under) or not (open at
-	 *                         riht of the button)
+	 * @param text
+	 *           the text of the menu
+	 * @param icon
+	 *           the icon of the menu
+	 * @param elementId
+	 *           the id of the menu
+	 * @param showLastSelected
+	 *           does the selection of a subelement change the content of the menu
+	 *           (text, icon)
+	 * @param firstlevel
+	 *           is the menu at firstlevel(open under) or not (open at riht of the
+	 *           button)
 	 */
-	public MenuButton(String text, IconComponent icon, ElementId elementId, boolean showLastSelected,
-	      boolean firstlevel) {
+	public MenuButton(String text, String icon, ElementId elementId, boolean showLastSelected,
+			boolean firstlevel) {
 		super(text, true, elementId, GuiGlobals.getInstance().getStyles().getDefaultStyle());
-		if (icon != null)
-			icon.setIconSize(new Vector2f(ICONSIZE, ICONSIZE));
-		this.setIcon(icon);
-		this.setTextVAlignment(VAlignment.Center);
-
-		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent
-		      .create(ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
-		this.setBackground(btTexture);
+		
+		ThemeUtil.setButtonIcon(icon, 32f, this);
+		ThemeUtil.setButtonTheme(this, false, true); 
+//		if (icon != null)
+//			icon.setIconSize(new Vector2f(ICONSIZE, ICONSIZE));
+//		this.setIcon(icon);
+//		this.setTextVAlignment(VAlignment.Center);
+//
+//		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent.create(
+//				ImageRepository.datas.getData("buttonSelectedBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
+//		this.setBackground(btTexture);
 
 		this.showSelected = showLastSelected;
 		this.firstLevel = firstlevel;
@@ -90,9 +98,19 @@ public class MenuButton extends Button implements IIHMEventListener {
 	 * @param text
 	 * @param icon
 	 */
-	public MenuButton(String text, IconComponent icon) {
-		this(text, icon, new ElementId("Menu"), true, false);
+	public MenuButton(String text, String iconName) {
+		this(text, iconName, new ElementId("Menu"), true, false);
 	}
+
+//	/**
+//	 * create a menu that open a right of the menu button
+//	 * 
+//	 * @param text
+//	 * @param icon
+//	 */
+//	public MenuButton(String text, String iconFile) {
+//		this(text, new IconComponent(iconFile), new ElementId("Menu"), true, false);
+//	}
 
 	/**
 	 * create a menu that open a right of the menu button
@@ -100,56 +118,42 @@ public class MenuButton extends Button implements IIHMEventListener {
 	 * @param text
 	 * @param icon
 	 */
-	public MenuButton(String text, String iconFile) {
-		this(text, new IconComponent(iconFile), new ElementId("Menu"), true, false);
+	public MenuButton(String text, String iconName, ElementId elementId) {
+		this(text, iconName, elementId, true, false);
 	}
 
-	/**
-	 * create a menu that open a right of the menu button
-	 * 
-	 * @param text
-	 * @param icon
-	 */
-	public MenuButton(String text, IconComponent icon, ElementId elementId) {
-		this(text, icon, elementId, true, false);
-	}
-
-	/**
-	 * create a menu that open a right of the menu button
-	 * 
-	 * @param text
-	 * @param icon
-	 */
-	public MenuButton(String text, String iconFile, ElementId elementId) {
-		this(text, new IconComponent(iconFile), elementId, true, false);
-	}
+//	/**
+//	 * create a menu that open a right of the menu button
+//	 * 
+//	 * @param text
+//	 * @param icon
+//	 */
+//	public MenuButton(String text, String iconFile, ElementId elementId) {
+//		this(text, new IconComponent(iconFile), elementId, true, false);
+//	}
 
 	/**
 	 * construct a button and add it to the menu
 	 * 
-	 * @param titleString the title of the button
-	 * @param icon        the icon
-	 * @param helpString  the tooltip
-	 * @param command     the command to execute when the button is pressed
+	 * @param titleString
+	 *           the title of the button
+	 * @param iconName
+	 *           the icon name
+	 * @param helpString
+	 *           the tooltip
+	 * @param command
+	 *           the command to execute when the button is pressed
 	 * @return the generated button
 	 */
-	public Button addButton(String titleString, IconComponent icon, String helpString, Command<Button> command) {
+	public Button addButton(String titleString, String iconName, String helpString, Command<Button> command) {
 		Button bt = new Button(titleString, this.getElementId().child("menuButton" + contents.getChildren().size()),
-		      GuiGlobals.getInstance().getStyles().getDefaultStyle());
-		if (icon != null)
-			icon.setIconSize(new Vector2f(ICONSIZE, ICONSIZE));
-		bt.setIcon(icon);
-		bt.setTextVAlignment(VAlignment.Center);
+				GuiGlobals.getInstance().getStyles().getDefaultStyle());
+		bt.setUserData("id", bt.getElementId().getId());
 
-		BitmapFont buttonFont = FontRepository.datas.getData("button.font").getFont();
+		// manage Theme
+		ThemeUtil.setButtonTheme(bt);
+		ThemeUtil.setButtonIcon(iconName, 32f, bt);
 
-		bt.setFont(buttonFont);
-		bt.setFontSize(ICONSIZE);
-
-		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent
-		      .create(ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
-		bt.setBackground(btTexture);
-		bt.setColor(ColorRGBA.Black);
 		// manage the tooltip
 		if (helpString != null) {
 			bt.setUserData("tooltip", helpString);
@@ -157,7 +161,6 @@ public class MenuButton extends Button implements IIHMEventListener {
 			bt.addCommands(ButtonAction.HighlightOff, new HighlightOffCommand());
 		}
 
-		bt.setUserData("id", bt.getElementId().getId());
 		// set the cloick command, and add one to cllose the menu
 		bt.addClickCommands(new CloseCommand());
 		bt.addClickCommands(command);
@@ -171,8 +174,10 @@ public class MenuButton extends Button implements IIHMEventListener {
 	 * closing the menu and displaying the tooltip Note that the id of the button
 	 * should be a child of the menu so that it know when / if it should close it.
 	 * 
-	 * @param bt         the button to add
-	 * @param helpString the tooltip to be displayed (null if none)
+	 * @param bt
+	 *           the button to add
+	 * @param helpString
+	 *           the tooltip to be displayed (null if none)
 	 */
 	public void addButton(Button bt, String helpString) {
 		// manage tooltip
@@ -191,7 +196,8 @@ public class MenuButton extends Button implements IIHMEventListener {
 	/**
 	 * open/close the menu. (Does not signal anything to anyone)
 	 * 
-	 * @param open true if the menu is to be opened
+	 * @param open
+	 *           true if the menu is to be opened
 	 */
 	public void setOpen(boolean open) {
 		if (open != opened) {
@@ -201,10 +207,10 @@ public class MenuButton extends Button implements IIHMEventListener {
 				HexTuto.getInstance().getGuiNode().attachChild(contents);
 				if (firstLevel) {
 					contents.setLocalTranslation(this.getWorldTranslation().x,
-					      this.getWorldTranslation().y - this.getSize().y - 2, 0);
+							this.getWorldTranslation().y - this.getSize().y - 2, 0);
 				} else {
-					contents.setLocalTranslation(this.getWorldTranslation().x + this.getPreferredSize().x + 2,
-					      this.getWorldTranslation().y, 0);
+					contents.setLocalTranslation(this.getWorldTranslation().x + this.getPreferredSize().x,
+							this.getWorldTranslation().y, 0);
 				}
 
 			} else {
@@ -229,7 +235,8 @@ public class MenuButton extends Button implements IIHMEventListener {
 	 * change the representation of the dropdonw button. does not act on the
 	 * selection (ie does not perform the click command)
 	 * 
-	 * @param bt the button to select
+	 * @param bt
+	 *           the button to select
 	 */
 	public void setSelected(Button bt) {
 		setSelected(bt, false);
@@ -239,15 +246,15 @@ public class MenuButton extends Button implements IIHMEventListener {
 	 * change the representation of the dropdonw button. does not act on the
 	 * selection.
 	 * 
-	 * @param bt     the button to select
-	 * @param action true if the button action(s) should be executed
+	 * @param bt
+	 *           the button to select
 	 */
 	public void setSelected(Button bt, boolean action) {
 		if (showSelected) {
 			// clear the currently selected
 			if (lastSelected != null && bt != lastSelected) {
 				TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent.create(
-				      ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
+						ImageRepository.datas.getData("buttonBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
 				lastSelected.setBackground(btTexture);
 			}
 
@@ -261,7 +268,7 @@ public class MenuButton extends Button implements IIHMEventListener {
 
 			// change the newly selected
 			TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent.create(
-			      ImageRepository.datas.getData("buttonSelectedBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
+					ImageRepository.datas.getData("buttonSelectedBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
 			bt.setBackground(btTexture);
 
 			// remember the currenlty selected
@@ -287,27 +294,29 @@ public class MenuButton extends Button implements IIHMEventListener {
 	 * menu
 	 * <li>if the action is BUTTON_CLICK then close this menu
 	 * 
-	 * @param source the source oif the event
-	 * @param action the nature of the action exected
+	 * @param source
+	 *           the source oif the event
 	 */
 	@Override
 	public void signalAction(Panel source, IHMAction action) {
-//		LOG.info("> Receiving IHM Event "+action.toString()+ " from "+source.getElementId().getId()
-//				+" to "+this.getElementId().getId());
-		if (source == this) {
-			return;
-		}
+		// LOG.info("> Receiving IHM Event "+action.toString()+ " from
+		// "+source.getElementId().getId()
+		// +" to "+this.getElementId().getId());
+
 		switch (action) {
 		case MENU_OPEN:
 		case MENU_CLOSE:
 //       if this is a sub menu (start with the same id than me), do not close			
 			if (!source.getElementId().getId().startsWith(this.getElementId().getId())) {
-//				LOG.info("> Closing the menu "+this.getElementId().getId());
+				// LOG.info("> Closing the menu "+this.getElementId().getId());
 				this.setOpen(false);
 			}
 			break;
-		case BUTTON_CLICK:
-			this.setOpen(false);
+		case MENU_CLOSE:
+			if (source.getElementId().getId().startsWith(this.getElementId().getId())) {
+				// LOG.info("> Closing the menu "+this.getElementId().getId());
+				this.setOpen(false);
+			}
 			break;
 		}
 	}
@@ -324,7 +333,8 @@ public class MenuButton extends Button implements IIHMEventListener {
 	}
 
 	/**
-	 * @param hooverField the hooverField to set
+	 * @param hooverField
+	 *           the hooverField to set
 	 */
 	public void setHooverField(TextField hooverField) {
 		this.hooverField = hooverField;
@@ -338,7 +348,8 @@ public class MenuButton extends Button implements IIHMEventListener {
 	}
 
 	/**
-	 * @param toolTip the toolTip to set
+	 * @param toolTip
+	 *           the toolTip to set
 	 */
 	public void setToolTip(String toolTip) {
 		this.toolTip = toolTip;

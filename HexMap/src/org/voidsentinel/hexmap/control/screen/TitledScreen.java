@@ -42,8 +42,11 @@ import com.simsilica.lemur.style.ElementId;
  */
 public class TitledScreen extends GameState {
 
+	protected final String SCREENCONTAINER_ID;
+
 	public TitledScreen(final HexTuto application) {
 		super(application);
+		SCREENCONTAINER_ID = this.id + ".screen";
 	}
 
 	/**
@@ -52,42 +55,44 @@ public class TitledScreen extends GameState {
 	 */
 	public TitledScreen(final HexTuto application, final String id) {
 		super(application, id);
+		SCREENCONTAINER_ID = this.id + ".screen";
 	}
 
 	/**
 	 * Will initialize the screen and display it
 	 */
 	@Override
-	public void initialize(final AppStateManager stateManager, final Application app) {
-		LOG.info("...Initializing State '" + this.id + "'");
+	public void attachScreen() {
 		if (guiNode == null) {
 			guiNode = new Node(this.id + ".guiNode");
 		}
-		// the Title should be created even if the guiNode exist( it should be
-		// initialized by child class).
 		generateIHM();
+	}
 
-		super.initialize(stateManager, app);
+	public void detachScreen() {
+		
 	}
 
 	private void generateIHM() {
-		final String CONTAINER_ID = this.id + ".title";
 		// if the title does not exist...
-		if (guiNode.getChild(CONTAINER_ID) == null) {
+		if (guiNode.getChild(SCREENCONTAINER_ID) == null) {
 			AppSettings settings = HexTuto.getInstance().getSettings();
 			// Title Container
-			Container titleContainer = new Container(new ElementId(CONTAINER_ID));
+			Container titleContainer = new Container(new ElementId(SCREENCONTAINER_ID));
+			titleContainer.setName(SCREENCONTAINER_ID);
 			titleContainer.setLayout(new BorderLayout());
+			titleContainer.setBackground(null);
 			guiNode.attachChild(titleContainer);
-			// Title
-			titleContainer.setPreferredSize(new Vector3f(settings.getWidth(), 50f, 0f));
+			titleContainer.setPreferredSize(new Vector3f(settings.getWidth(), settings.getHeight(), 0f));
 			titleContainer.setLocalTranslation(0f, settings.getHeight(), 0.1f);
+			// Title
 			TextField title = new TextField("", titleContainer.getElementId().child("text"));
+			title.setName(title.getElementId().toString());
 			title.setText(I18nMultiFile.getText(this.id + ".title"));
 			title.setColor(ColorRGBA.Black);
 			title.setFont(FontRepository.datas.getData("title.font").getFont());
-			title.setFontSize(50f);
-//			title.setPreferredSize(new Vector3f(settings.getWidth(), 70f, 0f));
+			title.setFontSize(72f);
+			title.setPreferredSize(new Vector3f(settings.getWidth(), 70f, 0f));
 			title.setTextVAlignment(VAlignment.Center);
 			title.setTextHAlignment(HAlignment.Center);
 

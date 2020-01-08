@@ -29,6 +29,7 @@ public class MenuBar extends Container {
 		super(elementId);
 		MigLayout layout = new MigLayout(null);
 		this.setLayout(layout);
+		this.setName(elementId.toString());
 	}
 
 	public void addButton(Button button) {
@@ -41,10 +42,6 @@ public class MenuBar extends Container {
 		} else {
 			addChild(button);
 		}
-		// replace the background
-		TbtQuadBackgroundComponent btTexture = TbtQuadBackgroundComponent.create(
-		      ImageRepository.datas.getData("buttonSelectedBackground").getFilename(), 1f, 5, 5, 40, 44, .1f, false);
-		button.setBackground(btTexture);
 	}
 
 	public List<Button> getButtons(){

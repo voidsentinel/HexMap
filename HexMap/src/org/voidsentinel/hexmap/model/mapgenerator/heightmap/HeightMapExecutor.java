@@ -6,6 +6,7 @@ package org.voidsentinel.hexmap.model.mapgenerator.heightmap;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.generation.DiamondSquareGeneration;
 import org.voidsentinel.hexmap.repositories.ImageRepository;
 import org.voidsentinel.hexmap.repositories.RepositoryData;
 import org.voidsentinel.hexmap.utils.I18nMultiFile;
@@ -14,23 +15,35 @@ import org.voidsentinel.hexmap.utils.I18nMultiFile;
  * @author guipatry
  *
  */
-public abstract class HeightMapTreatment extends RepositoryData {
-
+public abstract class HeightMapExecutor extends RepositoryData implements Runnable {
+	// The Presentation information
 	protected String								iconName		= null;
 	protected String								textName		= null;
 	protected String								tooltipName	= null;
+	// Parameters implementation
 	protected List<ParameterDescription>	parameters	= new ArrayList<ParameterDescription>();
 
-	public HeightMapTreatment() {
-		super(HeightMapTreatment.class.getSimpleName());
+	// Execution information
+	public enum Operation {
+		ADD, MULTIPLY
+	};
+
+	protected int									xSize			= 0;
+	protected int									ySize			= 0;
+	protected float[][]							heightMap;
+	protected HeightMapExecutor.Operation	operation	= HeightMapExecutor.Operation.MULTIPLY;
+	protected volatile float					execution	= 0.0f;
+
+	public HeightMapExecutor() {
+		super(HeightMapExecutor.class.getSimpleName());
 	}
 
-	public HeightMapTreatment(String id) {
+	public HeightMapExecutor(String id) {
 		super(id);
 	}
 
 	protected void addDataParameters(RepositoryData data) {
-		HeightMapTreatment source = (HeightMapTreatment) data;
+		HeightMapExecutor source = (HeightMapExecutor) data;
 		iconName = source.iconName;
 		textName = source.textName;
 		tooltipName = source.tooltipName;
@@ -59,7 +72,7 @@ public abstract class HeightMapTreatment extends RepositoryData {
 	}
 
 	/**
-	 * The icon name for the color extractor (to be used in IHM)
+	 * return the icon name/id in the image repository (or null if none)
 	 * 
 	 * @see ImageRepository
 	 * @return the iconName
@@ -69,7 +82,7 @@ public abstract class HeightMapTreatment extends RepositoryData {
 	}
 
 	/**
-	 * set the icon name for the color extractor (to be used in IHM)
+	 * set the icon name/id in the image repository (or null if none)
 	 * 
 	 * @see ImageRepository
 	 * @param iconName
@@ -80,7 +93,7 @@ public abstract class HeightMapTreatment extends RepositoryData {
 	}
 
 	/**
-	 * return the textId of the extractor name
+	 * return the text name/id in the text repository (or null if none)
 	 * 
 	 * @see I18nMultiFile
 	 * @return the textName
@@ -90,17 +103,18 @@ public abstract class HeightMapTreatment extends RepositoryData {
 	}
 
 	/**
-	 * set the textid of the extractor's name.
+	 * set the text name/id in the text repository (or null if none)
 	 * 
 	 * @param textName
 	 *           the tetx id to associate with the extractor
+	 * @see I18nMultiFile
 	 */
 	public void setTextName(String textName) {
 		this.textName = textName;
 	}
 
 	/**
-	 * return the textId of the extractor's tooltip
+	 * return the tooltip name/id in the text repository (or null if none)
 	 * 
 	 * @see I18nMultiFile
 	 * @return the tooltipName
@@ -110,17 +124,30 @@ public abstract class HeightMapTreatment extends RepositoryData {
 	}
 
 	/**
-	 * set the textid of the extractor's tooltip.
+	 * set the tooltip name/id in the text repository (or null if none)
 	 * 
 	 * @param tooltipName
 	 *           the tooltipName to set
 	 */
 	public void setTooltipName(String tooltipName) {
 		this.tooltipName = tooltipName;
+
 	}
 
-	abstract public List<ParameterDescription> getParameters();
+	/**
+	 * return the list of parameters for this executor
+	 * 
+	 * @return
+	 */
+	public List<ParameterDescription> getParameters() {
+		return parameters;
+	}
 
+	/**
+	 * normalize the given map (aa float 2D table) to 0.0f-1.0f
+	 * 
+	 * @param map
+	 */
 	protected void normalize(float[][] map) {
 
 		float min = findMinHeight(map);
@@ -171,5 +198,55 @@ public abstract class HeightMapTreatment extends RepositoryData {
 		}
 		return maxValue;
 	}
+
+	/**
+	 * @return the operation
+	 */
+	public HeightMapExecutor.Operation getOperation() {
+		return operation;
+	}
+
+	/**
+	 * @param operation
+	 *           the operation to set
+	 */
+	public void setOperation(HeightMapExecutor.Operation operation) {
+		this.operation = operation;
+	}
+
+	/**
+	 * @return the heightMap
+	 */
+	public float[][] getHeightMap() {
+		return heightMap;
+	}
+
+	/**
+	 * @param heightMap
+	 *           the heightMap to set
+	 */
+	public void setHeightMap(float[][] heightMap) {
+		this.heightMap = heightMap;
+		this.xSize = heightMap[0].length;
+		this.ySize = heightMap.length;
+	}
+
+	/**
+	 * The Runnable interface. Will be called when instanciating a new task with
+	 * this executor. Either run add or mulitply, depedning on the value of filed
+	 * operation
+	 * 
+	 * @see HeightMapExecutor.Operation
+	 */
+	public void run() {
+		LOG.info("   Operation : " + this.getClass().getSimpleName());
+		if (xSize == 0 || ySize == 0) {
+			LOG.info("      No valid initial map set");
+		} else {
+			this.performOperation();
+		}
+	}
+
+	abstract public void performOperation();
 
 }

@@ -25,9 +25,11 @@ import org.voidsentinel.hexmap.HexTuto;
 import org.voidsentinel.hexmap.control.GameStateMap;
 import org.voidsentinel.hexmap.control.screen.GameState;
 import org.voidsentinel.hexmap.model.TerrainData;
-import org.voidsentinel.hexmap.model.mapgenerator.heightmap.HeightMapTreatment;
+import org.voidsentinel.hexmap.model.mapgenerator.heightmap.HeightMapExecutor;
+import org.voidsentinel.hexmap.repositories.DataRepository;
 import org.voidsentinel.hexmap.repositories.FontData;
 import org.voidsentinel.hexmap.repositories.FontRepository;
+import org.voidsentinel.hexmap.repositories.GenericData;
 import org.voidsentinel.hexmap.repositories.ImageData;
 import org.voidsentinel.hexmap.repositories.ImageRepository;
 import org.voidsentinel.hexmap.repositories.MapTreatmentRepository;
@@ -130,7 +132,8 @@ public class ModLoader {
 	/**
 	 * get informations on the mod stored into a a given directory
 	 * 
-	 * @param directory where the mod.xml will be searched
+	 * @param directory
+	 *           where the mod.xml will be searched
 	 * @return the mod informations
 	 */
 	private static ModData getInformations(final String directory) {
@@ -179,8 +182,10 @@ public class ModLoader {
 	/**
 	 * Load a mod, given by its filename
 	 * 
-	 * @param filename  full filename (including directory)
-	 * @param directory directory of the file
+	 * @param filename
+	 *           full filename (including directory)
+	 * @param directory
+	 *           directory of the file
 	 */
 	private static void loadMod(String filename, String directory) {
 		LOG.log(Level.INFO, "   loading mod in file " + filename);
@@ -199,7 +204,9 @@ public class ModLoader {
 	/**
 	 * dispatch le loading to a method, depending on the name of the node. If
 	 * unknown, distpach the childrens
-	 * @TODO : put this into dynamic call to class associated with registered nodeName (one more level of dynamic...)
+	 * 
+	 * @TODO : put this into dynamic call to class associated with registered
+	 *       nodeName (one more level of dynamic...)
 	 * @param node
 	 * @param directory
 	 */
@@ -261,7 +268,8 @@ public class ModLoader {
 	/**
 	 * Load an image into the image repository
 	 * 
-	 * @param node      : the image node. id is the key, content is the filename
+	 * @param node
+	 *           : the image node. id is the key, content is the filename
 	 * @param directory
 	 */
 	private static void loadImage(Element node, String directory) {
@@ -279,7 +287,8 @@ public class ModLoader {
 	/**
 	 * Load an image into the image repository
 	 * 
-	 * @param node      : the image node. id is the key, content is the filename
+	 * @param node
+	 *           the image node. id is the key, content is the filename
 	 * @param directory
 	 */
 	private static void loadFont(Element node, String directory) {
@@ -287,19 +296,42 @@ public class ModLoader {
 		if (ImageRepository.datas.getData(id) == null) {
 			String file = directory + '/' + node.getValue().trim();
 			FontData data = new FontData(id);
-         data.addDataParameters("file", node.getValue().trim(), directory + '/');			
+			data.addDataParameters("file", node.getValue().trim(), directory + '/');
 			FontRepository.datas.addData(data);
 			LOG.log(Level.INFO, "   loading font " + id + " as " + data.getFilename());
 		} else {
 			LOG.log(Level.INFO, "   font " + id + " ignored as already existing");
 		}
 	}
-	
+
+	/**
+	 * Load a generic data into the data repository
+	 * 
+	 * @param node
+	 *           the data node. id is the key, content is the value
+	 * @param directory
+	 */
+	private static void loadData(Element node, String directory) {
+		String id = node.getAttributeValue("id");
+		if (ImageRepository.datas.getData(id) == null) {
+			String dataType = node.getAttributeValue("type");
+			String value = node.getValue();
+			GenericData generic = new GenericData(id);
+
+			DataRepository.datas.addData(generic);
+			LOG.log(Level.INFO, "   loading data " + id + " value " + value);
+		} else {
+			LOG.log(Level.INFO, "   data " + id + " ignored as already existing");
+		}
+	}
+
 	/**
 	 * Load a property file
 	 * 
-	 * @param node      the XML node containing the information
-	 * @param directory the directory of the current XML file
+	 * @param node
+	 *           the XML node containing the information
+	 * @param directory
+	 *           the directory of the current XML file
 	 */
 	private static void loadText(Element node, String directory) {
 		LOG.log(Level.INFO, "   loading texts in " + directory + "/" + node.getValue());
@@ -342,7 +374,7 @@ public class ModLoader {
 					clazz = Class.forName(className);
 					Constructor<?> constructor = clazz.getConstructor(String.class);
 					Object instance = constructor.newInstance(id);
-					MapTreatmentRepository.method.addData((HeightMapTreatment) (instance));
+					MapTreatmentRepository.method.addData((HeightMapExecutor) (instance));
 				} catch (ClassNotFoundException e) {
 					LOG.log(Level.SEVERE, "Impossible to find class " + className);
 				} catch (NoSuchMethodException e) {
@@ -360,17 +392,18 @@ public class ModLoader {
 				}
 			}
 
-			HeightMapTreatment method = MapTreatmentRepository.method.getData(id);
+			HeightMapExecutor method = MapTreatmentRepository.method.getData(id);
 			// adding data
-//			addElementData(method, node, directory);
-//			addAttribuetData(method, node, directory);
+			// addElementData(method, node, directory);
+			// addAttribuetData(method, node, directory);
 		}
 	}
 
 	/**
 	 * load a colorMapper a XML node. id and class attribute are mandatory.
 	 * 
-	 * @param node      XML Node to extract data from
+	 * @param node
+	 *           XML Node to extract data from
 	 * @param directory
 	 */
 	private static void loadMapColorMapper(Element node, String directory) {
@@ -413,7 +446,8 @@ public class ModLoader {
 	/**
 	 * load a MapRepresentation from a node. The "id" attribute is mandatory
 	 * 
-	 * @param node      the node to use for the data
+	 * @param node
+	 *           the node to use for the data
 	 * @param directory
 	 */
 	private static void loadMapRepresentation(Element node, String directory) {
@@ -466,9 +500,12 @@ public class ModLoader {
 	 * repetively call the repositoryData object with the name/value of each
 	 * subelement of the given node
 	 * 
-	 * @param object    the object to send data to
-	 * @param node      the node to use for getting data
-	 * @param directory the current directory
+	 * @param object
+	 *           the object to send data to
+	 * @param node
+	 *           the node to use for getting data
+	 * @param directory
+	 *           the current directory
 	 * @return the list of elment that was not ued.
 	 */
 	static private List<Element> addElementData(RepositoryData object, Element node, String directory) {
@@ -489,9 +526,12 @@ public class ModLoader {
 	 * repetively call the repositoryData (object) addParameters method with the
 	 * name/value of each attribute of the given node
 	 * 
-	 * @param object    the object to send data to
-	 * @param node      the node to use for getting data
-	 * @param directory the current directory
+	 * @param object
+	 *           the object to send data to
+	 * @param node
+	 *           the node to use for getting data
+	 * @param directory
+	 *           the current directory
 	 * @return the list of attribute that was not used.
 	 * @see RepositoryData#addParameter
 	 */
@@ -515,15 +555,19 @@ public class ModLoader {
 	 * repetively call the repositoryData addParameter object with the name/value of
 	 * each given attribute of the given node
 	 * 
-	 * @param object    the object to send data to
-	 * @param node      the node to use for getting data
-	 * @param names     the names of the used attributes
-	 * @param directory the current directory
+	 * @param object
+	 *           the object to send data to
+	 * @param node
+	 *           the node to use for getting data
+	 * @param names
+	 *           the names of the used attributes
+	 * @param directory
+	 *           the current directory
 	 * @return the list of attribute that was not used.
 	 * @see RepositoryData#addParameter
 	 */
 	static private List<Attribute> addAttribuetData(RepositoryData object, Element node, String[] names,
-	      String directory) {
+			String directory) {
 		if (names.length == 0) {
 			return addAttribuetData(object, node, directory);
 		}
