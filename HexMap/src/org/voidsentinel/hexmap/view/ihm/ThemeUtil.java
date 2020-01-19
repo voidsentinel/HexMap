@@ -35,7 +35,7 @@ public class ThemeUtil {
 
 	static public void setButtonTheme(Button button, boolean large, boolean selected, boolean filled) {
 		BitmapFont buttonFont = FontRepository.datas.getData("button.font").getFont();
-		float buttonFontSize = large ? 64f : 32f;
+		float buttonFontSize = large ? 64f : 24f;
 		ColorRGBA buttonColor = ColorRGBA.Black;
 		ColorRGBA buttonColorFocus = ColorRGBA.Brown;
 		Texture buttonTexture = null;

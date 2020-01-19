@@ -241,12 +241,19 @@ public abstract class HeightMapExecutor extends RepositoryData implements Runnab
 	public void run() {
 		LOG.info("   Operation : " + this.getClass().getSimpleName());
 		if (xSize == 0 || ySize == 0) {
-			LOG.info("      No valid initial map set");
+			LOG.warning("      No valid initial map set");
 		} else {
 			this.performOperation();
 		}
 	}
 
 	abstract public void performOperation();
+
+	/**
+	 * @return the execution
+	 */
+	public synchronized float getExecution() {
+		return execution;
+	}
 
 }

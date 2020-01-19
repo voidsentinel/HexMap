@@ -305,7 +305,6 @@ public class MenuButton extends Button implements IIHMEventListener {
 
 		switch (action) {
 		case MENU_OPEN:
-		case MENU_CLOSE:
 //       if this is a sub menu (start with the same id than me), do not close			
 			if (!source.getElementId().getId().startsWith(this.getElementId().getId())) {
 				// LOG.info("> Closing the menu "+this.getElementId().getId());
@@ -318,6 +317,9 @@ public class MenuButton extends Button implements IIHMEventListener {
 				this.setOpen(false);
 			}
 			break;
+		case BUTTON_CLICK:
+			this.setOpen(false);
+			break;			
 		}
 	}
 

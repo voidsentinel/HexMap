@@ -4,6 +4,7 @@
 package org.voidsentinel.hexmap.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -13,7 +14,7 @@ import java.util.HashMap;
  * @author VoidSentinel
  *
  */
-public class HashedList<K, V extends Comparable<V>> {
+public class HashedList<K, V extends Comparable> {
 
 	public ArrayList<V>	list	= new ArrayList<V>();
 	public HashMap<K, V>	map	= new HashMap<K, V>();
@@ -36,6 +37,15 @@ public class HashedList<K, V extends Comparable<V>> {
 	 */
 	public V get(K key) {
 		return map.get(key);
+	}
+	
+	/**
+	 * indicate if the Hahsed list contains the given key
+	 * @param key
+	 * @return true if the hashedlist contain an object with this key, false otherwise;
+	 */
+	public boolean containsKey(K key) {
+		return map.containsKey(key);
 	}
 
 	/**
@@ -96,5 +106,10 @@ public class HashedList<K, V extends Comparable<V>> {
 			}
 			list.set(j, tmp);
 		}
+	}
+	
+	
+	public void shuffle() {
+		Collections.shuffle(list);
 	}
 }

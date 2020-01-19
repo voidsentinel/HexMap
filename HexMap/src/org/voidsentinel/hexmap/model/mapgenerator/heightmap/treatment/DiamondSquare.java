@@ -13,6 +13,7 @@ import org.voidsentinel.hexmap.utils.Alea;
 public class DiamondSquare extends HeightMapExecutor {
 
 	public void performOperation() {
+		execution = 0f;
 		int val = Math.max(xSize, ySize);
 		LOG.info("      max initial size  : " + val);
 		int power = 32 - Integer.numberOfLeadingZeros(val - 1);
@@ -24,7 +25,13 @@ public class DiamondSquare extends HeightMapExecutor {
 		copy = plasma(copy);
 		this.normalize(copy);
 
-		heightMap = copy;
+		for (int i = 0; i < xSize; i++) {
+			for (int j = 0; j < ySize; j++) {
+				heightMap [j][i] = copy[j][i];
+			}
+		}
+
+		execution = 1f;
 	}
 
 	private float[][] plasma(float[][] data) {
@@ -129,7 +136,7 @@ public class DiamondSquare extends HeightMapExecutor {
 
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				data[i][j] = (data[i][j] - valmin) / (valmax - valmin);
+				data[j][i] = (data[j][i] - valmin) / (valmax - valmin);
 			}
 		}
 		return data;

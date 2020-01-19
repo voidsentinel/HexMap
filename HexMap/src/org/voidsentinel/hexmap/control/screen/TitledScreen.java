@@ -43,6 +43,7 @@ import com.simsilica.lemur.style.ElementId;
 public class TitledScreen extends GameState {
 
 	protected final String SCREENCONTAINER_ID;
+	protected TextField title = null;
 
 	public TitledScreen(final HexTuto application) {
 		super(application);
@@ -86,7 +87,7 @@ public class TitledScreen extends GameState {
 			titleContainer.setPreferredSize(new Vector3f(settings.getWidth(), settings.getHeight(), 0f));
 			titleContainer.setLocalTranslation(0f, settings.getHeight(), 0.1f);
 			// Title
-			TextField title = new TextField("", titleContainer.getElementId().child("text"));
+			title = new TextField("", titleContainer.getElementId().child("text"));
 			title.setName(title.getElementId().toString());
 			title.setText(I18nMultiFile.getText(this.id + ".title"));
 			title.setColor(ColorRGBA.Black);

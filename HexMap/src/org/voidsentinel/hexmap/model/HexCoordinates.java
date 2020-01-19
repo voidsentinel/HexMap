@@ -10,7 +10,7 @@ import java.util.List;
  * @author guipatry
  *
  */
-public class HexCoordinates {
+public class HexCoordinates implements Comparable{
 	public final int		column;
 	public final int		row;
 
@@ -60,9 +60,12 @@ public class HexCoordinates {
 	/**
 	 * return a coordinate that is an interpolation between two coordinate
 	 *
-	 * @param a the first coordinate
-	 * @param b the second coordinate
-	 * @param t the % of
+	 * @param a
+	 *           the first coordinate
+	 * @param b
+	 *           the second coordinate
+	 * @param t
+	 *           the % of
 	 * @return
 	 */
 	public static HexCoordinates interpolate(final HexCoordinates a, final HexCoordinates b, final float t) {
@@ -76,9 +79,12 @@ public class HexCoordinates {
 	/**
 	 * return a coordinate that is an interpolation between two coordinate
 	 *
-	 * @param a the first coordinate
-	 * @param b the second coordinate
-	 * @param t the % of
+	 * @param a
+	 *           the first coordinate
+	 * @param b
+	 *           the second coordinate
+	 * @param t
+	 *           the % of
 	 * @return
 	 */
 	public HexCoordinates interpolate(final HexCoordinates b, final float t) {
@@ -92,7 +98,8 @@ public class HexCoordinates {
 	/**
 	 * return the coordinate of the Hex in the given direction
 	 * 
-	 * @param dir the direction to calculate new coordinatre for
+	 * @param dir
+	 *           the direction to calculate new coordinatre for
 	 * @return the Cooridnate of the hex in this direction
 	 */
 	public HexCoordinates direction(Direction dir) {
@@ -102,7 +109,8 @@ public class HexCoordinates {
 	/**
 	 * return the distance between this coodinate and the one given
 	 * 
-	 * @param c2 the coodinate to search distance to
+	 * @param c2
+	 *           the coodinate to search distance to
 	 * @return the distance between the 2 hex coordinate
 	 */
 	public int distance(HexCoordinates c2) {
@@ -113,7 +121,8 @@ public class HexCoordinates {
 	 * return the list of coordinate that for a line between a given point and this
 	 * one.
 	 * 
-	 * @param c2 the destination point
+	 * @param c2
+	 *           the destination point
 	 * @return a list of coordinates
 	 */
 	public List<HexCoordinates> lineTo(HexCoordinates c2) {
@@ -187,6 +196,26 @@ public class HexCoordinates {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		if (arg0 == null) {
+			return 1;
+		}
+		HexCoordinates other = (HexCoordinates) arg0;
+		if (column > other.column) {
+			return 1;
+		} else if (column < other.column) {
+			return -1;
+		} else {
+			if (row > other.row) {
+				return 1;
+			} else if (row < other.row) {
+				return -1;
+			}
+		}
+		return 0;
 	}
 
 }
