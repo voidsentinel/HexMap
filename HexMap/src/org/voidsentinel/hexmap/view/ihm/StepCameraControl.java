@@ -57,6 +57,9 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 	private Application	application;
 	private HexGrid		mapdisplay;
 
+	boolean					topMode				= true;
+	Vector3f					deltaCam				= new Vector3f();
+
 	/**
 	 * create a camera
 	 * 
@@ -83,6 +86,9 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 		this.currentPosition = top;
 		this.startPosition = top;
 		this.stopPosition = top;
+
+		this.topMode = false;
+		this.deltaCam = target.subtract(top);
 
 		camera.setLocation(top);
 		camera.lookAt(target, normal);
@@ -148,11 +154,25 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 		application.getInputManager().removeListener(touchListener);
 	}
 
+	public void changeViewMode() {
+		if (topMode) {
+			stopPosition = stopTarget.subtract(deltaCam);
+			topMode = !topMode;
+		} else {
+			stopPosition = stopTarget.add(-0.1f, stopPosition.getY(), 0.1f);
+			topMode = !topMode;
+		}
+		positionChange = true;
+		positionElapsed = 0.0f;
+	}
+
 	public void setPosition(final Vector3f target) {
 		startPosition = currentPosition;
 		stopPosition = target;
 		positionChange = true;
 		positionElapsed = 0.0f;
+		if (!topMode)
+			deltaCam = stopTarget.subtract(stopPosition);
 	}
 
 	public void rotatePosition(final float value) {
@@ -165,6 +185,8 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 		stopPosition = stopTarget.add(delta);
 		positionChange = true;
 		positionElapsed = 10.0f;
+		if (!topMode)
+			deltaCam = stopTarget.subtract(stopPosition);
 	}
 
 	public void setTarget(final Vector3f to) {
@@ -176,6 +198,8 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 			positionElapsed = 0.0f;
 			targetChange = true;
 			targetElapsed = 0.0f;
+			if (!topMode)
+				deltaCam = stopTarget.subtract(stopPosition);
 		}
 	}
 
@@ -221,6 +245,9 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 		stopPosition.subtractLocal(orientation.multLocal(0.1f));
 		positionChange = true;
 		positionElapsed = 0.0f;
+		if (!topMode)
+			deltaCam = stopTarget.subtract(stopPosition);
+
 	}
 
 	public void zoomOut() {
@@ -229,6 +256,8 @@ public class StepCameraControl extends AbstractControl implements ActionListener
 		positionChange = true;
 		positionElapsed = 0.0f;
 		// change texture if to far.
+		if (!topMode)
+			deltaCam = stopTarget.subtract(stopPosition);
 
 	}
 

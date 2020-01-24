@@ -53,7 +53,7 @@ public class MapDisplayScreen extends GameState {
 
 	private StepCameraControl	cameraControl	= null;
 	private MapGenerator			generator		= new CapitalismGenerator();
-	private HexMap					map				= new HexMap(128, 96);
+	private HexMap					map				= new HexMap(800, 600);
 	private HexGrid				mapNode			= null;
 
 //	private AbstractPanelState[] modifierStates = null;
@@ -203,6 +203,9 @@ public class MapDisplayScreen extends GameState {
 		// Reload / generate
 		ddb.addButton(I18nMultiFile.getText("ihm.reload.label"), "generateIcon", I18nMultiFile.getText("ihm.reload.tooltip"), new ReloadCommand());
 
+		// Reload / generate
+		ddb.addButton(I18nMultiFile.getText("ihm.camera.label"), "generateIcon", I18nMultiFile.getText("ihm.camera.tooltip"), new ChangeCameraView());
+
 		// The QUIT button
 		ddb.addButton(I18nMultiFile.getText("ihm.quit.label"), "exitIcon", I18nMultiFile.getText("ihm.quit.tooltip"), new ExitCommand());
 
@@ -305,6 +308,13 @@ public class MapDisplayScreen extends GameState {
 			rootNode.addControl(cameraControl);
 			cameraControl.addControlMapping();
 
+		}
+	}
+
+	protected class ChangeCameraView implements Command<Button> {
+		@Override
+		public void execute(Button source) {
+			cameraControl.changeViewMode();
 		}
 	}
 
